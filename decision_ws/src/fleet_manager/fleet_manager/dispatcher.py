@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
-from sensor_msgs.msg import BatteryState
 from kobuki_etat.msg import RobotEtat
 from my_fleet_manager.msg import Tache
-from std_msgs.msg import String
 import math
+
+from geometry_msgs.msg import PoseStamped
 
 
 class Dispatcher(Node):
     def __init__(self):
         super().__init__('dispatcher')
 
-        # Abonnement au topic des tâches (Tache venant de my_fleet_manager)
+        # Abonnement au topic des tâches (Tache venant du séquenceur)
         self.subscription_task = self.create_subscription(
             Tache,
             'task_topic',
@@ -26,24 +26,22 @@ class Dispatcher(Node):
             self.listener_state_callback,
             10)
 
-        # Publisher pour envoyer les missions assignées
+        # Publisher pour envoyer les missions assignées (PoseStamped)
         self.publisher_assignment = self.create_publisher(
-            String,
-            'task_assignment',
+            PoseStamped,
+            'goal_pose',
             10)
 
         # Dictionnaire pour stocker l'état des robots
         self.robots = {}
 
-    def listener_task_callback(self, msg: Tache):
-        """
-        Callback appelée à la réception d'une Tache.
-        """
+    def listener_task_callback(self, msg):
+        # Récupération du goal depuis le message Tache
         goal = msg.goal
         position = goal.position
         orientation = goal.orientation
 
-        # Conversion quaternion -> yaw
+        # Conversion quaternion -> yaw (pour log)
         yaw = math.atan2(
             2.0 * (orientation.w * orientation.z + orientation.x * orientation.y),
             1.0 - 2.0 * (orientation.y ** 2 + orientation.z ** 2)
@@ -59,7 +57,7 @@ class Dispatcher(Node):
         min_distance = float('inf')
 
         for robot, state in self.robots.items():
-            if not state.get('busy', False):
+            if state['mode'] == "idle":  # robot disponible
                 dist = math.sqrt((position.x - state['x'])**2 + (position.y - state['y'])**2)
                 if dist < min_distance:
                     min_distance = dist
@@ -68,20 +66,21 @@ class Dispatcher(Node):
         # --- Publier l’assignation ---
         if robot_choice:
             self.get_logger().info(f"Assignation de la tâche {msg.task_id} au robot {robot_choice}")
-            msg_out = String()
-            msg_out.data = (
-                f"TacheID={msg.task_id}, MissionID={msg.mission_id}, "
-                f"Type={msg.task_type}, AssignedRobot={robot_choice}, "
-                f"Goal=({position.x:.2f},{position.y:.2f},yaw={yaw:.2f})"
-            )
+
+            msg_out = PoseStamped()
+            msg_out.header.stamp = self.get_clock().now().to_msg()
+            msg_out.header.frame_id = "map"  # à adapter selon ton frame de navigation
+            msg_out.pose.position = position
+            msg_out.pose.orientation = orientation
+
             self.publisher_assignment.publish(msg_out)
 
             # Marquer le robot comme occupé
-            self.robots[robot_choice]['busy'] = True
+            self.robots[robot_choice]['mode'] = "busy"
         else:
             self.get_logger().warn("Aucun robot disponible pour cette tâche")
 
-    def listener_state_callback(self, msg: RobotEtat):
+    def listener_state_callback(self, msg):
         """
         Callback qui reçoit un RobotEtat et met à jour l'état du robot dans le dictionnaire interne.
         """
@@ -91,7 +90,7 @@ class Dispatcher(Node):
         x = msg.x
         y = msg.y
         yaw = msg.yaw
-        stamp = msg.stamp            # déjà un float64 Unix time
+        stamp = msg.stamp            # float64 Unix time
 
         # Mise à jour du dictionnaire interne
         self.robots[robot_id] = {
@@ -100,8 +99,7 @@ class Dispatcher(Node):
             'yaw': yaw,
             'mode': mode,
             'battery': battery,
-            'stamp': stamp,
-            'busy': (mode == "busy")
+            'stamp': stamp
         }
 
         # Log d'information
