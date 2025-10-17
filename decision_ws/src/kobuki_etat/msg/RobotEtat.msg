@@ -12,5 +12,5 @@ float32 x
 float32 y
 float32 yaw
 
-# Horodatage (en secondes Unix)
+# Horodatage
 float64 stamp
