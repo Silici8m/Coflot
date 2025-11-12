@@ -34,7 +34,7 @@ mapImage.onload = () => {
     console.log("🗺️ Carte chargée :", mapConfig.path);
     canvas.width = mapImage.width;
     canvas.height = mapImage.height;
-    ctx.drawImage(mapImage, 0, 0);
+    ctx.drawImage(mapImage, 0, 0    ); //
     mapLoaded = true;
 };
 mapImage.onerror = () => console.error("❌ Impossible de charger la carte :", mapConfig.path);
