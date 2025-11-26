@@ -4,7 +4,7 @@ from rclpy.node import Node
 from kobuki_etat.msg import RobotEtat
 from my_fleet_manager.msg import Tache
 import math
-
+import queue
 from geometry_msgs.msg import PoseStamped
 
 
@@ -12,101 +12,85 @@ class Dispatcher(Node):
     def __init__(self):
         super().__init__('dispatcher')
 
+        self.task_queue = queue.Queue()
+
         # Abonnement au topic des tâches (Tache venant du séquenceur)
         self.subscription_task = self.create_subscription(
             Tache,
             'task_topic',
             self.listener_task_callback,
-            10)
+            10
+        )
 
         # Abonnement au topic des états des robots
         self.subscription_state = self.create_subscription(
             RobotEtat,
             'robot_etat',
             self.listener_state_callback,
-            10)
+            10
+        )
 
         # Publisher pour envoyer les missions assignées (PoseStamped)
         self.publisher_assignment = self.create_publisher(
             PoseStamped,
             'goal_pose',
-            10)
+            10
+        )
 
         # Dictionnaire pour stocker l'état des robots
         self.robots = {}
 
+    # --- Callback pour réception des tâches ---
     def listener_task_callback(self, msg):
-        # Récupération du goal depuis le message Tache
-        goal = msg.goal
-        position = goal.position
-        orientation = goal.orientation
-
-        # Conversion quaternion -> yaw (pour log)
-        yaw = math.atan2(
-            2.0 * (orientation.w * orientation.z + orientation.x * orientation.y),
-            1.0 - 2.0 * (orientation.y ** 2 + orientation.z ** 2)
-        )
-
+        self.task_queue.put(msg)
         self.get_logger().info(
-            f"Tâche {msg.task_id} (mission {msg.mission_id}, type {msg.task_type}) "
-            f"reçue à position ({position.x:.2f}, {position.y:.2f}), orientation {yaw:.2f} rad"
+            f"Tâche {msg.task_id} ajoutée à la file d’attente. Taille actuelle : {self.task_queue.qsize()}"
         )
+        # Essayer d’assigner si un robot est dispo
+        self.try_assign_tasks()
 
-        # --- Choix du robot le plus proche disponible ---
-        robot_choice = None
-        min_distance = float('inf')
-
-        for robot, state in self.robots.items():
-            if state['mode'] == "idle":  # robot disponible
-                dist = math.sqrt((position.x - state['x'])**2 + (position.y - state['y'])**2)
-                if dist < min_distance:
-                    min_distance = dist
-                    robot_choice = robot
-
-        # --- Publier l’assignation ---
-        if robot_choice:
-            self.get_logger().info(f"Assignation de la tâche {msg.task_id} au robot {robot_choice}")
-
-            msg_out = PoseStamped()
-            msg_out.header.stamp = self.get_clock().now().to_msg()
-            msg_out.header.frame_id = "map"  # à adapter selon ton frame de navigation
-            msg_out.pose.position = position
-            msg_out.pose.orientation = orientation
-
-            self.publisher_assignment.publish(msg_out)
-
-            # Marquer le robot comme occupé
-            self.robots[robot_choice]['mode'] = "busy"
-        else:
-            self.get_logger().warn("Aucun robot disponible pour cette tâche")
-
+    # --- Callback pour réception de l’état des robots ---
     def listener_state_callback(self, msg):
-        """
-        Callback qui reçoit un RobotEtat et met à jour l'état du robot dans le dictionnaire interne.
-        """
-        robot_id = msg.robot_id
-        mode = msg.mode              # "idle", "busy", "error", "charging"
-        battery = msg.battery_pct    # en %
-        x = msg.x
-        y = msg.y
-        yaw = msg.yaw
-        stamp = msg.stamp            # float64 Unix time
-
-        # Mise à jour du dictionnaire interne
-        self.robots[robot_id] = {
-            'x': x,
-            'y': y,
-            'yaw': yaw,
-            'mode': mode,
-            'battery': battery,
-            'stamp': stamp
+        self.robots[msg.robot_id] = {
+            'x': msg.x,
+            'y': msg.y,
+            'mode': msg.mode
         }
 
-        # Log d'information
-        self.get_logger().info(
-            f"[{stamp:.1f}] {robot_id} -> pos=({x:.2f}, {y:.2f}, yaw={yaw:.2f}) "
-            f"mode={mode} battery={battery:.1f}%"
-        )
+        # Si le robot est dispo, essayer d’assigner une tâche
+        if msg.mode == "idle":
+            self.try_assign_tasks()
+
+    # --- Fonction d'assignation ---
+    def try_assign_tasks(self):
+        if self.task_queue.empty():
+            return
+
+        # Trouver les robots libres
+        available_robots = [r for r, s in self.robots.items() if s['mode'] == "idle"]
+        if not available_robots:
+            print("try_assign aucun robot")        	
+            return  # aucun robot dispo, on attend
+
+        # On essaie d’assigner autant de tâches que possible
+        for robot_id in available_robots:
+            if self.task_queue.empty():
+                break
+
+            task_msg = self.task_queue.get()
+            goal = task_msg.goal
+
+            # Envoi au robot
+            msg_out = PoseStamped()
+            msg_out.header.stamp = self.get_clock().now().to_msg()
+            msg_out.header.frame_id = "map"
+            msg_out.pose = goal
+
+            self.publisher_assignment.publish(msg_out)
+            self.robots[robot_id]['mode'] = "busy"
+            self.get_logger().info(
+                f"Tâche {task_msg.task_id} assignée à {robot_id}. Tâches restantes : {self.task_queue.qsize()}"
+            )
 
 
 def main(args=None):
@@ -119,3 +103,4 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
+
