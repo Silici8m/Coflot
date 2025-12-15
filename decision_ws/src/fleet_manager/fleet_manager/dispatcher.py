@@ -42,17 +42,14 @@ class Dispatcher(Node):
         super().__init__('dispatcher')
         
         self.robots = {}
-        self.waiting_tasks = [] # File d'attente
+        self.waiting_tasks = [] 
         self.inactivity_timeout = Duration(seconds=5, nanoseconds=0)
 
-        # Abonnements
         self.create_subscription(Tache, 'task_topic', self.listener_task_callback, 10)
         self.create_subscription(RobotEtat, 'robot_etat', self.listener_state_callback, 10)
-
-        # Timer unique (1Hz) pour la maintenance ET le dispatch
         self.create_timer(1.0, self.timer_callback)
         
-        self.get_logger().info("Dispatcher démarré (Mode File d'attente).")
+        self.get_logger().info("Dispatcher démarré")
 
     def listener_state_callback(self, msg: RobotEtat):
         robot_id = msg.robot_id
@@ -62,34 +59,38 @@ class Dispatcher(Node):
         if robot_id not in self.robots:
             publisher = self.create_publisher(PoseStamped, topic_name, 10)
             self.robots[robot_id] = RobotData(robot_id, publisher, self.get_clock())
-            self.get_logger().info(f"Nouveau robot : {robot_id}")
+            self.get_logger().info(f"Connexion du robot : {robot_id}")
 
-        self.robots[robot_id].update_state(msg, current_time)
+        # Capture de l'ancien mode pour comparaison
+        robot = self.robots[robot_id]
+        old_mode = robot.mode
+
+        # Mise à jour
+        robot.update_state(msg, current_time)
+
+        # Log si changement
+        if old_mode != robot.mode:
+            self.get_logger().info(f"Robot {robot_id} : {old_mode.value} -> {robot.mode.value}")
 
     def listener_task_callback(self, msg: Tache):
-        # On ajoute simplement la tâche à la file
         self.waiting_tasks.append(msg)
         self.get_logger().info(f"Tâche {msg.task_id} ajoutée à la file d'attente (Total: {len(self.waiting_tasks)})")
 
     def timer_callback(self):
-        """Appelé toutes les secondes : Nettoie la flotte PUIS dispatche les tâches."""
         self.update_fleet()
         self.process_waiting_tasks()
 
     def process_waiting_tasks(self):
-        """Tente d'assigner les tâches en attente aux robots disponibles."""
         if not self.waiting_tasks:
             return
 
         unassigned_tasks = []
 
-        # On parcourt la file actuelle
         for task in self.waiting_tasks:
             target_pose = task.goal
             robot_choice = None
             min_distance = float('inf')
 
-            # Recherche du meilleur robot IDLE
             for robot_id, data in self.robots.items():
                 if data.mode == RobotMode.IDLE:
                     dist = math.sqrt(
@@ -100,8 +101,7 @@ class Dispatcher(Node):
                         robot_choice = robot_id
 
             if robot_choice:
-                # Assignation
-                self.get_logger().info(f"Déstockage Tâche {task.task_id} -> {robot_choice}")
+                self.get_logger().info(f"Tâche {task.task_id} assignée au robot {robot_choice}")
                 
                 msg_out = PoseStamped()
                 msg_out.header.stamp = self.get_clock().now().to_msg()
@@ -110,20 +110,19 @@ class Dispatcher(Node):
 
                 self.robots[robot_choice].publisher.publish(msg_out)
                 
-                # IMPORTANT : Marquer BUSY immédiatement pour ne pas lui réassigner une tâche dans la même boucle
+                # Changement manuel du mode et Log
+                old_mode = self.robots[robot_choice].mode
                 self.robots[robot_choice].mode = RobotMode.BUSY
+                self.get_logger().info(f"Robot {robot_choice} : {old_mode.value} -> {RobotMode.BUSY.value}")
             else:
-                # Si aucun robot n'est dispo pour cette tâche, on la garde
                 unassigned_tasks.append(task)
         
-        # On remplace la file d'attente par celle des tâches non assignées
         self.waiting_tasks = unassigned_tasks
         
         if self.waiting_tasks:
-            self.get_logger().info(f"Tâches restantes en attente : {len(self.waiting_tasks)}")
+            self.get_logger().info(f"{len(self.waiting_tasks)} tâches en attente")
 
     def update_fleet(self):
-        """Gestion de la déconnexion des robots."""
         current_time = self.get_clock().now()
         to_remove = []
 
