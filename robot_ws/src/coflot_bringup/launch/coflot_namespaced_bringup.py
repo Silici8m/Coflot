@@ -12,6 +12,10 @@ def generate_launch_description():
     # according to : https://discourse.openrobotics.org/t/tf-tree-in-a-multi-robot-setup-in-ros2/41426    
     remappings = [('/tf', 'tf'),
                   ('/tf_static', 'tf_static')]
+
+    # Get the launch directory
+    bringup_dir = get_package_share_directory('coflot_bringup')
+    map_dir = os.path.join(bringup_dir, 'map')
                   
     # --- Arguments ---
     robot_name_arg = DeclareLaunchArgument(
@@ -22,7 +26,7 @@ def generate_launch_description():
 
     map_file_arg = DeclareLaunchArgument(
         'map',
-        default_value='/home/delta3/launch/carte/salle2.yaml',
+        default_value= map_dir + '/salle2.yaml',
         description='Chemin du fichier carte YAML'
     )
 
@@ -142,6 +146,11 @@ def generate_launch_description():
 
 
     return LaunchDescription([
+        # Déclaration des arguments
+        robot_name_arg,
+        map_file_arg,
+        use_sim_time_arg,
+        lidar_port_arg,
 
         # Lancement du groupe de nœuds namespacés
         robot_namespaced_nodes,
