@@ -261,8 +261,8 @@ smoother_server:
 
 behavior_server:
   ros__parameters:
-    costmap_topic: robot1/local_costmap/costmap_raw
-    footprint_topic: robot1/local_costmap/published_footprint
+    costmap_topic: local_costmap/costmap_raw
+    footprint_topic: local_costmap/published_footprint
     cycle_frequency: 10.0
     behavior_plugins: ["spin", "backup", "drive_on_heading", "wait"]
     spin:
