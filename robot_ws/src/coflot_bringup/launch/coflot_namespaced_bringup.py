@@ -16,6 +16,7 @@ def generate_launch_description():
     # Get the launch directory
     bringup_dir = get_package_share_directory('coflot_bringup')
     map_dir = os.path.join(bringup_dir, 'map')
+    params_nav2_dir = os.path.join(bringup_dir, 'params')
                   
     # --- Arguments ---
     robot_name_arg = DeclareLaunchArgument(
@@ -27,6 +28,12 @@ def generate_launch_description():
     map_file_arg = DeclareLaunchArgument(
         'map',
         default_value= map_dir + '/salle2.yaml',
+        description='Chemin du fichier carte YAML'
+    )
+
+    params_nav2_arg = DeclareLaunchArgument(
+        'params',
+        default_value= params_nav2_dir + '/coflot_nav2_multirobots_params.yaml',
         description='Chemin du fichier carte YAML'
     )
 
@@ -138,7 +145,7 @@ def generate_launch_description():
         launch_arguments={
             'use_sim_time': use_sim_time,
             'map': LaunchConfiguration('map'),
-            'params_file': '/home/delta3/nav2_multirobot_params_1.yaml', # Chemin vers le YAML corrigé
+            'params_file': '/home/delta3/nav2_multirobot_params_1.yaml',
             'use_namespace': 'True', # Indique au launchfile Nav2 d'utiliser le namespace
             'namespace': robot_name 
         }.items()
@@ -149,6 +156,7 @@ def generate_launch_description():
         # Déclaration des arguments
         robot_name_arg,
         map_file_arg,
+        params_nav2_arg,
         use_sim_time_arg,
         lidar_port_arg,
 
