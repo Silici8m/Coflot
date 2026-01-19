@@ -1,0 +1,154 @@
+/* --- RESET & BASE --- */
+body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #121212; color: #e0e0e0; height: 100vh; overflow: hidden; }
+
+/* --- LAYOUT PRINCIPAL --- */
+.main-container { display: grid; grid-template-columns: 350px 1fr 300px; height: 100%; }
+
+.col-left { 
+    background-color: #1e1e1e; 
+    border-right: 1px solid #333; 
+    padding: 15px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 20px; 
+    height: 100%;
+    box-sizing: border-box; /* Important pour le padding */
+}
+
+.col-center { 
+    background-color: #0f0f0f; 
+    position: relative; 
+    overflow: hidden; 
+}
+
+.col-right { background-color: #1e1e1e; border-left: 1px solid #333; padding: 15px; }
+
+/* --- INDICATEUR STATUT --- */
+#status-indicator {
+    position: absolute; top: 10px; left: 10px; 
+    color: red; font-weight: bold; z-index: 10;
+    background: rgba(0,0,0,0.6); padding: 5px; border-radius: 4px;
+}
+
+/* --- TEXTES & TITRES --- */
+h2 { margin-top: 0; font-size: 1.1rem; border-bottom: 2px solid #00c853; padding-bottom: 5px; color: #00c853; }
+h3 { font-size: 0.9rem; color: #bbb; margin-bottom: 10px; margin-top: 15px;}
+
+/* --- INPUTS GÉNÉRAUX --- */
+.input-group { margin-bottom: 10px; display: flex; flex-direction: column; }
+label { font-size: 0.8rem; margin-bottom: 4px; color: #888; }
+input[type="text"], input[type="number"], select { 
+    background: #2c2c2c; border: 1px solid #444; color: white; padding: 6px; border-radius: 4px; 
+}
+
+/* --- LISTE DES MISSIONS --- */
+.mission-list-container { 
+    max-height: 150px; overflow-y: auto; 
+    background: #252525; padding: 10px; border-radius: 6px; 
+}
+.mission-item { font-size: 0.8rem; padding: 5px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; }
+.status-active { color: #4caf50; }
+
+.new-mission-container { 
+    flex: 1; display: flex; flex-direction: column; overflow: hidden; 
+}
+
+#waypointsContainer {
+    flex: 1; overflow-y: auto; padding-right: 5px; margin-bottom: 10px;
+}
+
+/* --- WAYPOINT CARD (Optimisé pour 350px) --- */
+.waypoint-card { 
+    border: 1px solid #333; 
+    background: #232f2d; 
+    padding: 10px; 
+    border-radius: 6px; 
+    margin-bottom: 10px; 
+}
+
+.wp-row-1 { 
+    display: flex; 
+    gap: 5px; 
+    align-items: center; 
+    margin-bottom: 8px; 
+}
+
+/* Le select prend toute la place restante */
+.wp-select-type { 
+    flex: 1; 
+    min-width: 0; 
+    font-size: 0.8rem;
+}
+
+.wp-coord-label { font-weight: bold; font-size: 0.8rem; color: #00897b; }
+
+/* Inputs x,y plus petits pour que ça rentre */
+.wp-coord { 
+    width: 35px; 
+    text-align: center; 
+    font-size: 0.8rem; 
+    padding: 4px 2px;
+}
+
+/* Bouton Cible (Image) */
+.btn-icon-cible { 
+    background: #00796b; 
+    border: none; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    width: 30px; height: 30px; 
+    display: flex; align-items: center; justify-content: center; 
+    padding: 5px;
+    flex-shrink: 0;
+}
+.btn-icon-cible:hover { background: #004d40; }
+.btn-icon-cible img { width: 100%; height: 100%; display: block; }
+
+.wp-row-2 { 
+    display: flex; 
+    gap: 10px; 
+    align-items: center; 
+    justify-content: space-between; 
+}
+
+.wp-check-group, .wp-time-group { 
+    display: flex; align-items: center; gap: 5px; font-size: 0.8rem; color: #ccc;
+}
+.wp-time-input { width: 40px; text-align: right; }
+
+.btn-delete { 
+    background: transparent; 
+    border: 1px solid #d32f2f; 
+    color: #d32f2f; 
+    font-size: 0.75rem; 
+    padding: 3px 8px; 
+    border-radius: 4px; 
+    cursor: pointer; 
+}
+.btn-delete:hover { background: rgba(211, 47, 47, 0.1); }
+
+/* --- BOUTONS D'ACTION (Bas de page) --- */
+.actions-bar { 
+    margin-top: auto; 
+    display: flex; 
+    gap: 10px; 
+    padding-top: 10px;
+    border-top: 1px solid #333;
+}
+
+.btn-main { 
+    flex: 1; 
+    padding: 12px; 
+    border: none; 
+    border-radius: 4px; 
+    font-weight: bold; 
+    cursor: pointer; 
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+.btn-add { background: #424242; color: white; }
+.btn-add:hover { background: #505050; }
+
+.btn-send { background: #00c853; color: black; }
+.btn-send:hover { background: #00e676; }

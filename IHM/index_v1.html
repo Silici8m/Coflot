@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supervision Flotte ROS2</title>
+    <style>
+        /* --- RESET & BASE --- */
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #121212; color: #e0e0e0; height: 100vh; overflow: hidden; }
+        
+        /* --- LAYOUT 3 COLONNES --- */
+        .main-container { display: grid; grid-template-columns: 350px 1fr 300px; height: 100%; }
+        
+        .col-left { background-color: #1e1e1e; border-right: 1px solid #333; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
+        .col-center { background-color: #0f0f0f; position: relative; display: flex; align-items: center; justify-content: center; }
+        .col-right { background-color: #1e1e1e; border-left: 1px solid #333; padding: 15px; }
+
+        /* --- STYLES GENERAUX --- */
+        h2 { margin-top: 0; font-size: 1.1rem; border-bottom: 2px solid #00c853; padding-bottom: 5px; color: #00c853; }
+        h3 { font-size: 0.9rem; color: #bbb; margin-bottom: 10px; }
+        
+        .input-group { margin-bottom: 10px; display: flex; flex-direction: column; }
+        label { font-size: 0.8rem; margin-bottom: 4px; color: #888; }
+        input[type="text"], input[type="number"], select {
+            background: #2c2c2c; border: 1px solid #444; color: white; padding: 5px; border-radius: 4px;
+        }
+        
+        /* --- ZONE LISTE MISSIONS (TOPIC ROS) --- */
+        .mission-list-container { flex: 0 0 auto; max-height: 30%; overflow-y: auto; background: #252525; padding: 10px; border-radius: 6px; }
+        .mission-item { font-size: 0.8rem; padding: 5px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; }
+        .status-active { color: #4caf50; }
+        .status-pending { color: #ff9800; }
+
+        /* --- ZONE CREATION MISSION --- */
+        .new-mission-container { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+        
+        /* --- LE BLOC CROQUIS (WAYPOINT) --- */
+        .waypoint-card {
+            border: 2px solid #00897b; /* Vert du croquis */
+            background: #232f2d;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        /* Ligne 1 : Type, X, Y, Z, Select */
+        .wp-row-1 { display: flex; gap: 5px; align-items: center; margin-bottom: 8px; }
+        .wp-select-type { flex: 2; min-width: 0; }
+        .wp-coord { width: 40px; text-align: center; }
+        .wp-coord-label { font-weight: bold; font-size: 0.9rem; color: #00897b; }
+        .btn-select { background: #00796b; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; }
+
+        /* Ligne 2 : Validation, Temps, Save */
+        .wp-row-2 { display: flex; gap: 10px; align-items: center; justify-content: space-between; }
+        .wp-check-group { display: flex; align-items: center; gap: 5px; font-size: 0.85rem; }
+        .wp-time-group { display: flex; align-items: center; gap: 5px; font-size: 0.85rem; }
+        .wp-time-input { width: 50px; }
+        .btn-save { background: transparent; border: 2px solid #00897b; color: #00897b; font-weight: bold; padding: 2px 8px; border-radius: 4px; cursor: pointer; }
+        .btn-save:hover { background: #00897b; color: white; }
+
+        /* Boutons d'action globaux */
+        .actions-bar { margin-top: auto; display: flex; gap: 10px; }
+        .btn-main { flex: 1; padding: 10px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        .btn-add { background: #444; color: white; }
+        .btn-send { background: #00c853; color: black; }
+
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <div class="col-left">
+        
+        <div>
+            <h2>État des Missions</h2>
+            <div class="mission-list-container" id="missionDisplay">
+                <div class="mission-item">
+                    <span>Mission Alpha (Prio: 1)</span>
+                    <span class="status-active">● En cours</span>
+                </div>
+                <div class="mission-item">
+                    <span>Mission Beta (Prio: 2)</span>
+                    <span class="status-pending">○ En attente</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="new-mission-container">
+            <h2>Nouvelle Mission</h2>
+            
+            <div class="input-group">
+                <label>Nom de la mission</label>
+                <input type="text" id="missionName" placeholder="Ex: Livraison Atelier A">
+            </div>
+            
+            <div class="input-group">
+                <label>Priorité</label>
+                <input type="number" id="missionPriority" value="1" min="1" max="10">
+            </div>
+
+            <h3>Points de passage (Waypoints)</h3>
+            
+            <div id="waypointsContainer">
+                </div>
+
+            <div class="actions-bar">
+                <button class="btn-main btn-add" onclick="addWaypointUI()">+ Point</button>
+                <button class="btn-main btn-send" onclick="sendMissionToROS()">Envoyer</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-center">
+        <span style="color: #444;">Visualisation Carte (ROS Map)</span>
+    </div>
+
+    <div class="col-right">
+        <h2>Info Flotte</h2>
+        <p style="font-size: 0.8rem; color: #888;">Status robots, batterie, logs...</p>
+    </div>
+</div>
+
+<script>
+    // --- GESTION DE L'INTERFACE ---
+
+    // Template HTML correspondant exactement à votre croquis
+    function createWaypointTemplate(id) {
+        return `
+        <div class="waypoint-card" id="wp-${id}">
+            <div class="wp-row-1">
+                <select class="wp-select-type" onchange="toggleCoordInput(${id}, this)">
+                    <option value="custom">Perso ✏️</option>
+                    <option value="home">Home Base</option>
+                    <option value="charging">Zone Charge</option>
+                    <option value="warehouse">Entrepôt A</option>
+                </select>
+
+                <span class="wp-coord-label">x</span>
+                <input type="text" class="wp-coord" placeholder="0.0" name="x">
+                
+                <span class="wp-coord-label">y</span>
+                <input type="text" class="wp-coord" placeholder="0.0" name="y">
+
+                <span class="wp-coord-label">z</span>
+                <input type="text" class="wp-coord" placeholder="0.0" name="z">
+
+                <button class="btn-select">Select</button>
+            </div>
+
+            <div class="wp-row-2">
+                <div class="wp-check-group">
+                    <span>Validation</span>
+                    <input type="checkbox" checked name="validation">
+                </div>
+
+                <div class="wp-time-group">
+                    <span>Temps Arret</span>
+                    <input type="number" class="wp-time-input" placeholder="sec" value="0" name="stopTime">
+                </div>
+
+                <button class="btn-save" onclick="removeWaypoint(${id})">Suppr</button> 
+                </div>
+        </div>
+        `;
+    }
+
+    let waypointCount = 0;
+
+    function addWaypointUI() {
+        waypointCount++;
+        const container = document.getElementById('waypointsContainer');
+        const div = document.createElement('div');
+        div.innerHTML = createWaypointTemplate(waypointCount);
+        container.appendChild(div);
+    }
+
+    function removeWaypoint(id) {
+        const el = document.getElementById(`wp-${id}`);
+        if(el) el.remove();
+    }
+
+    // Petit script pour désactiver les inputs X/Y/Z si on choisit un point préenregistré
+    window.toggleCoordInput = function(id, selectEl) {
+        const card = document.getElementById(`wp-${id}`);
+        const inputs = card.querySelectorAll('input[type="text"]');
+        const isCustom = selectEl.value === 'custom';
+        
+        inputs.forEach(input => {
+            input.disabled = !isCustom;
+            if(!isCustom) input.value = "-"; // Visuel seulement
+            else if(input.value === "-") input.value = "";
+        });
+    }
+
+    // --- LOGIQUE SIMULEE D'ENVOI VERS ROS ---
+    function sendMissionToROS() {
+        // 1. Récupération des données globales
+        const missionName = document.getElementById('missionName').value;
+        const priority = document.getElementById('missionPriority').value;
+        
+        // 2. Récupération des waypoints
+        const cards = document.querySelectorAll('.waypoint-card');
+        const waypointsData = [];
+
+        cards.forEach(card => {
+            const type = card.querySelector('select').value;
+            // Note: En JS natif, on parserait les inputs ici
+            waypointsData.push({
+                type: type,
+                x: type === 'custom' ? card.querySelector('input[name="x"]').value : null,
+                y: type === 'custom' ? card.querySelector('input[name="y"]').value : null,
+                validation: card.querySelector('input[name="validation"]').checked,
+                stopTime: card.querySelector('input[name="stopTime"]').value
+            });
+        });
+
+        // 3. Structure du Message ROS (JSON simulé)
+        const rosMessage = {
+            op: "publish",
+            topic: "/fleet_manager/new_mission",
+            msg: {
+                mission_id: "auto_" + Date.now(),
+                name: missionName,
+                priority: parseInt(priority),
+                waypoints: waypointsData
+            }
+        };
+
+        console.log("Message prêt à être envoyé à ROS via WebSocket :", rosMessage);
+        alert(`Mission "${missionName}" envoyée ! (Voir console F12)`);
+    }
+
+    // Init: Ajouter un premier point au chargement
+    addWaypointUI();
+
+</script>
+
+</body>
+</html>

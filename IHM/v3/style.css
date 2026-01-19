@@ -1,0 +1,24 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #fafafa;
+}
+
+h1 {
+    color: #333;
+}
+
+#status {
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: red;
+}
+
+#map {
+    width: 800px;
+    height: 600px;
+    margin: 0 auto;
+    border: 2px solid #333;
+    background: #e8e8e8;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
