@@ -31,8 +31,8 @@ def generate_launch_description():
 
     params_nav2_arg = DeclareLaunchArgument(
         'params',
-        default_value= os.path.join(bringup_dir, 'params', 'coflot_namespaced_bringup.py'),
-        description='Chemin du fichier carte YAML'
+        default_value= os.path.join(bringup_dir, 'params', 'coflot_nav2_multirobot_params.yaml'),
+        description='Chemin du fichier params'
     )
 
     use_sim_time_arg = DeclareLaunchArgument(
@@ -46,6 +46,12 @@ def generate_launch_description():
         default_value='/dev/rplidar',
         description='Port série du RPLIDAR'
     )
+    
+    kobuki_port_arg = DeclareLaunchArgument(
+        'kobuki_port',
+        default_value='/dev/kobuki',
+        description='Port série du Kobuki'
+    )
 
     # --- Substitutions ---
     robot_name = LaunchConfiguration('robot_name')
@@ -53,8 +59,6 @@ def generate_launch_description():
     
     
     # --- ACTIONS NAMESPACÉES (GroupAction) ---
-    
-    
     
     # --- Groupe pour les autres nœuds (RPLiDAR, CMD_VEL, ETAT) ---
     robot_namespaced_nodes = GroupAction([
@@ -71,6 +75,7 @@ def generate_launch_description():
             ),
             launch_arguments={
                 'use_sim_time': use_sim_time, 
+                'serial_port': LaunchConfiguration('kobuki_port')
             }.items()
         ),
 
@@ -80,7 +85,7 @@ def generate_launch_description():
                 os.path.join(
                     get_package_share_directory('kobuki_description'),
                     'launch',
-                    'coflot-robot_description_with_namespace.launch.py' # Utilisez le nom de votre fichier corrigé
+                    'coflot-robot_description_with_namespace.launch.py'
                 )
             ),
             launch_arguments={
@@ -122,12 +127,11 @@ def generate_launch_description():
 
         # 6- Robot state node
         Node(
-            package='kobuki_etat',
-            executable='robot_etat_node.py',
-            name='robot_etat_node',
+            package='kobuki_pose',
+            executable='robot_pose_node.py',
+            name='robot_pose_node',
             remappings=remappings,
-            output='screen',
-            parameters=[{'robot_name': robot_name}]
+            output='screen'
         ),
     ])
 
@@ -143,7 +147,7 @@ def generate_launch_description():
         launch_arguments={
             'use_sim_time': use_sim_time,
             'map': LaunchConfiguration('map'),
-            'params_file': '/home/delta3/nav2_multirobot_params_1.yaml',
+            'params_file': LaunchConfiguration('params'),
             'use_namespace': 'True', # Indique au launchfile Nav2 d'utiliser le namespace
             'namespace': robot_name 
         }.items()
