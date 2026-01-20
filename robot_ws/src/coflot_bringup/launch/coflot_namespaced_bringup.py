@@ -161,6 +161,7 @@ def generate_launch_description():
         params_nav2_arg,
         use_sim_time_arg,
         lidar_port_arg,
+        kobuki_port_arg,
 
         # Lancement du groupe de nœuds namespacés
         robot_namespaced_nodes,
