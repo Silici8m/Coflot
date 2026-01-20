@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
-from sensor_msgs.msg import BatteryState
-from kobuki_etat.msg import RobotEtat
-from nav2_msgs.msg import BehaviorTreeLog
 from geometry_msgs.msg import Pose
 import tf2_ros
 import math

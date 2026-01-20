@@ -24,7 +24,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'kobuki_pose = kobuki_pose.robot_pose_node.py:main'
+            'kobuki_pose = kobuki_pose.robot_pose_node:main'
         ],
     },
 )
