@@ -60,7 +60,7 @@ def generate_launch_description():
         Node(
             package='kobuki_etat',
             executable='robot_etat_node.py',
-            name='robot_etat_node',
+            name='robot_pose_node',
             output='screen'
         ),
     ])
