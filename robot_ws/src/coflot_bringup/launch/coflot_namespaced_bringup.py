@@ -125,10 +125,10 @@ def generate_launch_description():
             }.items()
         ),
 
-        # 6- Robot state node
+        # 6- Robot pose node
         Node(
             package='kobuki_pose',
-            executable='robot_pose_node.py',
+            executable='robot_pose_node',
             name='robot_pose_node',
             remappings=remappings,
             output='screen'
