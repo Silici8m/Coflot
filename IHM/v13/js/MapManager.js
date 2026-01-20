@@ -90,12 +90,12 @@ class MapManager {
             }
 
             // 2. Mise à jour Position
-            marker.x = robotState.x;
-            marker.y = robotState.y;
+            marker.x = robotState.pose.x;
+            marker.y = robotState.pose.y;
             
             // 3. Mise à jour Rotation
             // Rappel : rotation négative car l'axe Y du canvas est souvent inversé visuellement
-            marker.rotation = -robotState.yaw * (180.0 / Math.PI);
+            marker.rotation = -robotState.pose.yaw * (180.0 / Math.PI);
 
             // 4. Mise à jour Couleur / Forme
             // On récupère la forme existante et on la redessine pour être sûr 
@@ -152,6 +152,7 @@ class MapManager {
     }
 
     displayMissionPath(waypoints) {
+        console.log("displayMissionPath : ", waypoints)
         this.missionLayer.removeAllChildren();
         if (waypoints.length === 0) { this.viewer.scene.update(); return; }
 
