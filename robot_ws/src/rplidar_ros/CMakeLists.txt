@@ -9,7 +9,17 @@ if(NOT CMAKE_CXX_STANDARD)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic -Wno-unused-parameter -Wno-unused-value)
+  add_compile_options(
+    -Wall 
+    -Wextra 
+    -Wno-unused-parameter 
+    -Wno-unused-value
+    -Wno-pedantic              # Désactive "ISO C++ forbids zero-size array"
+    -Wno-sign-compare           # Désactive "comparison of different signedness" (int vs size_t)
+    -Wno-ignored-qualifiers     # Désactive "type qualifiers ignored on cast result"
+    -Wno-cast-function-type     # Désactive "cast between incompatible function types"
+    -Wno-unused-function        # Désactive "defined but not used" pour les fonctions static
+  )
 endif()
 
 if(MSVC)
