@@ -20,18 +20,14 @@ class UIManager {
     // Ajoute un bloc HTML waypoint
     addWaypoint() {
         this.waypointCount++;
-        
-        // Génération dynamique des options du menu déroulant
-        let zoneOptions = PRESET_ZONES.map(zone => 
-            `<option value="${zone.id}">${zone.name}</option>`
-        ).join('');
-
+        // Note: on ajoute oninput="updateMapViz()" pour le temps réel
         const html = `
         <div class="waypoint-card" id="wp-${this.waypointCount}">
             <div class="wp-row-1">
                 <select class="wp-select-type" onchange="uiManager.toggleCoordInput(${this.waypointCount}, this)">
                     <option value="custom">Personnalisé</option>
-                    ${zoneOptions}
+                    <option value="home">Base</option>
+                    <option value="charge">Charge</option>
                 </select>
                 <button class="btn-icon btn-save" onclick="savePoint(${this.waypointCount})"><img src="save.svg"></button>
                 <button class="btn-icon btn-delete-db" onclick="deleteFromDB(${this.waypointCount})"><img src="delete.svg"></button>
@@ -58,26 +54,13 @@ class UIManager {
     // Active/Désactive les inputs selon le select
     toggleCoordInput(id, selectEl) {
         const card = document.getElementById(`wp-${id}`);
-        const inputX = card.querySelector('input[name="x"]');
-        const inputY = card.querySelector('input[name="y"]');
+        const inputs = card.querySelectorAll('.wp-coord');
+        const isCustom = (selectEl.value === 'custom');
         
-        if (selectEl.value !== 'custom') {
-            const zone = PRESET_ZONES.find(z => z.id === selectEl.value);
-            if (zone) {
-                inputX.value = zone.x.toFixed(2);
-                inputY.value = zone.y.toFixed(2);
-                inputX.disabled = true;
-                inputY.disabled = true;
-                inputX.style.opacity = '0.5';
-                inputY.style.opacity = '0.5';
-            }
-        } else {
-            inputX.disabled = false;
-            inputY.disabled = false;
-            inputX.style.opacity = '1';
-            inputY.style.opacity = '1';
-        }
-        window.updateMapViz(); 
+        inputs.forEach(input => {
+            input.disabled = !isCustom;
+            input.style.opacity = isCustom ? '1' : '0.5';
+        });
     }
 
     // Remplit les champs d'un waypoint spécifique (utilisé par le Picking)
@@ -92,20 +75,42 @@ class UIManager {
             this.toggleCoordInput(id, sel);
         }
     }
-
-    // Lit tous les points pour l'envoi ou l'affichage
+    
     getAllWaypoints() {
         const waypoints = [];
         const wpElements = document.querySelectorAll('.waypoint-card');
         
         wpElements.forEach(card => {
-            const x = card.querySelector('input[name="x"]').value;
-            const y = card.querySelector('input[name="y"]').value;
-            if (!isNaN(parseFloat(x)) && !isNaN(parseFloat(y))) {
-                waypoints.push({ x: x, y: y });
+            const xStr = card.querySelector('input[name="x"]').value;
+            const yStr = card.querySelector('input[name="y"]').value;
+            
+            const xVal = parseFloat(xStr);
+            const yVal = parseFloat(yStr);
+
+            if (!isNaN(xVal) && !isNaN(yVal)) {
+                // Structure stricte geometry_msgs/Pose
+                const pose = {
+                    position: {
+                        x: xVal,
+                        y: yVal,
+                        z: 0.0 // Toujours 0 en 2D, mais obligatoire
+                    },
+                    orientation: {
+                        x: 0.0,
+                        y: 0.0,
+                        z: 0.0,
+                        w: 1.0 // Quaternion neutre (pas de rotation)
+                    }
+                };
+                waypoints.push(pose);
             }
         });
         return waypoints;
+    }
+
+    getName() {
+        const el = document.getElementById('missionName');
+        return el ? el.value : null;
     }
 
     getPriority() {

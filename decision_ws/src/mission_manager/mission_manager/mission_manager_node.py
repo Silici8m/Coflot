@@ -130,7 +130,7 @@ class MissionManager(Node):
             
             try:
                 # ROUTAGE DES ACTIONS
-                if d.action == AllocationAction.START:
+                if d.action == AllocationAction.ASSIGN_AND_START:
                     self._execute_start(d.mission_id, d.robot_id)
                     
                 elif d.action == AllocationAction.CANCEL_AND_START:

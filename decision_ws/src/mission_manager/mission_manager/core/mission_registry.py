@@ -3,14 +3,21 @@
 import threading
 from fleet_interfaces.msg import MissionRequest 
 
-from .mission import Mission
+from .mission import Mission, MissionState
 from .robot_pool import RobotPool
+from mission_manager.config import CLEAR_FINISHED_PERIOD
 
 class MissionRegistry:
     def __init__(self, parent_node, robot_pool: RobotPool):
         self._missions = {}
         self.node = parent_node
         self.robot_pool = robot_pool
+        
+        self.clear_finished_period = CLEAR_FINISHED_PERIOD
+        self.auto_delete_finished = self.node.create_timer(
+                self.clear_finished_period, 
+                self._clear_finished_missions
+            )
         
         self.logger = parent_node.get_logger()
         self._lock = threading.RLock()
@@ -108,3 +115,19 @@ class MissionRegistry:
     def get_mission_dict(self):
         with self._lock:
             return self._missions
+        
+    def _clear_finished_missions(self):
+        with self._lock:
+            # 1. Identifier les missions à supprimer
+            # On crée une liste temporaire pour ne pas itérer sur le dict qu'on modifie
+            ids_to_remove = [
+                m.mission_id 
+                for m in self._missions.values() 
+                if m.state in [MissionState.FINISHED, MissionState.FAILED]
+            ]
+            
+            # 2. Supprimer les missions identifiées
+            if ids_to_remove:
+                for mid in ids_to_remove:
+                    self._remove_mission(mid)
+                    self.logger.info(f"Cleaned up finished/failed mission: {mid}")       

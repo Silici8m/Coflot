@@ -2,14 +2,17 @@ class MapManager {
     constructor() {
         this.viewer = null;
         this.gridClient = null;
-        this.robotMarker = null;
+
+        // Calque pour la mission
         this.missionLayer = new createjs.Container();
-        this.missionLayer.scaleY = -1; 
-        
-        this.zonesLayer = new createjs.Container();
-        this.zonesLayer.scaleY = -1;
-        
-        // CORRECTION AXE Y
+        this.missionLayer.scaleY = -1;
+
+        // Calque pour la flotte
+        this.fleetLayer = new createjs.Container();
+        this.fleetLayer.scaleY = -1;
+
+        // Dictionnaire pour stocker les marqueurs de la flotte
+        this.fleetMarkers = {};
         
         this.isPicking = false;
         this.pickCallback = null;
@@ -17,6 +20,7 @@ class MapManager {
 
     init(ros, divId) {
         const el = document.getElementById(divId);
+
         this.viewer = new ROS2D.Viewer({
             divID: divId,
             width: el.offsetWidth,
@@ -34,21 +38,13 @@ class MapManager {
             if (this.gridClient.currentGrid) {
                 this.viewer.scaleToDimensions(this.gridClient.currentGrid.width, this.gridClient.currentGrid.height);
                 this.viewer.shift(this.gridClient.currentGrid.pose.position.x, this.gridClient.currentGrid.pose.position.y);
-
-                this.viewer.scene.addChild(this.zonesLayer);
-                this.drawZones();
-
                 this.viewer.scene.update();
             }
         });
 
         this.viewer.scene.addChild(this.missionLayer);
-        this.viewer.scene.addChild(this.zonesLayer);
+        this.viewer.scene.addChild(this.fleetLayer);
         
-        this.robotMarker = new createjs.Shape();
-        this.robotMarker.graphics.beginFill("#0088FF").drawPolyStar(0, 0, 0.3, 3, 0, -90);
-        this.robotMarker.visible = false;
-        this.viewer.scene.addChild(this.robotMarker);
 
         this.viewer.scene.addEventListener('stagemouseup', (evt) => {
             if (this.isPicking && this.pickCallback) {
@@ -64,6 +60,89 @@ class MapManager {
         });
     }
 
+    updateFleet(fleetMsg) {
+        // fleetMsg contient : { robots: [ {robot_id, mode, battery_pct, pose.x, pose.y, pose.yaw, ...}, ... ] }
+        
+        if(!fleetMsg.robots) return;
+
+        fleetMsg.robots.forEach(robotState => {
+            const robot_id = robotState.robot_id;
+            
+            // 1. Récupérer ou créer le marqueur
+            let marker = this.fleetMarkers[robot_id];
+            
+            if (!marker) {
+                // --- CRÉATION SI NOUVEAU ---
+                marker = new createjs.Container();
+                
+                // Forme du robot
+                const shape = new createjs.Shape();
+                shape.name = "body";
+                
+                // On dessine initialement (sera redessiné plus bas de toute façon)
+                this.drawRobotShape(shape, robotState.mode);
+                
+                marker.addChild(shape);
+                
+                // Ajout au calque Flotte
+                this.fleetLayer.addChild(marker);
+                this.fleetMarkers[robot_id] = marker;
+            }
+
+            // 2. Mise à jour Position
+            marker.x = robotState.pose.x;
+            marker.y = robotState.pose.y;
+            
+            // 3. Mise à jour Rotation
+            // Rappel : rotation négative car l'axe Y du canvas est souvent inversé visuellement
+            marker.rotation = -robotState.pose.yaw * (180.0 / Math.PI);
+
+            // 4. Mise à jour Couleur / Forme
+            // On récupère la forme existante et on la redessine pour être sûr 
+            // que la couleur correspond au mode actuel (idle, charging, etc.)
+            const shape = marker.getChildByName("body");
+            this.drawRobotShape(shape, robotState.mode);
+        });
+
+        this.viewer.scene.update();
+
+        // TODO : Ici, il faut ajouter la mise à jour du panneau latéral état de la flotte
+    }
+
+    // Fonction utilitaire pour dessiner le cercle du robot
+    drawRobotShape(shape, mode) {
+        const radius = 0.15; // Rayon 15cm = Diamètre 30cm
+        const color = this.getColorByMode(mode);
+
+        shape.graphics.clear();
+
+        // A. Bordure (pour mieux voir le robot sur la map sombre)
+        shape.graphics.setStrokeStyle(0.02).beginStroke("white"); 
+
+        // B. Corps du robot (Cercle de 30cm)
+        shape.graphics.beginFill(color).drawCircle(0, 0, radius);
+
+        // C. Indicateur de direction (Ligne blanche vers l'avant)
+        // L'axe X (0 degrés) est vers la droite dans EaselJS
+        shape.graphics.setStrokeStyle(0.03).beginStroke("white");
+        shape.graphics.moveTo(0, 0).lineTo(radius, 0); // Trait du centre vers le bord avant
+        
+    }
+
+    drawActiveMissions() {
+        return;
+    }
+
+    getColorByMode(mode) {
+        switch(mode) {
+            case 'idle': return '#057e43ff';     // Vert
+            case 'busy': return '#0e4097ff';     // Bleu
+            case 'charging': return '#a29607ff'; // Jaune
+            case 'error': return '#a40a29ff';    // Rouge
+            default: return '#9E9E9E';         // Gris
+        }
+    }
+
     gridToRos(pixelX, pixelY) {
         const grid = this.gridClient.currentGrid;
         const res = grid.scaleX;
@@ -77,6 +156,7 @@ class MapManager {
     }
 
     displayMissionPath(waypoints) {
+        console.log("displayMissionPath : ", waypoints)
         this.missionLayer.removeAllChildren();
         if (waypoints.length === 0) { this.viewer.scene.update(); return; }
 
@@ -110,46 +190,9 @@ class MapManager {
 
     enablePicking(callback) { this.isPicking = true; this.pickCallback = callback; document.body.style.cursor = 'crosshair'; }
     disablePicking() { this.isPicking = false; this.pickCallback = null; document.body.style.cursor = 'default'; }
-    
-    updateRobot(x, y, q) {
-        if(!this.robotMarker) return;
-        this.robotMarker.visible = true;
-        this.robotMarker.x = x;
-        this.robotMarker.y = y;
-        const siny_cosp = 2 * (q.w * q.z + q.x * q.y);
-        const cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z);
-        this.robotMarker.rotation = -(Math.atan2(siny_cosp, cosy_cosp)) * (180.0 / Math.PI);
-        this.viewer.scene.update();
-    }
 
     resize() {
         const el = document.getElementById(this.viewer.divID);
         if(el && this.viewer) { this.viewer.resize(el.offsetWidth, el.offsetHeight); this.viewer.scene.update(); }
-    }
-
-    drawZones() {
-        this.zonesLayer.removeAllChildren();
-        PRESET_ZONES.forEach(zone => {
-            const container = new createjs.Container();
-            container.x = zone.x;
-            container.y = zone.y;
-
-            const size = 0.5; // Carré de 50cm
-            const box = new createjs.Shape();
-            // Remplissage très léger (15% alpha)
-            box.graphics.beginFill(zone.color).drawRect(-size/2, -size/2, size, size);
-            box.alpha = 0.15;
-
-            const border = new createjs.Shape();
-            border.graphics.setStrokeStyle(0.02).beginStroke(zone.color).drawRect(-size/2, -size/2, size, size);
-
-            const text = new createjs.Text(zone.name, "0.18px Arial", "#444444");
-            text.y = -0.35;
-            text.textAlign = "center";
-            text.scaleY = -1; // Important avec scaleY = -1 sur le container
-
-            container.addChild(box, border, text);
-            this.zonesLayer.addChild(container);
-        });
     }
 }

@@ -1,0 +1,274 @@
+/* --- RESET & BASE --- */
+body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #121212; color: #e0e0e0; height: 100vh; overflow: hidden; }
+
+/* --- LAYOUT --- */
+.main-container { 
+    display: grid; 
+    grid-template-columns: 350px 1fr 300px; 
+    height: 100vh; 
+    overflow: hidden; 
+}
+
+.col-left { 
+    background-color: #1e1e1e; 
+    border-right: 1px solid #333; 
+    padding: 12px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
+    height: 100vh; 
+    box-sizing: border-box; 
+}
+
+.col-center { 
+    background-color: #0f0f0f; 
+    position: relative; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.col-right { background-color: #1e1e1e; border-left: 1px solid #333; padding: 15px; }
+
+/* --- INDICATEUR --- */
+#status-indicator {
+    position: absolute; top: 10px; left: 10px; color: red; font-weight: bold; z-index: 10;
+    background: rgba(0,0,0,0.6); padding: 5px; border-radius: 4px;
+}
+
+/* --- TITRES & TEXTES --- */
+h2 { margin-top: 0; margin-bottom: 8px; font-size: 1.0rem; border-bottom: 2px solid #00c853; padding-bottom: 5px; color: #00c853; }
+h3 { font-size: 0.8rem; color: #bbb; margin: 8px 0 4px 0;}
+.input-group { margin-bottom: 8px; display: flex; flex-direction: column; }
+.input-group label { font-size: 0.7rem; }
+label { font-size: 0.8rem; margin-bottom: 4px; color: #888; }
+input[type="text"] { background: #2c2c2c; border: 1px solid #444; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;}
+
+/* --- PRIORITÉ --- */
+.priority-selector { display: flex; gap: 5px; background: #252525; padding: 3px; border-radius: 4px; }
+.priority-selector input[type="radio"] { display: none; }
+.prio-btn {
+    flex: 1; text-align: center; padding: 8px 0; font-size: 0.75rem; 
+    cursor: pointer; border-radius: 4px; background: #333; color: #888; transition: 0.2s; border: 1px solid transparent;
+}
+.prio-btn:hover { background: #444; }
+
+input#prio1:checked + .p-normal { background: #00c853; color: #000; font-weight: bold; }
+input#prio2:checked + .p-high   { background: #ff9800; color: #000; font-weight: bold; }
+input#prio3:checked + .p-urgent { background: #ff3d00; color: white; font-weight: bold; }
+
+/* --- MISSIONS --- */
+.top-section {
+    flex: 3; /* Ratio agrandi */
+    display: flex;
+    flex-direction: column;
+    min-height: 0; 
+}
+.mission-list-container {
+    flex: 1;
+    overflow-y: auto;
+}
+.mission-item { font-size: 0.8rem; padding: 5px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; }
+.status-active { color: #4caf50; }
+.new-mission-container { 
+    flex: 2; /* Ratio réduit */
+    display: flex; 
+    flex-direction: column; 
+    background: #252525;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #383838;
+    min-height: 0; /* Important pour le scroll interne */
+}
+#waypointsContainer { 
+    flex: 1; 
+    overflow-y: auto; 
+    margin: 8px 0;
+    padding-right: 4px;
+    /* Scrollbar discrète */
+}
+
+#waypointsContainer::-webkit-scrollbar { width: 4px; }
+#waypointsContainer::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
+
+/* --- WAYPOINT CARD --- */
+.waypoint-card { border: 1px solid #333; background: #1d2625; padding: 6px; border-radius: 6px; margin-bottom: 6px; }
+
+/* LIGNE 1 : Select + 4 Boutons */
+.wp-row-1 { display: flex; gap: 3px; align-items: center; margin-bottom: 5px; }
+.wp-select-type { 
+    flex: 1; min-width: 0; font-size: 0.8rem; 
+    background: #2c2c2c; border: 1px solid #444; color: white; padding: 5px; border-radius: 4px; 
+}
+
+/* Style des boutons icones */
+.btn-icon { 
+    width: 24px; height: 24px; 
+    border: none; border-radius: 4px; cursor: pointer; 
+    display: flex; align-items: center; justify-content: center; padding: 4px; flex-shrink: 0;
+}
+.btn-icon img { width: 100%; height: 100%; display: block; }
+
+/* COULEURS BOUTONS (Mises à jour) */
+/* 1. Save (Bleu) */
+.btn-save { background: #1976d2; } 
+.btn-save:hover { background: #1565c0; }
+
+/* 2. Delete DB (Rouge) */
+.btn-delete-db { background: #d32f2f; } 
+.btn-delete-db:hover { background: #b71c1c; }
+
+/* 3. Pick Map (Vert) */
+.btn-pick { background: #00796b; } 
+.btn-pick:hover { background: #004d40; }
+
+/* 4. Clear UI (Gris) */
+.btn-clear { background: #424242; } 
+.btn-clear:hover { background: #616161; }
+
+
+/* LIGNE 2 : Coordonnées */
+.wp-row-2 { 
+    display: flex; gap: 10px; align-items: center; justify-content: center; 
+    background: #1a1a1a; padding: 5px; border-radius: 4px;
+}
+.wp-coord-label { font-weight: bold; font-size: 0.8rem; color: #00897b; }
+.wp-coord { 
+    width: 60px; text-align: center; font-size: 0.8rem; padding: 4px;
+    background: #2c2c2c; border: 1px solid #444; color: white; border-radius: 4px;
+}
+
+/* --- BOUTONS ACTION BAS --- */
+.actions-bar { margin-top: auto; display: flex; gap: 10px; padding-top: 10px; border-top: 1px solid #333; }
+.btn-main { flex: 1; padding: 12px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; }
+.btn-add { background: #424242; color: white; }
+.btn-send { background: #00c853; color: black; }
+
+/* --- LISTE DES MISSIONS (Conteneur) --- */
+.mission-list-container {
+    flex: 1;
+    overflow-y: auto;
+    background: #1e1e1e; /* Fond très sombre pour la liste */
+    padding: 5px;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border: 1px solid #333;
+}
+
+/* --- CARTE COMPACTE (Dark Theme) --- */
+.mission-card-compact {
+    display: flex; /* Active l'alignement gauche/droite */
+    justify-content: space-between;
+    align-items: center;
+    
+    background-color: #2c2c2c; /* Fond gris foncé */
+    color: #e0e0e0; /* Texte clair */
+    
+    border-left: 4px solid #555;
+    padding: 8px 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: background 0.2s;
+}
+
+.mission-card-compact:hover {
+    background-color: #383838;
+}
+
+/* --- PARTIE GAUCHE (Info Texte) --- */
+.mc-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+    flex: 1; /* Prend toute la place sauf celle du bouton */
+}
+
+.mc-id {
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mc-details {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    color: #aaaaaa;
+}
+
+.mc-status {
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.mc-robot {
+    color: #64b5f6; /* Bleu clair pour le robot */
+}
+
+/* --- PARTIE DROITE (Bouton) --- */
+.mc-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+}
+
+/* --- INDICATEURS PRIORITÉ (Points) --- */
+.prio-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0;}
+.dot-normal { background: #b0bec5; }
+.dot-high   { background: #ffb74d; box-shadow: 0 0 5px #ffb74d; }
+.dot-urgent { background: #ff5252; box-shadow: 0 0 5px #ff5252; }
+
+/* --- COULEURS BORDURE GAUCHE (Statut) --- */
+.mission-active  { border-left-color: #2196f3; } /* Bleu */
+.mission-success { border-left-color: #4caf50; opacity: 0.7; } /* Vert */
+.mission-warning { border-left-color: #ff9800; } /* Orange */
+.mission-error   { border-left-color: #f44336; } /* Rouge */
+
+/* --- BOUTONS VALIDATION --- */
+.btn-validation {
+    width: 32px; height: 32px;
+    border: none; border-radius: 50%;
+    color: white; font-size: 14px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    transition: transform 0.1s;
+}
+.btn-validation:active { transform: scale(0.95); }
+
+/* Etats Boutons */
+.btn-val-waiting { background: linear-gradient(135deg, #1e88e5, #1565c0); }
+.btn-val-waiting:hover { background: #42a5f5; }
+
+.btn-val-discharging { background: linear-gradient(135deg, #43a047, #2e7d32); }
+.btn-val-discharging:hover { background: #66bb6a; }
+
+.btn-val-disabled { background: #444; color: #777; cursor: not-allowed; box-shadow: none;}
+
+/* Etat Spécial (Rouge Pulse) */
+.btn-val-special {
+    background: linear-gradient(135deg, #d81b60, #ad1457) !important;
+    border: 2px solid #ff80ab;
+    color: white !important;
+    cursor: pointer !important;
+    animation: pulse-red 1.5s infinite;
+}
+
+@keyframes pulse-red {
+    0% { box-shadow: 0 0 0 0 rgba(216, 27, 96, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(216, 27, 96, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(216, 27, 96, 0); }
+}
+
+
+canvas {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Empêche la déformation */
+}

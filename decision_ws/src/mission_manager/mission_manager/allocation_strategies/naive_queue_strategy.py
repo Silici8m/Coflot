@@ -43,7 +43,7 @@ class NaiveQueueStrategy(AllocatorStrategy):
             robot = available_robots.pop(0)
             
             decision = AllocationDecision(
-                action=AllocationAction.START,
+                action=AllocationAction.ASSIGN_AND_START,
                 mission_id=mission.mission_id,
                 robot_id=robot.robot_id,
                 reason="Naive FIFO allocation"

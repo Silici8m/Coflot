@@ -17,39 +17,41 @@ class UIManager {
         if (el) el.innerHTML = `X: ${x.toFixed(2)}`;
     }
 
-    // Ajoute un bloc HTML waypoint
+
     addWaypoint() {
         this.waypointCount++;
         
-        // Génération dynamique des options du menu déroulant
-        let zoneOptions = PRESET_ZONES.map(zone => 
-            `<option value="${zone.id}">${zone.name}</option>`
-        ).join('');
+        // Options des zones
+        let zoneOptions = PRESET_ZONES.map(z => `<option value="${z.id}">${z.name}</option>`).join('');
 
+        // Structure sur une seule ligne (Flexbox géré par CSS)
         const html = `
         <div class="waypoint-card" id="wp-${this.waypointCount}">
-            <div class="wp-row-1">
-                <select class="wp-select-type" onchange="uiManager.toggleCoordInput(${this.waypointCount}, this)">
-                    <option value="custom">Personnalisé</option>
-                    ${zoneOptions}
-                </select>
-                <button class="btn-icon btn-save" onclick="savePoint(${this.waypointCount})"><img src="save.svg"></button>
-                <button class="btn-icon btn-delete-db" onclick="deleteFromDB(${this.waypointCount})"><img src="delete.svg"></button>
-                <button class="btn-icon btn-pick" onclick="startPickMap(${this.waypointCount})"><img src="cible.svg"></button>
-                <button class="btn-icon btn-clear" onclick="removeWaypointUI(${this.waypointCount})"><img src="clear.svg"></button>
-            </div>
-            <div class="wp-row-2">
-                <span class="wp-coord-label">X:</span>
-                <input type="text" class="wp-coord" name="x" value="0.00" oninput="updateMapViz()">
-                <span class="wp-coord-label">Y:</span>
-                <input type="text" class="wp-coord" name="y" value="0.00" oninput="updateMapViz()">
-            </div>
+            <span class="wp-index">#${this.waypointCount}</span>
+            
+            <select class="wp-select-type" onchange="uiManager.toggleCoordInput(${this.waypointCount}, this)">
+                <option value="custom">Perso</option>
+                ${zoneOptions}
+            </select>
+
+            <span class="wp-coord-label">X</span>
+            <input type="text" class="wp-coord" name="x" value="0.00" oninput="updateMapViz()">
+            
+            <span class="wp-coord-label">Y</span>
+            <input type="text" class="wp-coord" name="y" value="0.00" oninput="updateMapViz()">
+            
+            <button class="btn-icon btn-pick" onclick="startPickMap(${this.waypointCount})" title="Viser sur la carte">
+                <img src="cible.svg">
+            </button>
+            <button class="btn-icon btn-remove" onclick="removeWaypointUI(${this.waypointCount})" title="Supprimer le point">
+                <img src="clear.svg"> </button>
         </div>`;
         
         this.container.insertAdjacentHTML('beforeend', html);
+        
+        // Auto-scroll vers le bas
         this.container.scrollTop = this.container.scrollHeight;
     }
-
     removeWaypoint(id) {
         const el = document.getElementById(`wp-${id}`);
         if (el) el.remove();
@@ -77,7 +79,7 @@ class UIManager {
             inputX.style.opacity = '1';
             inputY.style.opacity = '1';
         }
-        window.updateMapViz(); 
+        window.updateMapViz(); // Met à jour le dessin des traits immédiatement
     }
 
     // Remplit les champs d'un waypoint spécifique (utilisé par le Picking)
@@ -92,20 +94,42 @@ class UIManager {
             this.toggleCoordInput(id, sel);
         }
     }
-
-    // Lit tous les points pour l'envoi ou l'affichage
+    
     getAllWaypoints() {
         const waypoints = [];
         const wpElements = document.querySelectorAll('.waypoint-card');
         
         wpElements.forEach(card => {
-            const x = card.querySelector('input[name="x"]').value;
-            const y = card.querySelector('input[name="y"]').value;
-            if (!isNaN(parseFloat(x)) && !isNaN(parseFloat(y))) {
-                waypoints.push({ x: x, y: y });
+            const xStr = card.querySelector('input[name="x"]').value;
+            const yStr = card.querySelector('input[name="y"]').value;
+            
+            const xVal = parseFloat(xStr);
+            const yVal = parseFloat(yStr);
+
+            if (!isNaN(xVal) && !isNaN(yVal)) {
+                // Structure stricte geometry_msgs/Pose
+                const pose = {
+                    position: {
+                        x: xVal,
+                        y: yVal,
+                        z: 0.0 // Toujours 0 en 2D, mais obligatoire
+                    },
+                    orientation: {
+                        x: 0.0,
+                        y: 0.0,
+                        z: 0.0,
+                        w: 1.0 // Quaternion neutre (pas de rotation)
+                    }
+                };
+                waypoints.push(pose);
             }
         });
         return waypoints;
+    }
+
+    getName() {
+        const el = document.getElementById('missionName');
+        return el ? el.value : null;
     }
 
     getPriority() {

@@ -12,6 +12,7 @@ function initProject() {
             
             // On lance la map une fois connecté
             mapManager.init(rosManager.ros, 'map-panel');
+            mapManager.drawZones();
 
             // On s'abonne au robot
             rosManager.subscribeRobotPose((x, y, orientation) => {

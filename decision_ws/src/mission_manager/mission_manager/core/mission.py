@@ -6,7 +6,7 @@ import threading
 import rclpy
 from rclpy.node import Node
 
-from mission_manager.config import VALIDATION_TIMEOUT 
+from mission_manager.config import VALIDATION_TIMEOUT
 
 class MissionState(Enum):
     PENDING = 0
@@ -36,7 +36,7 @@ class Mission:
     #client: RobotNavigationActionClient
     timeout_timer: rclpy.timer.Timer
 
-    def __init__(self, parent_node : Node, mission_id, priority, waypoints, request_stamp, validation_timeout=VALIDATION_TIMEOUT):
+    def __init__(self, parent_node : Node, mission_id, priority, waypoints, request_stamp):
         self.node = parent_node
         self.logger = parent_node.get_logger()
         self.mission_id = mission_id
@@ -48,7 +48,7 @@ class Mission:
         self.request_stamp = request_stamp
         self.robot_adapter = None
         self.timeout_timer = None
-        self.validation_timeout = validation_timeout
+        self.deletion_finished_timeout = VALIDATION_TIMEOUT
         self.lock = threading.RLock()
         
         
