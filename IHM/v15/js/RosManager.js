@@ -116,4 +116,29 @@ class RosManager {
         console.log(`Mission ${missionData.name} publiée sur ${CONFIG.TOPIC_MISSION}.`);
         console.log(message);
     }
+    advertiseMissionValidation() {
+        if (!this.ros) return;
+        
+        this.missionValidationTopic = new ROSLIB.Topic({
+            ros: this.ros,
+            name: CONFIG.TOPIC_MISSION_VALIDATION,
+            messageType: CONFIG.TYPE_MISSION_VALIDATION
+        });
+        
+        this.missionValidationTopic.advertise();
+    }
+
+    sendValidation(missionId) {
+        if (!this.missionValidationTopic) {
+            console.error("Le topic de validation n'est pas initialisé.");
+            return;
+        }
+
+        const msg = new ROSLIB.Message({
+            data: missionId
+        });
+
+        this.missionValidationTopic.publish(msg);
+        console.log(`Validation envoyée pour la mission : ${missionId}`);
+    }
 }

@@ -4,6 +4,7 @@
 const rosManager = new RosManager();
 const mapManager = new MapManager();
 const uiManager  = new UIManager();
+const missionManager = new MissionManager();
 
 // --- 2. INIT GLOBAL (Appelé par body onload) ---
 function initProject() {
@@ -30,16 +31,13 @@ function initProject() {
             });
 
             rosManager.subscribeMissions((missionArrayMsg) => {
-                console.log("Missions reçues:", missionArrayMsg.missions);
                 
-                // 1. Mise à jour graphique (Trajectoires des missions en cours)
-                // mapManager.updateMissions(missionArrayMsg.missions); 
-
-                // 2. Mise à jour de la liste textuelle
-                updateMissionsUI(missionArrayMsg.missions);
+                missionManager.update(missionArrayMsg.missions);
+                mapManager.drawActiveMissions(missionArrayMsg.missions);
             });
 
             rosManager.advertiseMissionRequest();
+            rosManager.advertiseMissionValidation();
         },
         () => { // Erreur
             uiManager.updateStatus(false);
@@ -79,6 +77,10 @@ window.savePoint = function(id) {
 
 window.deleteFromDB = function(id) {
     console.log("Delete DB", id);
+};
+
+window.validateMission = function(missionId) {
+    rosManager.sendValidation(missionId);
 };
 
 window.startPickMap = function(id) {
@@ -131,6 +133,7 @@ function updateMissionsUI(missions) {
     });
     container.innerHTML = html;
 }
+
 
 // --- 4. EXPORTS ---
 // Pour que le HTML puisse voir ces fonctions

@@ -14,5 +14,8 @@ const CONFIG = {
     TYPE_FLEET_STATE:   'fleet_interfaces/msg/RobotStateArray' ,
 
     TOPIC_MISSIONS:   '/mission/missions_state',
-    TYPE_MISSIONS:   'fleet_interfaces/msg/RobotStateArray' 
+    TYPE_MISSIONS:   'fleet_interfaces/msg/RobotStateArray' ,
+
+    TOPIC_MISSION_VALIDATION: '/mission/validation',
+    TYPE_MISSION_VALIDATION: 'std_msgs/msg/String'
 };
