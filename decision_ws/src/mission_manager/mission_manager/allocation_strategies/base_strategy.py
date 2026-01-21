@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List
+from rclpy.node import Node
 
 # On importe uniquement pour le type hinting (pas d'instanciation ici)
 from mission_manager.core.robot_pool import RobotPool
@@ -8,10 +9,8 @@ from .allocation_interface import AllocationDecision
 
 class AllocatorStrategy(ABC):
     
-    def __init__(self, robot_pool: RobotPool, mission_registry: MissionRegistry):
-        """
-        L'allocateur a accès aux sources de vérité.
-        """
+    def __init__(self, node: Node, robot_pool: RobotPool, mission_registry: MissionRegistry):
+        self.node = node
         self.robot_pool = robot_pool
         self.registry = mission_registry
 

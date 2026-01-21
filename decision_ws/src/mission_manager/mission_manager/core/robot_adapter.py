@@ -139,31 +139,22 @@ class RobotAdapter:
             return None 
         
 
-    def make_plan_async(self, start_pose_stamped, goal_pose_stamped):
-        # Calculation of the time penalty (if robot is busy)
-        time_penalty = 0.0
-        actual_start = start_pose_stamped
-
-        with self.lock:
-            if self.is_busy():
-                # If busy, we start from the current destination
-                if self.current_goal_pose:
-                    actual_start = self._to_pose_stamped(self.current_goal_pose)
-                
-                # We add the estimated remaining time
-                if self.estimated_time_remaining:
-                    time_penalty = self.estimated_time_remaining
-                elif self.distance_remaining: # Fallback
-                    time_penalty = self.distance_remaining / ROBOT_AVERAGE_SPEED
+    def make_plan_async(self, start_pose_msg, goal_pose_msg):
+        if not hasattr(start_pose_msg, 'header'):
+            start_pose_msg = self._to_pose_stamped(start_pose_msg)
+        if not hasattr(goal_pose_msg, 'header'):
+            goal_pose_msg = self._to_pose_stamped(goal_pose_msg)
+            
 
         goal_msg = ComputePathToPose.Goal()
-        goal_msg.start = actual_start
-        goal_msg.goal = goal_pose_stamped
+        goal_msg.start = start_pose_msg
+        goal_msg.goal = goal_pose_msg
         goal_msg.use_start = True
 
+        self.plan_client.wait_for_server()
         # Asynchronous sending
         # Send a future
-        return self.plan_client.send_goal_async(goal_msg), time_penalty
+        return self.plan_client.send_goal_async(goal_msg)
     
     def _to_pose_stamped(self, pose_msg):
         ps = PoseStamped()

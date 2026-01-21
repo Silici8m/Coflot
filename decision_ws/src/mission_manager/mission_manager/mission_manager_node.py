@@ -3,6 +3,7 @@
 import rclpy
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, DurabilityPolicy
+from rclpy.executors import MultiThreadedExecutor
 
 from fleet_interfaces.msg import MissionRequest, RobotStateArray, MissionState, MissionStateArray
 from std_msgs.msg import String
@@ -12,6 +13,7 @@ from mission_manager.core.mission_registry import MissionRegistry
 
 from mission_manager.allocation_strategies.allocation_interface import AllocationAction
 from mission_manager.allocation_strategies.naive_queue_strategy import NaiveQueueStrategy
+from mission_manager.allocation_strategies.utility_adveanced_strategy import UtilityAdvancedStrategy
 
 from mission_manager.config import FLEET_STATE_TOPIC, MISSION_REQUEST_TOPIC, VALIDATION_TOPIC, MISSIONS_STATE_TOPIC
 
@@ -33,11 +35,11 @@ class MissionManager(Node):
         
         if strategy_name == 'simple_queue':
             # On passe le pool et le registry ici !
-            self.allocator = NaiveQueueStrategy(self.robot_pool, self.registry)
+            self.allocator = NaiveQueueStrategy(self, self.robot_pool, self.registry)
         
         elif strategy_name == 'smart_utility':
-            # self.allocator = UtilityMatrixStrategy(self.robot_pool, self.registry)
-            raise NotImplementedError("Smart strategy not enabled yet")
+            
+            self.allocator = UtilityAdvancedStrategy(self, self.robot_pool, self.registry)
         else:
             raise ValueError(f"Unknown strategy: {strategy_name}")
         
@@ -114,58 +116,96 @@ class MissionManager(Node):
         """
         Boucle principale : Demande des décisions -> Exécute.
         """
-        # A. L'allocateur a déjà accès aux données, on l'appelle sans arguments
         try:
+            # 1. Obtenir les décisions de la stratégie
             decisions = self.allocator.allocate()
         except Exception as e:
             self.get_logger().error(f"Allocation error: {e}")
+            import traceback
+            self.get_logger().error(traceback.format_exc())
             return
 
         if not decisions:
             return
 
-        # B. Exécution des décisions
+        # 2. Exécution des décisions
         for d in decisions:
-            self.get_logger().info(f"[ALLOC] Action {d.action.name}: Mission {d.mission_id} -> Robot {d.robot_id}")
+            self.get_logger().info(f"[ALLOC] Action {d.action.name}: Robot {d.robot_id} (Reason: {d.reason})")
             
             try:
-                # ROUTAGE DES ACTIONS
+                # --- ROUTAGE DES ACTIONS ---
                 if d.action == AllocationAction.ASSIGN_AND_START:
+                    # Ici on a besoin de l'ID de la nouvelle mission
                     self._execute_start(d.mission_id, d.robot_id)
                     
-                elif d.action == AllocationAction.CANCEL_AND_START:
-                    self._execute_cancel_and_start(d.mission_id, d.robot_id)
-                
-                # ... autres cas (SUSPEND, etc.)
+                elif d.action == AllocationAction.REVOKE:
+                    # On n'a pas besoin de d.mission_id ici, on annule juste ce que le robot fait
+                    self._execute_revoke(d.robot_id)
+                    
+                elif d.action == AllocationAction.SUSPEND:
+                    # On suspend juste ce que le robot fait
+                    self._execute_suspend(d.robot_id)
+                    
+                else:
+                    self.get_logger().warn(f"Action inconnue ou non gérée: {d.action}")
                 
             except Exception as e:
-                self.get_logger().error(f"Execution failed for {d}: {e}")
+                self.get_logger().error(f"Execution failed for decision {d}: {e}")
 
     # --- Primitives d'Exécution ---
 
     def _execute_start(self, mission_id, robot_id):
-        # Tente d'assigner. Si le robot est busy (race condition), ça renverra False.
+        """
+        Assigne une mission à un robot et lance l'approche.
+        """
+        # 1. Tentative d'assignation dans le registre (Lien Logique)
         if self.registry.mission_assign(mission_id, robot_id):
+            # 2. Si succès, déclenchement du mouvement (Commande Physique)
             self.registry.mission_start_approaching(mission_id)
+        else:
+            self.get_logger().error(f"Failed to assign mission {mission_id} to {robot_id}")
 
-    def _execute_cancel_and_start(self, new_mission_id, robot_id):
-        # 1. On révoque la mission actuelle
+    def _execute_revoke(self, robot_id):
+        """
+        Annule UNIQUEMENT la mission courante du robot.
+        La nouvelle mission sera assignée au prochain cycle (via ASSIGN_AND_START).
+        """
         current_mission = self.registry.get_mission_by_robot(robot_id)
+        
         if current_mission:
-            self.get_logger().warn(f"Preempting mission {current_mission.mission_id} on robot {robot_id}")
+            self.get_logger().warn(f"REVOKING mission {current_mission.mission_id} on robot {robot_id}")
+            # Appel au registre pour nettoyer l'ancienne mission (State -> FAILED/CANCELLED)
             self.registry.mission_revoke(current_mission.mission_id)
+        else:
+            self.get_logger().warn(f"Received REVOKE for robot {robot_id} but no mission found.")
+
+    def _execute_suspend(self, robot_id):
+        """
+        Suspend UNIQUEMENT la mission courante du robot.
+        La nouvelle mission sera assignée au prochain cycle (via ASSIGN_AND_START).
+        """
+        current_mission = self.registry.get_mission_by_robot(robot_id)
         
-        # 2. On démarre la nouvelle
-        self._execute_start(new_mission_id, robot_id)
-        
-        
-        
+        if current_mission:
+            self.get_logger().warn(f"SUSPENDING mission {current_mission.mission_id} on robot {robot_id}")
+            # Appel au registre pour passer l'ancienne en SUSPENDING
+            self.registry.mission_suspend(current_mission.mission_id)
+        else:
+            self.get_logger().warn(f"Received SUSPEND for robot {robot_id} but no mission found.")
+            
+            
 def main(args=None):
     rclpy.init(args=args)
     node = MissionManager()
-    rclpy.spin(node)
-    node.destroy_node()
-    rclpy.shutdown()
+    executor = MultiThreadedExecutor() # Important pour éviter le deadlock !
+    executor.add_node(node)
+    
+    try:
+        executor.spin()
+    finally:
+        executor.shutdown()
+        node.destroy_node()
+        rclpy.shutdown()
     
 if __name__ == '__main__':
     main()

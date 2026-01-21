@@ -10,7 +10,7 @@ class AllocationAction(Enum):
     ASSIGN_AND_START = 1               # Démarrage standard (Robot libre -> Mission)
     REVOKE = 2    # Préemption (Urgence) : On annule la mission en cours, on lance la nouvelle
     SUSPEND = 3   # Suspension : On met en pause la mission en cours, on lance la nouvelle
-    # WAIT = 4              # (Optionnel) Expliciter qu'on attend (ex: charge batterie)
+    NOTHING = 4
 
 @dataclass
 class AllocationDecision:

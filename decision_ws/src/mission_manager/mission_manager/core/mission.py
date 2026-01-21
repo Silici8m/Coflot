@@ -48,7 +48,7 @@ class Mission:
         self.request_stamp = request_stamp
         self.robot_adapter = None
         self.timeout_timer = None
-        self.deletion_finished_timeout = VALIDATION_TIMEOUT
+        self.validation_timeout = VALIDATION_TIMEOUT
         self.lock = threading.RLock()
         
         
