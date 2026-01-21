@@ -4,6 +4,7 @@ import threading
 
 import rclpy
 from rclpy.node import Node
+from rclpy.callback_groups import ReentrantCallbackGroup
 
 from nav2_msgs.action import NavigateToPose
 from nav2_msgs.action import ComputePathToPose
@@ -22,11 +23,13 @@ class RobotAdapter:
         self.robot_id = robot_id
         self.namespace = f"/{robot_id}"
         
+        self.client_cb_group = ReentrantCallbackGroup()
+        
         action_topic = f"{self.namespace}/navigate_to_pose"
-        self.client = ActionClient(self.node, NavigateToPose, action_topic)
+        self.client = ActionClient(self.node, NavigateToPose, action_topic, callback_group=self.client_cb_group)
         
         plan_topic = f"{self.namespace}/compute_path_to_pose"
-        self.plan_client = ActionClient(self.node, ComputePathToPose, plan_topic)
+        self.plan_client = ActionClient(self.node, ComputePathToPose, plan_topic, callback_group=self.client_cb_group)
         
         
         self._goal_response_pending = False

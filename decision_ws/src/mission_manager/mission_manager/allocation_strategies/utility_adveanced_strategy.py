@@ -213,12 +213,22 @@ def solve_hungarian_max(matrix):
     Résout le problème d'affectation pour maximiser la somme.
     Retourne une liste de tuples (index_ligne, index_colonne).
     """
-    if not matrix or not len(matrix):
+    # 1. Vérification de sécurité compatible NumPy
+    if matrix is None:
+        return [], 0
+        
+    # Si c'est déjà un array numpy
+    if isinstance(matrix, np.ndarray):
+        if matrix.size == 0:
+            return [], 0
+    # Si c'est une liste standard
+    elif len(matrix) == 0:
         return [], 0
         
     M = np.array(matrix)
+    
+    # 2. Résolution
     # linear_sum_assignment minimise par défaut. On passe -M pour maximiser.
-    # (Ou maximize=True sur les versions récentes de SciPy, mais -M est universel)
     row_ind, col_ind = linear_sum_assignment(M, maximize=True)
     
     assignments = []

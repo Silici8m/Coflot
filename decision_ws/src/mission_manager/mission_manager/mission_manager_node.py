@@ -4,6 +4,7 @@ import rclpy
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, DurabilityPolicy
 from rclpy.executors import MultiThreadedExecutor
+from rclpy.callback_groups import ReentrantCallbackGroup
 
 from fleet_interfaces.msg import MissionRequest, RobotStateArray, MissionState, MissionStateArray
 from std_msgs.msg import String
@@ -43,6 +44,8 @@ class MissionManager(Node):
         else:
             raise ValueError(f"Unknown strategy: {strategy_name}")
         
+        self.allocation_group = ReentrantCallbackGroup()
+        
         # --- Publishers ---
         # Publisher pour l'état des missions
         self.missions_state_pub = self.create_publisher(
@@ -78,7 +81,7 @@ class MissionManager(Node):
         )
 
         # Timers
-        self.create_timer(1.0, self.allocation_loop) # Mission allocation
+        self.create_timer(1.0, self.allocation_loop, callback_group=self.allocation_group) # Mission allocation
         self.create_timer(0.5, self.publish_missions_state) # mission state publishment
         
         self.get_logger().info("Mission Manager started.")
