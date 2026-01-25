@@ -17,5 +17,8 @@ const CONFIG = {
     TYPE_MISSIONS:   'fleet_interfaces/msg/RobotStateArray' ,
 
     TOPIC_MISSION_VALIDATION: '/mission/validation',
-    TYPE_MISSION_VALIDATION: 'std_msgs/msg/String'
+    TYPE_MISSION_VALIDATION: 'std_msgs/msg/String',
+    
+    FLEET_UPDATE_INTERVAL: 100, // ms
+    MISSIONS_UPDATE_INTERVAL: 200 // ms
 };

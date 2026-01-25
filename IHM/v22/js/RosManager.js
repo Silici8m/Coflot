@@ -9,10 +9,10 @@ class RosManager {
 
         // Variables pour le throttling (limitation de FPS)
         this.lastFleetUpdate = 0;
-        this.fleetUpdateInterval = 200; // ms (100ms = 10 FPS max)
+        this.fleetUpdateInterval = CONFIG.FLEET_UPDATE_INTERVAL;
 
         this.lastMissionsUpdate = 0;
-        this.missionsUpdateInterval = 500; // ms
+        this.missionsUpdateInterval = CONFIG.MISSIONS_UPDATE_INTERVAL;
     }
 
     // Connecte à ROS et gère les callbacks succès/erreur

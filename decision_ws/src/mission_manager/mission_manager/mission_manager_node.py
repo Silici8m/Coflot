@@ -46,6 +46,7 @@ class MissionManager(Node):
         
         self.allocation_group = ReentrantCallbackGroup()
         
+        
         # --- Publishers ---
         # Publisher pour l'état des missions
         self.missions_state_pub = self.create_publisher(
@@ -81,7 +82,7 @@ class MissionManager(Node):
         )
 
         # Timers
-        self.create_timer(1.0, self.allocation_loop, callback_group=self.allocation_group) # Mission allocation
+        self.create_timer(3.0, self.allocation_loop, callback_group=self.allocation_group) # Mission allocation
         self.create_timer(0.5, self.publish_missions_state) # mission state publishment
         
         self.get_logger().info("Mission Manager started.")
