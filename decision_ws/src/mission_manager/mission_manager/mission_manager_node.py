@@ -14,9 +14,9 @@ from mission_manager.core.mission_registry import MissionRegistry
 
 from mission_manager.allocation_strategies.allocation_interface import AllocationAction
 from mission_manager.allocation_strategies.naive_queue_strategy import NaiveQueueStrategy
-from mission_manager.allocation_strategies.utility_adveanced_strategy import UtilityAdvancedStrategy
+from mission_manager.allocation_strategies.utility_strategy import UtilityStrategy
 
-from mission_manager.config import FLEET_STATE_TOPIC, MISSION_REQUEST_TOPIC, VALIDATION_TOPIC, MISSIONS_STATE_TOPIC
+from mission_manager.config import FLEET_STATE_TOPIC, MISSION_REQUEST_TOPIC, VALIDATION_TOPIC, MISSIONS_STATE_TOPIC, ALLOCATION_INTERVAL, MISSION_PUBLICATION_INTERVAL
 
 
 class MissionManager(Node):
@@ -29,7 +29,7 @@ class MissionManager(Node):
         latching_qos = QoSProfile(depth=1, durability=DurabilityPolicy.TRANSIENT_LOCAL)
         
         # Allocation strategy
-        self.declare_parameter('allocation_strategy', 'simple_queue')
+        self.declare_parameter('allocation_strategy', 'utility')
         strategy_name = self.get_parameter('allocation_strategy').value
         
         self.get_logger().info(f"Strategy selected: {strategy_name}")
@@ -38,9 +38,9 @@ class MissionManager(Node):
             # On passe le pool et le registry ici !
             self.allocator = NaiveQueueStrategy(self, self.robot_pool, self.registry)
         
-        elif strategy_name == 'smart_utility':
+        elif strategy_name == 'utility':
             
-            self.allocator = UtilityAdvancedStrategy(self, self.robot_pool, self.registry)
+            self.allocator = UtilityStrategy(self, self.robot_pool, self.registry)
         else:
             raise ValueError(f"Unknown strategy: {strategy_name}")
         
@@ -82,8 +82,17 @@ class MissionManager(Node):
         )
 
         # Timers
-        self.create_timer(3.0, self.allocation_loop, callback_group=self.allocation_group) # Mission allocation
-        self.create_timer(0.5, self.publish_missions_state) # mission state publishment
+        # Mission allocation
+        self.create_timer(
+            ALLOCATION_INTERVAL, 
+            self.allocation_loop, 
+            callback_group=self.allocation_group
+        ) 
+        # mission state publication
+        self.create_timer(
+            MISSION_PUBLICATION_INTERVAL,
+            self.publish_missions_state
+        )
         
         self.get_logger().info("Mission Manager started.")
         
@@ -122,6 +131,7 @@ class MissionManager(Node):
         """
         try:
             # 1. Obtenir les décisions de la stratégie
+            self._logger.info("\nAllocation loop")
             decisions = self.allocator.allocate()
         except Exception as e:
             self.get_logger().error(f"Allocation error: {e}")
@@ -130,7 +140,9 @@ class MissionManager(Node):
             return
 
         if not decisions:
+            # self._logger.info("Aucune décision")
             return
+        #self._logger.info(f"{len(decisions)} décisions :")
 
         # 2. Exécution des décisions
         for d in decisions:
@@ -152,9 +164,10 @@ class MissionManager(Node):
                     
                 else:
                     self.get_logger().warn(f"Action inconnue ou non gérée: {d.action}")
-                
+            
             except Exception as e:
                 self.get_logger().error(f"Execution failed for decision {d}: {e}")
+            self._logger.info("Allocation loop finished\n")
 
     # --- Primitives d'Exécution ---
 
@@ -210,6 +223,3 @@ def main(args=None):
         executor.shutdown()
         node.destroy_node()
         rclpy.shutdown()
-    
-if __name__ == '__main__':
-    main()

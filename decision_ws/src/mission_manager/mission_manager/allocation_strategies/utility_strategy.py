@@ -1,14 +1,15 @@
-import rclpy
+# utility_strategy.py
+
+import time
 from .base_strategy import AllocatorStrategy
 from .allocation_interface import AllocationDecision, AllocationAction
-from mission_manager.core.mission import MissionState
-from mission_manager.config import AVERAGE_WAITING_TIME, ROBOT_QUALITY_S, ROBOT_AVERAGE_SPEED
+from mission_manager.core.mission import Mission, MissionState
+from mission_manager.config import AVERAGE_WAITING_TIME, REQUEST_PATH_COMPUTING_TIMEOUT, ROBOT_QUALITY_S, ROBOT_AVERAGE_SPEED, COMPUTE_PLAN_TIMEOUT
 from mission_manager.core.robot import Robot
 
-class UtilityAdvancedStrategy(AllocatorStrategy):
+class UtilityStrategy(AllocatorStrategy):
 
     def allocate(self) -> list[AllocationDecision]:
-        self.node.get_logger().info("Allocation")
         decisions = []
         
         all_missions = self.registry.get_missions_list()
@@ -17,6 +18,9 @@ class UtilityAdvancedStrategy(AllocatorStrategy):
         nb_missions = len(all_missions)
         nb_robots = len(all_robots)
         
+        self.logger.info(f"-robots[{nb_robots}]: {[r.robot_id for r in all_robots]}")
+        self.logger.info(f"-missions[{nb_missions}]: {[m.mission_id for m in all_missions]}")
+
         if nb_missions == 0 or nb_robots == 0:
             return []
         
@@ -106,9 +110,10 @@ class UtilityAdvancedStrategy(AllocatorStrategy):
         robots_pool = self.robot_pool
         
         robot : Robot = robots_pool.get_robot(robot_id)
-        mission = missions_registry.get_mission(mission_id)
+        mission : Mission = missions_registry.get_mission(mission_id)
         
         mission_current = missions_registry.get_mission_by_robot(robot_id)
+
         
         pose_approch_start = None
         
@@ -118,11 +123,17 @@ class UtilityAdvancedStrategy(AllocatorStrategy):
         aborting_mission_cost = 0
         
         start_mission_waypoint_idx = mission.goal_waypoint_idx
+        
+        # Cas 1 : La robot est déja assigné à la mission (=> Cour nul)
+        if mission_current is not None and mission_current.assigned_robot_id == robot_id:
+            return 0
+        
         if start_mission_waypoint_idx is None or start_mission_waypoint_idx < 0:
             start_mission_waypoint_idx = 0
-            
+        
+        # Cas 2 : Le robot est sur une autre mission en cours
         if mission_current is not None and mission_current.state in [MissionState.DELIVERING, MissionState.SUSPENDING]:
-            # CORRECTION 3 : Sécurisation de l'accès à la liste waypoints
+            # Sécurisation de l'accès à la liste waypoints
             idx = mission_current.goal_waypoint_idx if mission_current.goal_waypoint_idx is not None else 0
             
             if mission_current.waypoints and idx < len(mission_current.waypoints):
@@ -139,7 +150,13 @@ class UtilityAdvancedStrategy(AllocatorStrategy):
         if not mission.waypoints:
              return float('inf')
          
-        goal_handle_future = robot.adapter.make_plan_async(pose_approch_start, mission.waypoints[start_mission_waypoint_idx])
+        goal_handle_future = robot.adapter.make_plan_async(
+            pose_approch_start, 
+            mission.waypoints[start_mission_waypoint_idx]
+        )
+        if goal_handle_future is None:
+            self.node.get_logger().error(f"Failed to call make_plan for robot {robot_id}")
+            return float('inf')
         
         if mission_current is not None and mission_current.state in [MissionState.WAITING, MissionState.DISCHARGING, MissionState.DELIVERING, MissionState.SUSPENDING]:
             # En cours ou en fin de mission
@@ -147,21 +164,29 @@ class UtilityAdvancedStrategy(AllocatorStrategy):
             if mission.priority != 2: 
                 # Mission non urgente
                 aborting_mission_cost += ROBOT_QUALITY_S
-                
-        # Attendre résultat calcul et le mettre dans approaching_cost (*ROBOT_AVERAGE_SPEED)
-        rclpy.spin_until_future_complete(self.node, goal_handle_future, timeout_sec=1.0)
-        if not goal_handle_future.done():
-            self.node.get_logger().error(f"Timeout waiting for planner server on robot {robot_id}")
-            return float('inf')
+
+        start_time = time.time()
+        while not goal_handle_future.done():
+            if time.time() - start_time > REQUEST_PATH_COMPUTING_TIMEOUT:
+                self.node.get_logger().error(f"Timeout waiting for planner server response (Robot {robot_id})")
+                return float('inf')
+            time.sleep(0.01)
+            
         goal_handle = goal_handle_future.result()
         if not goal_handle.accepted:
             self.node.get_logger().error(f"Planning request rejected by robot {robot_id}")
             return float('inf')
-        result_future = goal_handle.get_result_async()
-        rclpy.spin_until_future_complete(self.node, result_future, timeout_sec=1.0)
         
-        if not result_future.done():
-            return float('inf')
+        result_future = goal_handle.get_result_async()
+
+        start_time = time.time()
+        while not result_future.done():
+            if time.time() - start_time > COMPUTE_PLAN_TIMEOUT:
+                self.node.get_logger().error(f"Timeout waiting for planning result (Robot {robot_id})")
+                return float('inf')
+            time.sleep(0.01) # Pause critique
+
+        
         wrapped_result = result_future.result()
         path = wrapped_result.result.path
         

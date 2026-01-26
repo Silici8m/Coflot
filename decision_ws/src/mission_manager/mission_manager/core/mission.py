@@ -158,7 +158,7 @@ class Mission:
     def on_arrival_cb(self):
         with self.lock:
             if self.state not in [MissionState.APPROACHING, MissionState.DELIVERING, MissionState.SUSPENDING]:
-                raise TransitionException("Arrival event not valid in current state.")
+                raise TransitionException(f"Arrival event not valid in current state. {self.state.name}")
             
             self.start_validation_timer()
             

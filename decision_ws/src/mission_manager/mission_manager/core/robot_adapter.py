@@ -23,13 +23,23 @@ class RobotAdapter:
         self.robot_id = robot_id
         self.namespace = f"/{robot_id}"
         
-        self.client_cb_group = ReentrantCallbackGroup()
+        self._client_cb_group = ReentrantCallbackGroup()
         
         action_topic = f"{self.namespace}/navigate_to_pose"
-        self.client = ActionClient(self.node, NavigateToPose, action_topic, callback_group=self.client_cb_group)
+        self.client = ActionClient(
+            node=self.node, 
+            action_type=NavigateToPose, 
+            action_name=action_topic, 
+            callback_group=self._client_cb_group
+        )
         
         plan_topic = f"{self.namespace}/compute_path_to_pose"
-        self.plan_client = ActionClient(self.node, ComputePathToPose, plan_topic, callback_group=self.client_cb_group)
+        self.plan_client = ActionClient(
+            node=self.node, 
+            action_type=ComputePathToPose,
+            action_name=plan_topic, 
+            callback_group=self._client_cb_group
+        )
         
         
         self._goal_response_pending = False
@@ -154,7 +164,10 @@ class RobotAdapter:
         goal_msg.goal = goal_pose_msg
         goal_msg.use_start = True
 
-        self.plan_client.wait_for_server()
+        server_ready = self.plan_client.wait_for_server(timeout_sec=0.5)
+        if not server_ready:
+            self.logger.error(f"ComputePath server not available for robot {self.robot_id}")
+            return None
         # Asynchronous sending
         # Send a future
         return self.plan_client.send_goal_async(goal_msg)

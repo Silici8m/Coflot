@@ -13,6 +13,7 @@ class AllocatorStrategy(ABC):
         self.node = node
         self.robot_pool = robot_pool
         self.registry = mission_registry
+        self.logger = self.node.get_logger()
 
     @abstractmethod
     def allocate(self) -> List[AllocationDecision]:
