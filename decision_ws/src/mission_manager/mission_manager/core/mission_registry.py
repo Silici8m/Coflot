@@ -48,7 +48,7 @@ class MissionRegistry:
             return self._missions.pop(mission_id, None)
             
     
-    def get_mission_by_robot(self, robot_id):
+    def get_mission_by_robot(self, robot_id) -> Mission:
         with self._lock:
             for mission in self._missions.values():
                 if mission.assigned_robot_id == robot_id:

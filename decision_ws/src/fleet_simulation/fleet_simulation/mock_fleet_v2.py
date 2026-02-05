@@ -46,10 +46,13 @@ class MockFleetNode(Node):
     def __init__(self):
         super().__init__('mock_fleet')
         
+        self.declare_parameter('sim_speed', 1.0)
+        speed_factor = self.get_parameter('sim_speed').get_parameter_value().double_value
+
         # 1. Configuration de la flotte virtuelle (Vitesse ajoutée)
         self.robots = {
-            "robot_1": SimulatedRobot("robot_1", x=0.0, y=0.5, battery=90.0, speed=0.5),
-            "robot_2": SimulatedRobot("robot_2", x=1.0, y=1.0, battery=45.0, speed=0.3) 
+            "robot_1": SimulatedRobot("robot_1", x=0.0, y=0.5, battery=90.0, speed=speed_factor*0.5),
+            "robot_2": SimulatedRobot("robot_2", x=1.0, y=1.0, battery=45.0, speed=speed_factor*0.3) 
         }
 
         self.cb_group = ReentrantCallbackGroup()
