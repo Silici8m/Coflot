@@ -75,7 +75,7 @@ def generate_launch_description():
             ),
             launch_arguments={
                 'use_sim_time': use_sim_time, 
-                'serial_port': LaunchConfiguration('kobuki_port')
+                'device_port': LaunchConfiguration('kobuki_port')
             }.items()
         ),
 
