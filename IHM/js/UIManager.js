@@ -17,7 +17,6 @@ class UIManager {
         if (el) el.innerHTML = `X: ${x.toFixed(2)}`;
     }
 
-
     addWaypoint() {
         this.waypointCount++;
         
@@ -41,10 +40,10 @@ class UIManager {
             <input type="text" class="wp-coord" name="y" value="0.00" oninput="updateMapViz()">
             
             <button class="btn-icon btn-pick" onclick="startPickMap(${this.waypointCount})" title="Viser sur la carte">
-                <img src="cible.svg">
+                <img src="media/cible.svg">
             </button>
             <button class="btn-icon btn-remove" onclick="removeWaypointUI(${this.waypointCount})" title="Supprimer le point">
-                <img src="clear.svg"> </button>
+                <img src="media/clear.svg"> </button>
         </div>`;
         
         this.container.insertAdjacentHTML('beforeend', html);
