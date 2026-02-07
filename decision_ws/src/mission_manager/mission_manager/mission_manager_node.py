@@ -13,6 +13,7 @@ from mission_manager.core.robot_pool import RobotPool
 from mission_manager.core.mission_registry import MissionRegistry
 
 from mission_manager.allocation_strategies.allocation_interface import AllocationAction
+from mission_manager.allocation_strategies.closest_strategy import ClosestStrategy
 from mission_manager.allocation_strategies.naive_queue_strategy import NaiveQueueStrategy
 from mission_manager.allocation_strategies.utility_strategy import UtilityStrategy
 
@@ -41,6 +42,9 @@ class MissionManager(Node):
         elif strategy_name == 'utility':
             
             self.allocator = UtilityStrategy(self, self.robot_pool, self.registry)
+        elif strategy_name == 'closest':
+            
+            self.allocator = ClosestStrategy(self, self.robot_pool, self.registry)
         else:
             raise ValueError(f"Unknown strategy: {strategy_name}")
         
