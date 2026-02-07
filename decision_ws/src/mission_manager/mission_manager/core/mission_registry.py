@@ -76,7 +76,7 @@ class MissionRegistry:
         
         try:
             mission.assign(robot_id, robot_adapter)
-            self.logger.info(f"Assigned robot {robot_id} to mission {mission_id}")
+            #self.logger.info(f"Assigned robot {robot_id} to mission {mission_id}")
             return True
         except Exception as e:
             self.logger.error(f"Failed to assign {robot_id} to {mission_id}: {e}")
@@ -130,4 +130,4 @@ class MissionRegistry:
             if ids_to_remove:
                 for mid in ids_to_remove:
                     self._remove_mission(mid)
-                    self.logger.info(f"Cleaned up finished/failed mission: {mid}")       
+                    #self.logger.info(f"Cleaned up finished/failed mission: {mid}")       

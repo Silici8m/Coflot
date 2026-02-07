@@ -93,7 +93,7 @@ class RobotAdapter:
                 on_failure()
                 return
         
-            self.logger.info(f"Robot {self.robot_id}: Goal accepted, moving...")
+            # self.logger.info(f"Robot {self.robot_id}: Goal accepted, moving...")
             self._current_handle = goal_handle
             get_result_future = goal_handle.get_result_async()
             get_result_future.add_done_callback(
@@ -108,13 +108,13 @@ class RobotAdapter:
             
             match result.status:
                 case GoalStatus.STATUS_SUCCEEDED:
-                    self.logger.info(f"Robot {self.robot_id}: Goal reached.")
+                    #self.logger.info(f"Robot {self.robot_id}: Goal reached.")
                     on_success()
                 case GoalStatus.STATUS_ABORTED:
                     self.logger.error(f"Robot {self.robot_id}: Goal aborted.")
                     on_failure()
                 case GoalStatus.STATUS_CANCELED:
-                    self.logger.error(f"Robot {self.robot_id}: Goal canceled.")
+                    self.logger.warning(f"Robot {self.robot_id}: Goal canceled.")
                     on_failure()
                 case _:
                     self.logger.error(f"Robot {self.robot_id}: Unknown result status : {result.status}.")

@@ -6,11 +6,12 @@ from rclpy.qos import QoSProfile, DurabilityPolicy
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.callback_groups import ReentrantCallbackGroup
 
-from fleet_interfaces.msg import MissionRequest, RobotStateArray, MissionState, MissionStateArray
+from fleet_interfaces.msg import MissionRequest, RobotStateArray, MissionState as MissionStateMsg, MissionStateArray as MissionStateArrayMsg
 from std_msgs.msg import String
 
 from mission_manager.core.robot_pool import RobotPool
 from mission_manager.core.mission_registry import MissionRegistry
+from mission_manager.core.mission import MissionState
 
 from mission_manager.allocation_strategies.allocation_interface import AllocationAction
 from mission_manager.allocation_strategies.closest_strategy import ClosestStrategy
@@ -54,7 +55,7 @@ class MissionManager(Node):
         # --- Publishers ---
         # Publisher pour l'état des missions
         self.missions_state_pub = self.create_publisher(
-            MissionStateArray,
+            MissionStateArrayMsg,
             MISSIONS_STATE_TOPIC,
             latching_qos
         )
@@ -105,7 +106,7 @@ class MissionManager(Node):
         self.registry.handle_validation(msg.data)
         
     def publish_missions_state(self):
-        msg = MissionStateArray()
+        msg = MissionStateArrayMsg()
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.header.frame_id = "map"
         
@@ -114,7 +115,7 @@ class MissionManager(Node):
         all_missions = self.registry.get_missions_list() 
 
         for m in all_missions:
-            s = MissionState()
+            s = MissionStateMsg()
             s.mission_id = m.mission_id
             s.priority = m.priority
             s.waypoints = m.waypoints
@@ -134,8 +135,6 @@ class MissionManager(Node):
         Boucle principale : Demande des décisions -> Exécute.
         """
         try:
-            # 1. Obtenir les décisions de la stratégie
-            self._logger.info("\nAllocation loop")
             decisions = self.allocator.allocate()
         except Exception as e:
             self.get_logger().error(f"Allocation error: {e}")
@@ -144,34 +143,60 @@ class MissionManager(Node):
             return
 
         if not decisions:
-            # self._logger.info("Aucune décision")
             return
-        #self._logger.info(f"{len(decisions)} décisions :")
+        
+        self._logger.info(f"/!\ {len(decisions)} DECISIONS :")
 
         # 2. Exécution des décisions
         for d in decisions:
-            self.get_logger().info(f"[ALLOC] Action {d.action.name}: Robot {d.robot_id} (Reason: {d.reason})")
+            self.get_logger().info(f" - {d.action.name} {d.robot_id} | {d.mission_id} ({d.reason})")
             
             try:
+                target_mission = self.registry.get_mission(d.mission_id)
+                current_mission = self.registry.get_mission_by_robot(d.robot_id)
+
                 # --- ROUTAGE DES ACTIONS ---
+
+                # CAS 1 : Démarrage standard (ASSIGN_AND_START)
                 if d.action == AllocationAction.ASSIGN_AND_START:
-                    # Ici on a besoin de l'ID de la nouvelle mission
-                    self._execute_start(d.mission_id, d.robot_id)
-                    
+                    # Sanity Check : On ne démarre que si la mission cible est bien PENDING
+                    # (Si elle est déjà ASSIGNED à qqun d'autre par erreur, on stop)
+                    if target_mission.state == MissionState.PENDING:
+                        self._execute_start(d.mission_id, d.robot_id)
+                    else:
+                        self.get_logger().warn(f"Ignored START: Target {d.mission_id} is {target_mission.state.name}")
+
+                # CAS 2 : Annulation (REVOKE)
                 elif d.action == AllocationAction.REVOKE:
-                    # On n'a pas besoin de d.mission_id ici, on annule juste ce que le robot fait
-                    self._execute_revoke(d.robot_id)
-                    
+                    # Sanity Check : On ne révoque que si on est toujours en approche
+                    if current_mission and current_mission.state == MissionState.APPROACHING:
+                        self._execute_revoke(d.robot_id)
+                    else:
+                        self.get_logger().warn(f"Ignored REVOKE: Robot {d.robot_id} state changed (expected APPROACHING)")
+                
+                # CAS 3 : Suspension (SUSPEND)
                 elif d.action == AllocationAction.SUSPEND:
-                    # On suspend juste ce que le robot fait
-                    self._execute_suspend(d.robot_id)
-                    
+                    # Sanity Check : On ne suspend que si on travaille
+                    if current_mission and current_mission.state in [MissionState.WAITING, MissionState.DELIVERING]:
+                        self._execute_suspend(d.robot_id)
+                    else:
+                        self.get_logger().warn(f"Ignored SUSPEND: Robot {d.robot_id} state changed")
+                
+                # CAS 4 : NOTHING (Ne devrait pas arriver ici si filtré par la stratégie, mais au cas où)
+                elif d.action == AllocationAction.NOTHING:
+                    pass 
+                                        
                 else:
-                    self.get_logger().warn(f"Action inconnue ou non gérée: {d.action}")
-            
+                    # Fallback pour debug
+                    target_state = target_mission.state.name if target_mission else "None"
+                    current_state = current_mission.state.name if current_mission else "None"
+                    self.get_logger().warn(
+                        f"[Refus Allocation] Action {d.action.name} impossible / non gérée. "
+                        f"Target: {target_state} | Current: {current_state}"
+                    )
+
             except Exception as e:
                 self.get_logger().error(f"Execution failed for decision {d}: {e}")
-            self._logger.info("Allocation loop finished\n")
 
     # --- Primitives d'Exécution ---
 

@@ -1,0 +1,24 @@
+const CONFIG = {
+    ROSBRIDGE_URL: 'ws://localhost:9090',
+    TYPE_POSE:     'geometry_msgs/msg/PoseStamped',
+
+    MISSION_REQUEST_FRAME_ID: 'map',
+
+    TOPIC_MISSION_REQUEST: '/mission/mission_request',
+    TYPE_MISSION_REQUEST: 'fleet_interfaces/msg/MissionRequest',
+
+    TOPIC_MISSIONS_STATE: '/mission/missions_state',
+    TYPE_MISSIONS_STATE: 'fleet_interfaces/msg/MissionStateArray',
+
+    TOPIC_FLEET_STATE:   '/fleet/fleet_state',
+    TYPE_FLEET_STATE:   'fleet_interfaces/msg/RobotStateArray' ,
+
+    TOPIC_MISSIONS:   '/mission/missions_state',
+    TYPE_MISSIONS:   'fleet_interfaces/msg/RobotStateArray' ,
+
+    TOPIC_MISSION_VALIDATION: '/mission/validation',
+    TYPE_MISSION_VALIDATION: 'std_msgs/msg/String',
+    
+    FLEET_UPDATE_INTERVAL: 100, // ms
+    MISSIONS_UPDATE_INTERVAL: 200 // ms
+};

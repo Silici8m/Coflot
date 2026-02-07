@@ -2,6 +2,10 @@
 ROBOT_AVERAGE_SPEED = 0.3  # m/s
 AVERAGE_WAITING_TIME = 3 # s
 ROBOT_QUALITY_S = 100 # s
+STEAL_COST = 1.0 # Coût de "voler" une mission en cours d'approche (si priorité égale ou supérieure)
+
+COEF_MISSION_PRIORITAIRE = 1.5
+COEF_MISSION_URGENTE = 5.0
 
 POSESTAMPED_FRAME_ID = 'map' 
 
