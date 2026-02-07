@@ -7,7 +7,7 @@ from scipy.optimize import linear_sum_assignment
 from .base_strategy import AllocatorStrategy
 from .allocation_interface import AllocationDecision, AllocationAction
 
-from mission_manager.core.mission import Mission, MissionPriority, MissionState
+from mission_manager.core.mission import MissionPriority, MissionState
 from mission_manager.config import (
     AVERAGE_WAITING_TIME, 
     REQUEST_PATH_COMPUTING_TIMEOUT, 

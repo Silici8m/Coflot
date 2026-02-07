@@ -2,8 +2,6 @@
 
 import threading
 
-import rclpy
-
 from .robot import Robot
 from fleet_interfaces.msg import RobotStateArray
 

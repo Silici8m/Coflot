@@ -1,8 +1,6 @@
 # robot.py
 
 from .robot_adapter import RobotAdapter
-from geometry_msgs.msg import Pose
-from fleet_interfaces.msg import RobotState
 
 class Robot:
     def __init__(self, node, state_msg):

@@ -1,6 +1,7 @@
+# allocation_interface.py
+
 from enum import Enum
 from dataclasses import dataclass
-from typing import List
 
 class AllocationAction(Enum):
     """

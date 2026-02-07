@@ -12,7 +12,7 @@ from rclpy.action import ActionClient
 from action_msgs.msg import GoalStatus
 from geometry_msgs.msg import PoseStamped
 
-from mission_manager.config import ROBOT_AVERAGE_SPEED, POSESTAMPED_FRAME_ID
+from mission_manager.config import POSESTAMPED_FRAME_ID
 
 class RobotAdapter:
     node : Node
