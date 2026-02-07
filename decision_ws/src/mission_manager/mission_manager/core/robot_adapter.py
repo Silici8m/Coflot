@@ -12,7 +12,7 @@ from rclpy.action import ActionClient
 from action_msgs.msg import GoalStatus
 from geometry_msgs.msg import PoseStamped
 
-from mission_manager.config import ROBOT_AVERAGE_SPEED, POSESTAMPED_FRAME_ID
+from mission_manager.config import POSESTAMPED_FRAME_ID
 
 class RobotAdapter:
     node : Node
@@ -23,13 +23,23 @@ class RobotAdapter:
         self.robot_id = robot_id
         self.namespace = f"/{robot_id}"
         
-        self.client_cb_group = ReentrantCallbackGroup()
+        self._client_cb_group = ReentrantCallbackGroup()
         
         action_topic = f"{self.namespace}/navigate_to_pose"
-        self.client = ActionClient(self.node, NavigateToPose, action_topic, callback_group=self.client_cb_group)
+        self.client = ActionClient(
+            node=self.node, 
+            action_type=NavigateToPose, 
+            action_name=action_topic, 
+            callback_group=self._client_cb_group
+        )
         
         plan_topic = f"{self.namespace}/compute_path_to_pose"
-        self.plan_client = ActionClient(self.node, ComputePathToPose, plan_topic, callback_group=self.client_cb_group)
+        self.plan_client = ActionClient(
+            node=self.node, 
+            action_type=ComputePathToPose,
+            action_name=plan_topic, 
+            callback_group=self._client_cb_group
+        )
         
         
         self._goal_response_pending = False
@@ -83,7 +93,7 @@ class RobotAdapter:
                 on_failure()
                 return
         
-            self.logger.info(f"Robot {self.robot_id}: Goal accepted, moving...")
+            # self.logger.info(f"Robot {self.robot_id}: Goal accepted, moving...")
             self._current_handle = goal_handle
             get_result_future = goal_handle.get_result_async()
             get_result_future.add_done_callback(
@@ -98,13 +108,13 @@ class RobotAdapter:
             
             match result.status:
                 case GoalStatus.STATUS_SUCCEEDED:
-                    self.logger.info(f"Robot {self.robot_id}: Goal reached.")
+                    #self.logger.info(f"Robot {self.robot_id}: Goal reached.")
                     on_success()
                 case GoalStatus.STATUS_ABORTED:
                     self.logger.error(f"Robot {self.robot_id}: Goal aborted.")
                     on_failure()
                 case GoalStatus.STATUS_CANCELED:
-                    self.logger.error(f"Robot {self.robot_id}: Goal canceled.")
+                    self.logger.warning(f"Robot {self.robot_id}: Goal canceled.")
                     on_failure()
                 case _:
                     self.logger.error(f"Robot {self.robot_id}: Unknown result status : {result.status}.")
@@ -154,7 +164,10 @@ class RobotAdapter:
         goal_msg.goal = goal_pose_msg
         goal_msg.use_start = True
 
-        self.plan_client.wait_for_server()
+        server_ready = self.plan_client.wait_for_server(timeout_sec=0.5)
+        if not server_ready:
+            self.logger.error(f"ComputePath server not available for robot {self.robot_id}")
+            return None
         # Asynchronous sending
         # Send a future
         return self.plan_client.send_goal_async(goal_msg)

@@ -52,7 +52,7 @@ class MockFleetNode(Node):
         # 1. Configuration de la flotte virtuelle (Vitesse ajoutée)
         self.robots = {
             "robot_1": SimulatedRobot("robot_1", x=0.0, y=0.5, battery=90.0, speed=speed_factor*0.5),
-            #"robot_2": SimulatedRobot("robot_2", x=1.0, y=1.0, battery=45.0, speed=speed_factor*0.3) 
+            "robot_2": SimulatedRobot("robot_2", x=1.0, y=1.0, battery=45.0, speed=speed_factor*0.3) 
         }
 
         self.cb_group = ReentrantCallbackGroup()
@@ -70,7 +70,8 @@ class MockFleetNode(Node):
             self._action_servers.append(ActionServer(
                 self, NavigateToPose, nav_topic,
                 execute_callback=lambda goal_handle, rid=r_id: self.navigate_callback(goal_handle, rid),
-                callback_group=self.cb_group
+                callback_group=self.cb_group,
+                cancel_callback=self.cancel_callback
             ))
             
             # ComputePathToPose
@@ -82,6 +83,11 @@ class MockFleetNode(Node):
             ))
             
         self.get_logger().info(f"Mock Fleet started with {len(self.robots)} robots.")
+
+    def cancel_callback(self, goal_handle):
+        """Accepte toutes les demandes d'annulation"""
+        self.get_logger().info('Received cancel request')
+        return CancelResponse.ACCEPT
 
     def publish_fleet_state(self):
         msg = RobotStateArray()

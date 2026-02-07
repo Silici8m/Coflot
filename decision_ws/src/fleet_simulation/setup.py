@@ -28,7 +28,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'mock_fleet = fleet_simulation.mock_fleet_v2:main',
+            'mock_fleet = fleet_simulation.mock_fleet_v3:main',
         ],
     },
 )

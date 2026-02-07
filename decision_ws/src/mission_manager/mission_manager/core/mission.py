@@ -19,7 +19,11 @@ class MissionState(Enum):
     FINISHED = 7
     FAILED = 8
     
-    
+class MissionPriority(Enum):
+    NORMAL = 1
+    PRIORITAIRE = 2
+    URGENTE = 3
+
 class TransitionException(Exception):
     pass
     
@@ -71,6 +75,10 @@ class Mission:
         with self.lock:
             if self.state != MissionState.ASSIGNED:
                 raise TransitionException("Mission can only start approaching from ASSIGNED state.")
+            
+            if self.robot_adapter.is_busy():
+                self.logger.warning(f"Robot {self.assigned_robot_id} is busy, cannot start mission {self.mission_id}.")
+                raise Exception("Cannot start mission with a robot whose action server is busy.")
             
             self.robot_adapter.send_goal(
                 self.waypoints[self.goal_waypoint_idx],
@@ -156,9 +164,12 @@ class Mission:
 
 
     def on_arrival_cb(self):
+        if self.state == MissionState.PENDING:
+            # Cas d'un revoke
+            return
         with self.lock:
             if self.state not in [MissionState.APPROACHING, MissionState.DELIVERING, MissionState.SUSPENDING]:
-                raise TransitionException("Arrival event not valid in current state.")
+                raise TransitionException(f"Arrival event not valid in current state. {self.state.name}")
             
             self.start_validation_timer()
             
@@ -238,9 +249,12 @@ class Mission:
             
     def on_failure_cb(self):
         with self.lock:
+            if self.state == MissionState.PENDING:
+                # Cas d'un revoke
+                return
             if self.state not in [MissionState.APPROACHING, MissionState.DELIVERING, MissionState.SUSPENDING]:
                 raise TransitionException("Mission can only fail during APPROACHING, DELIVERING or SUSPENDING states.")
-            
+
             self.logger.error(f"Mission {self.mission_id} failed during navigation (previous state: {self.state}).")
             self.state = MissionState.FAILED
                 
