@@ -6,7 +6,7 @@ package_name = 'fleet_simulation'
 
 setup(
     name=package_name,
-    version='0.0.0',
+    version='1.1.0',
     packages=find_packages(exclude=['test']),
     data_files=[
         ('share/ament_index/resource_index/packages',
@@ -20,7 +20,7 @@ setup(
     maintainer='victor',
     maintainer_email='vik.forc38@gmail.com',
     description='Package de simulation pour mission manager',
-    license='TODO: License declaration',
+    license='Apache-2.0',
     extras_require={
         'test': [
             'pytest',
@@ -28,7 +28,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'mock_fleet = fleet_simulation.mock_fleet_v3:main',
+            'fleet_simulation = fleet_simulation.fleet_simulation:main',
         ],
     },
 )

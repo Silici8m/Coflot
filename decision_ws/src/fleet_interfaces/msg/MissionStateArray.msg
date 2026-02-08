@@ -1,5 +1,6 @@
 # MissionStateArray.msg
-# Liste complète de toutes les missions connues (Latché)
+
+# DESCRIPTION: Aggregated list of all mission states (active and queued).
 
 std_msgs/Header header
 

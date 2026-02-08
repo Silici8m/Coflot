@@ -1,3 +1,5 @@
+# simulation.launch.py
+
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
@@ -5,14 +7,30 @@ from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
-def generate_launch_description():
+def generate_launch_description() -> LaunchDescription:
+    """Generates the launch description for the fleet simulation environment.
+
+    This function sets up the necessary nodes to run a simulated fleet scenario.
+    It configures the map server to load a static map, manages the node lifecycle,
+    and starts the mock fleet simulation.
+
+    The following nodes are defined:
+    1.  **nav2_map_server**: Loads the map file (YAML/PGM).
+    2.  **nav2_lifecycle_manager**: Automatically transitions the map server to the active state.
+    3.  **fleet_simulation (mock_fleet)**: Simulates robot positions, battery levels, and navigation actions.
+    4.  **mission_manager**: The decision-making node (currently defined but commented out in the return list).
+
+    Returns:
+        LaunchDescription: The launch description object containing the
+        declared arguments and node configurations.
+    """
     
     # --- 1. CONFIGURATION ---
     # On récupère le chemin du package de simulation où se trouve la map
-    sim_pkg_share = get_package_share_directory('fleet_simulation')
+    sim_pkg_share: str = get_package_share_directory('fleet_simulation')
     
     # Chemin par défaut vers la map
-    default_map_path = os.path.join(sim_pkg_share, 'maps', 'map.yaml')
+    default_map_path: str = os.path.join(sim_pkg_share, 'maps', 'map.yaml')
     
     # Argument pour changer la map si besoin en ligne de commande
     map_yaml_arg = DeclareLaunchArgument(
@@ -49,12 +67,12 @@ def generate_launch_description():
 
     # --- 3. NOEUDS DE SIMULATION ---
 
-    # Mock Fleet : Simule les robots (Positions, Batteries, Actions Nav2)
+    # Fleet simulation : Simule les robots (Positions, Batteries, Actions Nav2)
     # Vient du package fleet_simulation
     mock_fleet_node = Node(
         package='fleet_simulation',
-        executable='mock_fleet',
-        name='mock_fleet',
+        executable='fleet_simulation',
+        name='fleet_simulation',
         output='screen'
     )
 

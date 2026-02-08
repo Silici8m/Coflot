@@ -1,19 +1,45 @@
+# closest_strategy.py
+
 import math
+from typing import List, Set, Dict, Any
+
 from geometry_msgs.msg import Pose
 from .base_strategy import AllocatorStrategy
 from .allocation_interface import AllocationDecision, AllocationAction
-from mission_manager.core.mission import MissionState
+from mission_manager.core.mission import MissionState, Mission
 
 class ClosestStrategy(AllocatorStrategy):
-    def allocate(self) -> list[AllocationDecision]:
-        decisions = []
+    """
+    Implements a greedy allocation strategy based on spatial proximity.
+
+    This strategy assigns available robots to pending missions by minimizing the
+    Euclidean distance between the robot's current position and the mission's
+    first waypoint. It processes missions in order of priority (highest first)
+    and then request time (oldest first).
+    """
+
+    def allocate(self) -> List[AllocationDecision]:
+        """
+        Executes the allocation logic to match robots to missions.
+
+        The process follows these steps:
+        1. Identify busy robots (those currently assigned to unfinished missions).
+        2. Identify available robots.
+        3. Sort pending missions by Priority (Descending) and Date (Ascending).
+        4. For each pending mission, find the closest available robot.
+        5. Create an assignment decision and mark the robot as booked for this cycle.
+
+        Returns:
+            List[AllocationDecision]: A list of assignment decisions to be applied.
+        """
+        decisions: List[AllocationDecision] = []
         
         # --- 1. Récupération des données ---
-        all_missions = self.registry.get_missions_list()
-        all_robots_dict = self.robot_pool.get_all_robots()
+        all_missions: List[Mission] = self.registry.get_missions_list()
+        all_robots_dict: Dict[str, Any] = self.robot_pool.get_all_robots()
         
         # --- 2. Identification des robots occupés ---
-        busy_robot_ids = set()
+        busy_robot_ids: Set[str] = set()
         for m in all_missions:
             # Si un robot est assigné et que la mission n'est pas finie/échouée
             if m.assigned_robot_id and m.state not in [MissionState.FINISHED, MissionState.FAILED]:
@@ -26,7 +52,7 @@ class ClosestStrategy(AllocatorStrategy):
                 available_robots.append(robot)
         
         # --- 4. Récupération des missions PENDING ---
-        pending_missions = self.registry.get_missions_by_state(MissionState.PENDING)
+        pending_missions: List[Mission] = self.registry.get_missions_by_state(MissionState.PENDING)
         
         # --- 5. Tri des missions : Priorité > Date ---
         pending_missions.sort(
@@ -47,7 +73,7 @@ class ClosestStrategy(AllocatorStrategy):
                 continue
 
             # La cible est le premier waypoint de la mission
-            target_pose = mission.waypoints[0]
+            target_pose: Pose = mission.waypoints[0]
             
             best_robot = None
             min_dist = float('inf')
@@ -76,7 +102,9 @@ class ClosestStrategy(AllocatorStrategy):
         return decisions
 
     def _compute_distance(self, pose1: Pose, pose2: Pose) -> float:
-        """Calcule la distance euclidienne 2D entre deux Poses ROS"""
+        """
+        Calculates the 2D Euclidean distance between two ROS poses.
+        """
         dx = pose1.position.x - pose2.position.x
         dy = pose1.position.y - pose2.position.y
         return math.hypot(dx, dy)

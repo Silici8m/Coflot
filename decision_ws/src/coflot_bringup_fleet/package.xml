@@ -3,9 +3,12 @@
 <package format="3">
   <name>coflot_bringup_fleet</name>
   <version>1.0.0</version>
-  <description>TODO: Package description</description>
+  <description>Package de démarrage et de configuration pour la flotte coflot.</description>
+  
   <maintainer email="vik.forc38@gmail.com">victor</maintainer>
-  <license>TODO: License declaration</license>
+  <author email="vik.forc38@gmail.com">victor</author>
+  
+  <license>Apache-2.0</license>
 
   <depend>nav2_map_server</depend>
   <depend>nav2_lifecycle_manager</depend>

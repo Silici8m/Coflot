@@ -1,13 +1,17 @@
-import rclpy
-from rclpy.node import Node
-from rclpy.action import ActionServer, CancelResponse, GoalResponse
-from rclpy.callback_groups import ReentrantCallbackGroup
-from rclpy.executors import MultiThreadedExecutor
-from rclpy.qos import QoSProfile, DurabilityPolicy
+# fleet_simulation.py
 
 import time
 import math
 import threading
+from typing import List, Dict, Any, Optional
+
+import rclpy
+from rclpy.node import Node
+from rclpy.action import ActionServer, CancelResponse, GoalResponse
+from rclpy.action.server import ServerGoalHandle
+from rclpy.callback_groups import ReentrantCallbackGroup
+from rclpy.executors import MultiThreadedExecutor
+from rclpy.qos import QoSProfile, DurabilityPolicy
 
 # Messages
 from fleet_interfaces.msg import RobotState, RobotStateArray
@@ -15,8 +19,16 @@ from geometry_msgs.msg import Pose, Point, Quaternion, PoseStamped
 from nav2_msgs.action import NavigateToPose, ComputePathToPose
 from nav_msgs.msg import Path
 
-def euler_to_quaternion(yaw):
-    """Convertit un angle yaw (radians) en Quaternion ROS"""
+def euler_to_quaternion(yaw: float) -> Quaternion:
+    """
+    Converts a yaw angle (in radians) into a ROS 2 Quaternion message.
+
+    Args:
+        yaw (float): The angle in radians.
+
+    Returns:
+        Quaternion: The corresponding ROS geometry_msgs Quaternion.
+    """
     q = Quaternion()
     q.x = 0.0
     q.y = 0.0
@@ -25,7 +37,32 @@ def euler_to_quaternion(yaw):
     return q
 
 class SimulatedRobot:
-    def __init__(self, robot_id, x, y, battery=100.0, speed=1.0):
+    """
+    Represents the internal state of a single simulated robot.
+
+    This class acts as a data container and state machine for the simulation,
+    holding position, battery levels, and operational status.
+
+    Attributes:
+        robot_id (str): Unique identifier of the robot.
+        x (float): Current X coordinate in the map frame.
+        y (float): Current Y coordinate in the map frame.
+        yaw (float): Current orientation in radians.
+        battery (float): Current battery percentage (0-100).
+        speed (float): Movement speed in m/s.
+        status (str): Current operational status (e.g., "IDLE", "BUSY").
+    """
+    def __init__(self, robot_id: str, x: float, y: float, battery: float = 100.0, speed: float = 1.0) -> None:
+        """
+        Initializes a simulated robot.
+
+        Args:
+            robot_id (str): Unique identifier.
+            x (float): Initial X position.
+            y (float): Initial Y position.
+            battery (float): Initial battery level (default: 100.0).
+            speed (float): Movement speed in m/s (default: 1.0).
+        """
         self.robot_id = robot_id
         self.x = float(x)
         self.y = float(y)
@@ -35,7 +72,13 @@ class SimulatedRobot:
         self.status = "IDLE" 
         self.lock = threading.RLock()
 
-    def get_pose(self):
+    def get_pose(self) -> Pose:
+        """
+        Generates a standard ROS Pose message based on current internal state.
+
+        Returns:
+            Pose: The current position and orientation.
+        """
         p = Pose()
         p.position.x = self.x
         p.position.y = self.y
@@ -43,16 +86,42 @@ class SimulatedRobot:
         return p
 
 class MockFleetNode(Node):
-    def __init__(self):
+    """
+    Simulates a fleet of robots and their navigation stacks.
+
+    This node replaces physical robots and the Nav2 stack for testing purposes.
+    It provides Action Servers that mimic the `MapsToPose` and `ComputePathToPose`
+    interfaces found in standard ROS 2 navigation stacks.
+
+    Attributes:
+        robots (Dict[str, SimulatedRobot]): Dictionary of simulated robot instances.
+
+    ROS Parameters:
+        sim_speed (double): Global speed multiplier for simulation (default: 1.0).
+
+    ROS Topics:
+        Publishes to:
+            /fleet/fleet_state (fleet_interfaces/RobotStateArray): Real-time telemetry of the fleet.
+
+    ROS Actions:
+        Servers:
+            /{robot_id}/navigate_to_pose (nav2_msgs/NavigateToPose): Simulates robot movement.
+            /{robot_id}/compute_path_to_pose (nav2_msgs/ComputePathToPose): Simulates path planning.
+    """
+
+    def __init__(self) -> None:
+        """
+        Initializes the Mock Fleet Node, sets up simulated robots, and starts Action Servers.
+        """
         super().__init__('mock_fleet')
         
         self.declare_parameter('sim_speed', 1.0)
         speed_factor = self.get_parameter('sim_speed').get_parameter_value().double_value
 
         # 1. Configuration de la flotte virtuelle (Vitesse ajoutée)
-        self.robots = {
+        self.robots: Dict[str, SimulatedRobot] = {
             "robot_1": SimulatedRobot("robot_1", x=0.0, y=0.5, battery=90.0, speed=speed_factor*0.5),
-            #"robot_2": SimulatedRobot("robot_2", x=1.0, y=1.0, battery=45.0, speed=speed_factor*0.3) 
+            "robot_2": SimulatedRobot("robot_2", x=1.0, y=1.0, battery=45.0, speed=speed_factor*0.3) 
         }
 
         self.cb_group = ReentrantCallbackGroup()
@@ -62,7 +131,7 @@ class MockFleetNode(Node):
         self.create_timer(0.1, self.publish_fleet_state) # 5 Hz (plus fluide)
 
         # 3. Création des Action Servers
-        self._action_servers = []
+        self._action_servers: List[ActionServer] = []
         
         for r_id in self.robots:
             # NavigateToPose
@@ -70,7 +139,8 @@ class MockFleetNode(Node):
             self._action_servers.append(ActionServer(
                 self, NavigateToPose, nav_topic,
                 execute_callback=lambda goal_handle, rid=r_id: self.navigate_callback(goal_handle, rid),
-                callback_group=self.cb_group
+                callback_group=self.cb_group,
+                cancel_callback=self.cancel_callback
             ))
             
             # ComputePathToPose
@@ -83,7 +153,26 @@ class MockFleetNode(Node):
             
         self.get_logger().info(f"Mock Fleet started with {len(self.robots)} robots.")
 
-    def publish_fleet_state(self):
+    def cancel_callback(self, goal_handle: Any) -> CancelResponse:
+        """
+        Callback to handle incoming cancellation requests for actions.
+
+        Args:
+            goal_handle (Any): The handle of the action goal being cancelled.
+
+        Returns:
+            CancelResponse: Always returns ACCEPT to allow cancellation.
+        """
+        self.get_logger().info('Received cancel request')
+        return CancelResponse.ACCEPT
+
+    def publish_fleet_state(self) -> None:
+        """
+        Timer callback to publish the aggregated state of all simulated robots.
+
+        Constructs a `RobotStateArray` message containing ID, battery, and pose
+        for every robot in the simulation.
+        """
         msg = RobotStateArray()
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.header.frame_id = "map"
@@ -98,7 +187,23 @@ class MockFleetNode(Node):
         
         self.state_pub.publish(msg)
 
-    def navigate_callback(self, goal_handle, robot_id):
+    def navigate_callback(self, goal_handle: Any, robot_id: str) -> Any:
+        """
+        Simulates the execution of a navigation action.
+
+        This method blocks the thread to simulate travel time. It updates the robot's
+        position incrementally towards the goal, calculates battery drain, and publishes feedback.
+
+        Note:
+            Uses `time.sleep()` to simulate real-world travel time.
+
+        Args:
+            goal_handle (Any): The action server goal handle.
+            robot_id (str): The ID of the robot to move.
+
+        Returns:
+            NavigateToPose.Result: The final result of the action.
+        """
         self.get_logger().info(f"[{robot_id}] Navigation started...")
         
         # Récupération de l'objet robot simulé
@@ -151,7 +256,7 @@ class MockFleetNode(Node):
             remaining_dist = dist_total - dist_traveled
             feedback_msg.distance_remaining = remaining_dist
             
-            # --- CORRECTION : CALCUL DU TEMPS RESTANT ---
+            # --- CALCUL DU TEMPS RESTANT ---
             if robot.speed > 0:
                 time_left_sec = remaining_dist / robot.speed
                 feedback_msg.estimated_time_remaining.sec = int(time_left_sec)
@@ -178,7 +283,20 @@ class MockFleetNode(Node):
         self.get_logger().info(f"[{robot_id}] Arrived at ({tx}, {ty}).")
         return NavigateToPose.Result()
 
-    def compute_path_callback(self, goal_handle, robot_id):
+    def compute_path_callback(self, goal_handle: Any, robot_id: str) -> Any:
+        """
+        Simulates a path planner by generating a straight line path.
+
+        This is a naive implementation that ignores obstacles, used purely
+        for testing the upper layers of the architecture.
+
+        Args:
+            goal_handle (Any): The action server goal handle.
+            robot_id (str): The ID of the robot requesting the plan.
+
+        Returns:
+            ComputePathToPose.Result: The result containing the computed path.
+        """
         # Simulation d'un planificateur (A* simplifié en ligne droite)
         # On génère un chemin avec des points tous les 50cm pour être réaliste
         
@@ -221,7 +339,7 @@ class MockFleetNode(Node):
         # On peut aussi remplir result.planning_time pour plus de réalisme
         return result
 
-def main(args=None):
+def main(args: Optional[List[str]] = None) -> None:
     rclpy.init(args=args)
     node = MockFleetNode()
     

@@ -5,18 +5,32 @@ from dataclasses import dataclass
 
 class AllocationAction(Enum):
     """
-    Définit le TYPE d'action à effectuer.
-    Cela permet au Dispatcher d'appliquer la bonne procédure sans deviner.
+    Defines the specific type of action to be performed by the Dispatcher.
+
+    This enumeration allows the Dispatcher to apply the correct procedure
+    (start, preemption, suspension) without inferring logic.
+
+    Attributes:
+        ASSIGN_AND_START: Standard assignment. The robot is free and starts the mission immediately.
+        REVOKE: Preemption (Emergency). The current mission is cancelled to start the new one.
+        SUSPEND: Suspension. The current mission is paused to start the new one.
+        NOTHING: No action required.
     """
-    ASSIGN_AND_START = 1               # Démarrage standard (Robot libre -> Mission)
-    REVOKE = 2    # Préemption (Urgence) : On annule la mission en cours, on lance la nouvelle
-    SUSPEND = 3   # Suspension : On met en pause la mission en cours, on lance la nouvelle
+    ASSIGN_AND_START = 1
+    REVOKE = 2
+    SUSPEND = 3
     NOTHING = 4
 
 @dataclass
 class AllocationDecision:
     """
-    Objet de transfert de données (DTO) représentant une décision de l'allocateur.
+    Data Transfer Object (DTO) representing a decision made by the allocator.
+
+    Attributes:
+        action (AllocationAction): The type of action to execute.
+        mission_id (str): The unique identifier of the mission concerned by the decision.
+        robot_id (str): The unique identifier of the robot assigned or affected.
+        reason (str): A textual explanation for the decision (default is empty).
     """
     action: AllocationAction
     mission_id: str

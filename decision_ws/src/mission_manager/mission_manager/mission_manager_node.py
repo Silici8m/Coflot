@@ -1,5 +1,8 @@
 # mission_manager_node.py
 
+import sys
+from typing import List, Optional, Any
+
 import rclpy
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, DurabilityPolicy
@@ -11,18 +14,50 @@ from std_msgs.msg import String
 
 from mission_manager.core.robot_pool import RobotPool
 from mission_manager.core.mission_registry import MissionRegistry
-from mission_manager.core.mission import MissionState
+from mission_manager.core.mission import MissionState, Mission
 
-from mission_manager.allocation_strategies.allocation_interface import AllocationAction
+from mission_manager.allocation_strategies.allocation_interface import AllocationAction, AllocationDecision
 from mission_manager.allocation_strategies.closest_strategy import ClosestStrategy
 from mission_manager.allocation_strategies.naive_queue_strategy import NaiveQueueStrategy
 from mission_manager.allocation_strategies.utility_strategy import UtilityStrategy
+from mission_manager.allocation_strategies.base_strategy import AllocatorStrategy
 
 from mission_manager.config import FLEET_STATE_TOPIC, MISSION_REQUEST_TOPIC, VALIDATION_TOPIC, MISSIONS_STATE_TOPIC, ALLOCATION_INTERVAL, MISSION_PUBLICATION_INTERVAL
 
 
 class MissionManager(Node):
-    def __init__(self):
+    """
+    Central orchestration node for the entire fleet management system.
+
+    This node is responsible for:
+    1. Aggregating robot states via `RobotPool`.
+    2. Managing the lifecycle of all missions via `MissionRegistry`.
+    3. Executing the chosen allocation strategy to assign missions to robots.
+    4. Publishing the global state of the fleet's missions.
+    5. Handling incoming mission requests and validation events.
+
+    Attributes:
+        robot_pool (RobotPool): Manager for the collection of active robots.
+        registry (MissionRegistry): Central database for all missions.
+        allocator (AllocatorStrategy): The active strategy instance used for decision making.
+        allocation_group (ReentrantCallbackGroup): Callback group allowing concurrent execution of allocation logic.
+    
+    ROS Parameters:
+        allocation_strategy (string): The name of the strategy to use ('utility', 'closest', 'simple_queue'). Default: 'utility'.
+
+    ROS Topics:
+        Subscribes to:
+            /fleet/state (fleet_interfaces/RobotStateArray): Updates for robot telemetry.
+            /mission/request (fleet_interfaces/MissionRequest): New mission submissions.
+            /mission/validation (std_msgs/String): Human validation signals.
+        Publishes to:
+            /mission/state (fleet_interfaces/MissionStateArray): Real-time status of all missions (Latched).
+    """
+    
+    def __init__(self) -> None:
+        """
+        Initializes the MissionManager node, its components, and ROS interfaces.
+        """
         super().__init__('mission_manager')
         
         self.robot_pool = RobotPool(self)
@@ -36,6 +71,7 @@ class MissionManager(Node):
         
         self.get_logger().info(f"Strategy selected: {strategy_name}")
         
+        self.allocator: AllocatorStrategy
         if strategy_name == 'simple_queue':
             # On passe le pool et le registry ici !
             self.allocator = NaiveQueueStrategy(self, self.robot_pool, self.registry)
@@ -101,18 +137,30 @@ class MissionManager(Node):
         
         self.get_logger().info("Mission Manager started.")
         
-    def _validation_cb(self, msg):
+    def _validation_cb(self, msg: String) -> None:
+        """
+        Callback handling manual validation events from the operator.
+
+        Args:
+            msg (String): The message containing the ID of the validated mission.
+        """
         # msg.data contient l'ID de la mission validée
         self.registry.handle_validation(msg.data)
         
-    def publish_missions_state(self):
+    def publish_missions_state(self) -> None:
+        """
+        Periodically publishes the status of all managed missions.
+
+        Converts internal Mission objects into ROS MissionStateArray messages
+        for external monitoring.
+        """
         msg = MissionStateArrayMsg()
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.header.frame_id = "map"
         
         # On récupère toutes les missions (MissionRegistry doit avoir get_missions())
         # Si get_missions() retourne un dict, utilisez .values()
-        all_missions = self.registry.get_missions_list() 
+        all_missions: List[Mission] = self.registry.get_missions_list() 
 
         for m in all_missions:
             s = MissionStateMsg()
@@ -130,9 +178,13 @@ class MissionManager(Node):
             
         self.missions_state_pub.publish(msg)
         
-    def allocation_loop(self):
+    def allocation_loop(self) -> None:
         """
-        Boucle principale : Demande des décisions -> Exécute.
+        Main execution loop for the mission allocation process.
+
+        1. Queries the active strategy for allocation decisions.
+        2. Iterates through the proposed decisions.
+        3. Executes the required actions (Assign, Revoke, Suspend) via the Registry.
         """
         try:
             decisions = self.allocator.allocate()
@@ -145,11 +197,11 @@ class MissionManager(Node):
         if not decisions:
             return
         
-        self._logger.info(f"/!\ {len(decisions)} DECISIONS :")
+        self.get_logger().info(f"{len(decisions)} décisions prises :")
 
         # 2. Exécution des décisions
         for d in decisions:
-            self.get_logger().info(f" - {d.action.name} {d.robot_id} | {d.mission_id} ({d.reason})")
+            self.get_logger().info(f"\t- {d.action.name} {d.robot_id} | {d.mission_id} because {d.reason}")
             
             try:
                 target_mission = self.registry.get_mission(d.mission_id)
@@ -164,7 +216,7 @@ class MissionManager(Node):
                     if target_mission.state == MissionState.PENDING:
                         self._execute_start(d.mission_id, d.robot_id)
                     else:
-                        self.get_logger().warn(f"Ignored START: Target {d.mission_id} is {target_mission.state.name}")
+                        self.get_logger().warn(f"Ignored ASSIGN_AND_START: Target {d.mission_id} is {target_mission.state.name}")
 
                 # CAS 2 : Annulation (REVOKE)
                 elif d.action == AllocationAction.REVOKE:
@@ -200,9 +252,13 @@ class MissionManager(Node):
 
     # --- Primitives d'Exécution ---
 
-    def _execute_start(self, mission_id, robot_id):
+    def _execute_start(self, mission_id: str, robot_id: str) -> None:
         """
-        Assigne une mission à un robot et lance l'approche.
+        Executes the assignment and start of a new mission.
+
+        Args:
+            mission_id (str): The ID of the mission to start.
+            robot_id (str): The ID of the robot to assign.
         """
         # 1. Tentative d'assignation dans le registre (Lien Logique)
         if self.registry.mission_assign(mission_id, robot_id):
@@ -211,10 +267,15 @@ class MissionManager(Node):
         else:
             self.get_logger().error(f"Failed to assign mission {mission_id} to {robot_id}")
 
-    def _execute_revoke(self, robot_id):
+    def _execute_revoke(self, robot_id: str) -> None:
         """
-        Annule UNIQUEMENT la mission courante du robot.
-        La nouvelle mission sera assignée au prochain cycle (via ASSIGN_AND_START).
+        Revokes the current mission of a robot.
+
+        The mission state is reset, effectively cancelling the current assignment.
+        The robot becomes free for a new assignment in the next cycle.
+
+        Args:
+            robot_id (str): The ID of the robot to revoke.
         """
         current_mission = self.registry.get_mission_by_robot(robot_id)
         
@@ -225,10 +286,15 @@ class MissionManager(Node):
         else:
             self.get_logger().warn(f"Received REVOKE for robot {robot_id} but no mission found.")
 
-    def _execute_suspend(self, robot_id):
+    def _execute_suspend(self, robot_id: str) -> None:
         """
-        Suspend UNIQUEMENT la mission courante du robot.
-        La nouvelle mission sera assignée au prochain cycle (via ASSIGN_AND_START).
+        Suspends the current mission of a robot.
+
+        The mission enters a SUSPENDING state, allowing the robot to be reassigned
+        to a higher priority task once the suspension logic completes.
+
+        Args:
+            robot_id (str): The ID of the robot to suspend.
         """
         current_mission = self.registry.get_mission_by_robot(robot_id)
         
@@ -240,7 +306,7 @@ class MissionManager(Node):
             self.get_logger().warn(f"Received SUSPEND for robot {robot_id} but no mission found.")
             
             
-def main(args=None):
+def main(args: Optional[List[str]] = None) -> None:
     rclpy.init(args=args)
     node = MissionManager()
     executor = MultiThreadedExecutor() # Important pour éviter le deadlock !

@@ -6,7 +6,7 @@ package_name = 'coflot_bringup_fleet'
 
 setup(
     name=package_name,
-    version='0.0.0',
+    version='1.0.0',
     packages=find_packages(exclude=['test']),
     data_files=[
         ('share/ament_index/resource_index/packages',
@@ -19,8 +19,8 @@ setup(
     zip_safe=True,
     maintainer='victor',
     maintainer_email='vik.forc38@gmail.com',
-    description='TODO: Package description',
-    license='TODO: License declaration',
+    description='Package de démarrage et de configuration pour la flotte coflot.',
+    license='Apache-2.0',
     extras_require={
         'test': [
             'pytest',

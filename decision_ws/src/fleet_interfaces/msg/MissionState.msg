@@ -1,21 +1,26 @@
 # MissionState.msg
 
+# DESCRIPTION: Live status of a specific mission managed by the system.
+
 string mission_id
 
-# Priorité de la mission 0 = Normal, 1 = Prioritaire, 2 = Urgente
+# Priority level: 0 = Normal, 1 = High, 2 = Urgent
 int32 priority
 
-# Liste des points de passage de la mission
+# Sequence of waypoints to visit
 geometry_msgs/Pose[] waypoints
 
-# Robot réalisant la mission ("" si non assigné)
+# ID of the robot performing the mission (empty string "" if unassigned)
 string assigned_robot_id
 
-# États possibles :     PENDING = 0, ASSIGNED = 1, APPROACHING = 2, WAITING = 3, DELIVERING = 4, SUSPENDING = 5, DISCHARGING = 6, FINISHED = 7, FAILED = 8
+# Lifecycle status.
+# Values: PENDING, ASSIGNED, APPROACHING, WAITING, DELIVERING, 
+#         SUSPENDING, DISCHARGING, FINISHED, FAILED
 string status 
 
-# Index du waypoint objectif (-1 si la mission n'a pas encore commencé, 0 avant le premier waypoint, etc. L'index est incrémenté lorsque le robot quitte le waypoint)
+# Current target waypoint index.
+# -1: Not started / 0: Moving to 1st waypoint / Increments upon departure.
 int32 goal_waypoint_idx
 
-# Stamp de création de la mission
+# Time when the mission was originally requested
 builtin_interfaces/Time request_stamp

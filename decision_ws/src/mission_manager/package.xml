@@ -3,9 +3,12 @@
 <package format="3">
   <name>mission_manager</name>
   <version>1.1.0</version>
-  <description>TODO: Package description</description>
+  <description>Gestionnaire de missions et de coordination pour la flotte.</description>
+  
   <maintainer email="vik.forc38@gmail.com">victor</maintainer>
-  <license>TODO: License declaration</license>
+  <author email="vik.forc38@gmail.com">victor</author>
+  
+  <license>Apache-2.0</license>
 
   <depend>rclpy</depend>
   <depend>std_msgs</depend>

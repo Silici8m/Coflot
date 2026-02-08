@@ -4,7 +4,7 @@ package_name = 'mission_manager'
 
 setup(
     name=package_name,
-    version='0.0.1',
+    version='1.1.0',
     packages=find_packages(exclude=['test']),
     data_files=[
         ('share/ament_index/resource_index/packages',
@@ -15,8 +15,8 @@ setup(
     zip_safe=True,
     maintainer='victor',
     maintainer_email='vik.forc38@gmail.com',
-    description='Gestionnaire de missions',
-    license='TODO: License declaration',
+    description='Gestionnaire de missions et de coordination pour la flotte.',
+    license='Apache-2.0',
     extras_require={
         'test': [
             'pytest',

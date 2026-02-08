@@ -1,13 +1,18 @@
 # utility_strategy.py
 
 import time
+import math
+from typing import List, Tuple, Any, Optional, Union
+
 import numpy as np
 from scipy.optimize import linear_sum_assignment
+from geometry_msgs.msg import Pose, PoseStamped
+from nav_msgs.msg import Path
 
 from .base_strategy import AllocatorStrategy
 from .allocation_interface import AllocationDecision, AllocationAction
 
-from mission_manager.core.mission import MissionPriority, MissionState
+from mission_manager.core.mission import MissionPriority, MissionState, Mission
 from mission_manager.config import (
     AVERAGE_WAITING_TIME, 
     REQUEST_PATH_COMPUTING_TIMEOUT, 
@@ -20,22 +25,32 @@ from mission_manager.config import (
 )
 
 
-def solve_hungarian_max(matrix):
+def solve_hungarian_max(matrix: Union[List[List[float]], np.ndarray]) -> Tuple[List[Tuple[int, int]], float]:
     """
-    Résout le problème d'affectation pour maximiser la somme.
-    Retourne une liste de tuples (index_ligne, index_colonne).
+    Solves the linear assignment problem to maximize the total utility.
+
+    This function wraps scipy's `linear_sum_assignment` (which minimizes cost)
+    by passing the negative of the matrix to achieve maximization.
+
+    Args:
+        matrix (Union[List[List[float]], np.ndarray]): A 2D cost/utility matrix.
+
+    Returns:
+        Tuple[List[Tuple[int, int]], float]: A tuple containing:
+            - A list of (row_index, col_index) tuples representing the optimal assignment.
+            - The total sum of the values of the assigned elements.
     """
     # 1. Vérification de sécurité compatible NumPy
     if matrix is None:
-        return [], 0
+        return [], 0.0
         
     # Si c'est déjà un array numpy
     if isinstance(matrix, np.ndarray):
         if matrix.size == 0:
-            return [], 0
+            return [], 0.0
     # Si c'est une liste standard
     elif len(matrix) == 0:
-        return [], 0
+        return [], 0.0
         
     M = np.array(matrix)
     
@@ -44,7 +59,7 @@ def solve_hungarian_max(matrix):
     row_ind, col_ind = linear_sum_assignment(M, maximize=True)
     
     assignments = []
-    total_value = 0
+    total_value = 0.0
     
     for r, c in zip(row_ind, col_ind):
         value = M[r, c]
@@ -54,12 +69,32 @@ def solve_hungarian_max(matrix):
     return assignments, total_value
 
 class UtilityStrategy(AllocatorStrategy):
+    """
+    Implements a global optimization strategy based on Utility.
 
-    def allocate(self) -> list[AllocationDecision]:
-        decisions = []
+    This strategy computes a Utility matrix (Quality - Cost) for every robot-mission pair
+    and solves the assignment problem using the Hungarian algorithm (Munkres) to maximize
+    the global utility of the fleet. It accounts for mission priorities, travel times,
+    and transition costs (revocation/suspension penalties).
+    """
+
+    def allocate(self) -> List[AllocationDecision]:
+        """
+        Executes the utility-based allocation logic.
+
+        The process follows these steps:
+        1. Construct a Cost Matrix based on temporal costs (travel time + penalties).
+        2. Derive a Utility Matrix (Quality - Cost), adjusted by mission Priority coefficients.
+        3. Solve the assignment problem using the Hungarian algorithm to maximize global utility.
+        4. Generate allocation decisions for the optimal assignments found.
+
+        Returns:
+            List[AllocationDecision]: A list of decisions to be executed by the dispatcher.
+        """
+        decisions: List[AllocationDecision] = []
         
-        all_missions = self.registry.get_missions_list()
-        all_missions = [m for m in all_missions if m.state not in [MissionState.FINISHED, MissionState.FAILED]]
+        all_missions_full = self.registry.get_missions_list()
+        all_missions: List[Mission] = [m for m in all_missions_full if m.state not in [MissionState.FINISHED, MissionState.FAILED]]
         all_robots = list(self.robot_pool.get_all_robots().values())
         
         nb_missions = len(all_missions)
@@ -86,7 +121,6 @@ class UtilityStrategy(AllocatorStrategy):
                     utility_matrix[i_m, :] *= COEF_MISSION_PRIORITAIRE
                 case MissionPriority.URGENTE.value:
                     utility_matrix[i_m, :] *= COEF_MISSION_URGENTE
-                    self.logger.info(f"colonne urgente : {utility_matrix[i_m, :]}")
                 case _:
                     pass
         
@@ -107,7 +141,7 @@ class UtilityStrategy(AllocatorStrategy):
             # Si la robot est déjà assignée à cette mission, on ne fait rien
             if mission.assigned_robot_id == robot.robot_id:
                 continue
-            print(utility_matrix)
+            
             # On récupère le mission actuelle du robot pour déterminer l'action à prendre
             current_mission = self.registry.get_mission_by_robot(robot.robot_id)
             required_action = self._get_required_action(current_mission)
@@ -126,10 +160,22 @@ class UtilityStrategy(AllocatorStrategy):
         return decisions
     
     
-    def compute_cost(self, mission_id, robot_id):
+    def compute_cost(self, mission_id: str, robot_id: str) -> float:
         """
-        Calcule le coût temporel total (secondes) pour qu'un robot réalise une mission cible.
-        Gère les interdictions (inf) et les pénalités de transition.
+        Calculates the total temporal cost (in seconds) for a robot to perform a target mission.
+
+        This method evaluates:
+        1. Strict constraints (Anti-theft, Stability).
+        2. Technical feasibility (Required actions like Suspend/Revoke).
+        3. Transition penalties (Time to free the robot from its current task).
+        4. Travel time to the target mission's first waypoint (using path planning).
+
+        Args:
+            mission_id (str): The unique identifier of the target mission.
+            robot_id (str): The unique identifier of the candidate robot.
+
+        Returns:
+            float: The estimated cost in seconds. Returns float('inf') if the assignment is impossible.
         """
         missions_registry = self.registry
         robots_pool = self.robot_pool
@@ -232,10 +278,25 @@ class UtilityStrategy(AllocatorStrategy):
         return time_to_free + travel_time + steal_cost
 
 
-    def _get_travel_time(self, robot, start_pose, target_pose):
+    def _get_travel_time(self, robot: Any, start_pose: Union[Pose, PoseStamped], target_pose: Union[Pose, PoseStamped]) -> Optional[float]:
         """
-        Interroge le robot (Action Server) pour obtenir un plan et calcule la durée du trajet.
-        Bloquant avec timeout pour garantir la synchronisation dans compute_cost.
+        Estimates the travel time between two points by querying the robot's plan server.
+
+        This method sends an asynchronous path planning request to the robot's adapter
+        and waits for the result (synchronously blocking with a timeout).
+
+        Note:
+            This method is blocking and includes `time.sleep` loops to wait for the
+            async ROS 2 actions. This is necessary because the cost calculation
+            must return a value to the Hungarian algorithm.
+
+        Args:
+            robot (Any): The robot instance (Robot object).
+            start_pose (Union[Pose, PoseStamped]): The starting pose for the plan.
+            target_pose (Union[Pose, PoseStamped]): The destination pose.
+
+        Returns:
+            Optional[float]: The estimated travel time in seconds, or None if planning failed.
         """
         try:
             # 1. Requête au serveur de planification
@@ -283,8 +344,18 @@ class UtilityStrategy(AllocatorStrategy):
             self.node.get_logger().error(f"Error in _get_travel_time: {e}")
             return None
 
-    def _calculate_path_length(self, path_msg):
-        """Calcule la distance cumulée (en mètres) d'un nav_msgs/Path"""
+    def _calculate_path_length(self, path_msg: Path) -> float:
+        """
+        Computes the total length (in meters) of a ROS 2 Path message.
+
+        Sum the Euclidean distances between consecutive waypoints in the path.
+
+        Args:
+            path_msg (Path): The navigation path.
+
+        Returns:
+            float: The total length in meters.
+        """
         import math
         length = 0.0
         if not path_msg or not path_msg.poses:
@@ -296,4 +367,3 @@ class UtilityStrategy(AllocatorStrategy):
             dist = math.hypot(p2.x - p1.x, p2.y - p1.y)
             length += dist
         return length
-

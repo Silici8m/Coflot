@@ -1,13 +1,33 @@
+# bringup.launch.py
+
+import os
+from typing import List
+
 from launch import LaunchDescription
 from launch_ros.actions import Node
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 from ament_index_python.packages import get_package_share_directory
-import os
 
-def generate_launch_description():
+def generate_launch_description() -> LaunchDescription:
+    """Generates the launch description for the CoFlot fleet bringup system.
+
+    This function configures and launches the core infrastructure nodes required
+    for the fleet management environment. It initializes the static map server,
+    manages its lifecycle state, and establishes a Rosbridge WebSocket for
+    external communication.
+
+    The following nodes are launched:
+    1.  **nav2_map_server**: Loads and publishes the static map.
+    2.  **nav2_lifecycle_manager**: Automatically transitions the map server to the active state.
+    3.  **rosbridge_server**: Opens a WebSocket on port 9090.
+
+    Returns:
+        LaunchDescription: The launch description object containing the
+        declared arguments and node configurations.
+    """
     # Chemins
-    pkg_dir = get_package_share_directory('coflot_bringup_fleet')
+    pkg_dir: str = get_package_share_directory('coflot_bringup_fleet')
     
     # --- Arguments ---
     map_yaml_arg = DeclareLaunchArgument(
