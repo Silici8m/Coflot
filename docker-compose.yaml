@@ -1,0 +1,57 @@
+
+services:
+  # ---------------------------------------------------------
+  # SERVICE 1 : IHM (Web)
+  # ---------------------------------------------------------
+  hmi:
+    build: .
+    image: coflot_supervisor
+    container_name: coflot_hmi
+    network_mode: host
+    command: nginx -g "daemon off;"
+    restart: always
+
+  # ---------------------------------------------------------
+  # SERVICE 2 : INFRASTRUCTURE (Cartes, ROS Bridge)
+  # ---------------------------------------------------------
+  infrastructure:
+    image: coflot_supervisor
+    container_name: coflot_infra
+    network_mode: host
+    environment:
+      - ROS_DOMAIN_ID=0
+    # Notez le chemin générique '/app/coflot_ws' défini dans le Dockerfile
+    command: bash -c "source /app/coflot_ws/install/setup.bash && ros2 launch coflot_bringup_fleet bringup.launch.py"
+
+  # ---------------------------------------------------------
+  # SERVICE 3 : INTELLIGENCE (Mission Manager)
+  # ---------------------------------------------------------
+  brain:
+    image: coflot_supervisor
+    container_name: coflot_brain
+    network_mode: host
+    environment:
+      - ROS_DOMAIN_ID=0
+    command: bash -c "source /app/coflot_ws/install/setup.bash && ros2 run mission_manager mission_manager --ros-args -p allocation_strategy:=utility"
+    depends_on:
+      - infrastructure
+
+  # ---------------------------------------------------------
+  # SERVICE 4A : SIMULATION (Mode Test Bureau)
+  # ---------------------------------------------------------
+  fleet_sim:
+    image: coflot_supervisor
+    container_name: coflot_sim
+    network_mode: host
+    profiles: ["sim"]
+    command: bash -c "source /app/coflot_ws/install/setup.bash && ros2 run fleet_simulation mock_fleet"
+
+  # ---------------------------------------------------------
+  # SERVICE 4B : CONNECTION REELLE (Mode Terrain)
+  # ---------------------------------------------------------
+  fleet_adapter:
+    image: coflot_supervisor
+    container_name: coflot_adapter
+    network_mode: host
+    profiles: ["real"]
+    command: bash -c "source /app/coflot_ws/install/setup.bash && ros2 run fleet_adapter fleet_adapter"

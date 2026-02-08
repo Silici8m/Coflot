@@ -1,0 +1,5 @@
+decision_ws/build
+decision_ws/install
+decision_ws/log
+robot_ws/
+.git
