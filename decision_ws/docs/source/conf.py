@@ -70,3 +70,6 @@ intersphinx_mapping = {
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
+
+autodoc_inherit_docstrings = False
+nosidebar = True

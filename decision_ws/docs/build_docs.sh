@@ -3,7 +3,7 @@ set -e
 
 DOCS_DIR=$(pwd)
 SRC_DIR="../src"
-VENV_PATH="../.venv-doc"
+VENV_PATH=".venv-doc"
 
 echo "=== Checking Environment ===" 
 if [ ! -d "$VENV_PATH" ]; then 
@@ -36,12 +36,11 @@ rm -rf $DOCS_DIR/source/launch
 # --------------------------------------------------
 
 echo "=== Copy package READMEs ==="
-cp $SRC_DIR/fleet_interfaces/README.md source/fleet_interfaces_readme.md 2>/dev/null || true
-cp $SRC_DIR/fleet_adapter/README.md source/fleet_adapter_readme.md 2>/dev/null || true
-cp $SRC_DIR/mission_manager/README.md source/mission_manager_readme.md 2>/dev/null || true
-cp $SRC_DIR/fleet_simulation/README.md source/fleet_simulation_readme.md 2>/dev/null || true
-cp $SRC_DIR/coflot_bringup_fleet/README.md source/coflot_bringup_fleet_readme.md 2>/dev/null || true
-
+cp $SRC_DIR/fleet_interfaces/README.md source/fleet_interfaces_readme.md 2>/dev/null || echo "Missing interfaces README"
+cp $SRC_DIR/fleet_adapter/README.md source/fleet_adapter_readme.md 2>/dev/null || echo "Missing adapter README"
+cp $SRC_DIR/mission_manager/README.md source/mission_manager_readme.md 2>/dev/null || echo "Missing manager README"
+cp $SRC_DIR/fleet_simulation/README.md source/fleet_simulation_readme.md 2>/dev/null || echo "Missing simulation README"
+cp $SRC_DIR/coflot_bringup_fleet/README.md source/coflot_bringup_fleet_readme.md 2>/dev/null || echo "Missing bringup README"
 # --------------------------------------------------
 # MSG DEFINITIONS
 # --------------------------------------------------
@@ -86,9 +85,11 @@ echo "==================================" >> $LAUNCH_RST
 echo "" >> $LAUNCH_RST
 
 for f in source/launch/*.py; do
+  [ -e "$f" ] || continue
   name=$(basename $f)
   echo "$name" >> $LAUNCH_RST
-  echo "----------------" >> $LAUNCH_RST
+  # Génère une ligne de '-' de la même longueur que le nom
+  echo "$(echo "$name" | sed 's/./-/g')" >> $LAUNCH_RST
   echo "" >> $LAUNCH_RST
   echo ".. literalinclude:: launch/$name" >> $LAUNCH_RST
   echo "   :language: python" >> $LAUNCH_RST
