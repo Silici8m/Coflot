@@ -1,0 +1,11 @@
+# Documentation Core
+Sphinx==8.1.3
+myst-parser==4.0.1
+sphinx-rtd-theme==3.1.0
+sphinx-autodoc-typehints==3.0.1
+sphinxcontrib-mermaid==2.0.0
+
+# Code Analysis Dependencies
+numpy==2.2.6
+scipy==1.15.3
+PyYAML==6.0.3

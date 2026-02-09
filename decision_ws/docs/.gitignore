@@ -1,0 +1,11 @@
+# Dossiers de sortie
+build/
+
+# Environnement virtuel
+.venv-doc/
+
+# Fichiers générés par le script build_docs.sh
+source/*.md
+source/interfaces/
+source/launch/
+source/*.rst
