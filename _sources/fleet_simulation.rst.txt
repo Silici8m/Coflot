@@ -1,0 +1,18 @@
+fleet\_simulation package
+=========================
+
+.. automodule:: fleet_simulation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+fleet\_simulation.fleet\_simulation module
+------------------------------------------
+
+.. automodule:: fleet_simulation.fleet_simulation
+   :members:
+   :undoc-members:
+   :show-inheritance:

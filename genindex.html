@@ -1,0 +1,1251 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Index &mdash; coflot_fleet 1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=56dcb7b8"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}`;
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        all_mermaids.forEach((el) => {
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+        await mermaid.run();
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+const load = async () => {
+    initStyles();
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...JSON.parse(
+                    `{"startOnLoad": false}`
+                ),
+                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...JSON.parse(
+        `{"startOnLoad": false}`
+    ),
+    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    }
+);
+
+window.addEventListener("load", load);</script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="#" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            coflot_fleet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Workspace</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="workspace_readme.html">Coflot - Système de Gestion de Flotte de Robots</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Packages Overview</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fleet_interfaces_readme.html">fleet_interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mission_manager_readme.html">mission_manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fleet_adapter_readme.html">fleet_adapter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coflot_bringup_fleet_readme.html">coflot_bringup_fleet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fleet_simulation_readme.html">fleet_simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fleet_adapter.html">fleet_adapter package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mission_manager.html">mission_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fleet_simulation.html">fleet_simulation package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">ROS Interfaces</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fleet_interfaces_msg.html">fleet_interfaces — Messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coflot_bringup_fleet_launch.html">coflot_bringup_fleet — Launch files</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">coflot_fleet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Index</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+
+<h1 id="index">Index</h1>
+
+<div class="genindex-jumpbox">
+ <a href="#_"><strong>_</strong></a>
+ | <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
+ | <a href="#I"><strong>I</strong></a>
+ | <a href="#K"><strong>K</strong></a>
+ | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
+ | <a href="#O"><strong>O</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ | <a href="#U"><strong>U</strong></a>
+ | <a href="#V"><strong>V</strong></a>
+ | <a href="#W"><strong>W</strong></a>
+ | <a href="#X"><strong>X</strong></a>
+ | <a href="#Y"><strong>Y</strong></a>
+ 
+</div>
+<h2 id="_">_</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission_registry.MissionRegistry._missions">_missions (mission_manager.core.mission_registry.MissionRegistry attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot_pool.RobotPool._robots">_robots (mission_manager.core.robot_pool.RobotPool attribute)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot.Robot._state_msg">_state_msg (mission_manager.core.robot.Robot attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.allocation_strategies.html#id4">action (mission_manager.allocation_strategies.allocation_interface.AllocationDecision attribute)</a>, <a href="mission_manager.allocation_strategies.html#mission_manager.allocation_strategies.allocation_interface.AllocationDecision.action">[1]</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot.Robot.adapter">adapter (mission_manager.core.robot.Robot attribute)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission_registry.MissionRegistry.add_mission">add_mission() (mission_manager.core.mission_registry.MissionRegistry method)</a>
+</li>
+      <li><a href="mission_manager.allocation_strategies.html#mission_manager.allocation_strategies.base_strategy.AllocatorStrategy.allocate">allocate() (mission_manager.allocation_strategies.base_strategy.AllocatorStrategy method)</a>
+
+      <ul>
+        <li><a href="mission_manager.allocation_strategies.html#mission_manager.allocation_strategies.closest_strategy.ClosestStrategy.allocate">(mission_manager.allocation_strategies.closest_strategy.ClosestStrategy method)</a>
+</li>
+        <li><a href="mission_manager.allocation_strategies.html#mission_manager.allocation_strategies.naive_queue_strategy.NaiveQueueStrategy.allocate">(mission_manager.allocation_strategies.naive_queue_strategy.NaiveQueueStrategy method)</a>
+</li>
+        <li><a href="mission_manager.allocation_strategies.html#mission_manager.allocation_strategies.utility_strategy.UtilityStrategy.allocate">(mission_manager.allocation_strategies.utility_strategy.UtilityStrategy method)</a>
+</li>
+      </ul></li>
+      <li><a href="mission_manager.html#mission_manager.mission_manager_node.MissionManager.allocation_group">allocation_group (mission_manager.mission_manager_node.MissionManager attribute)</a>
+</li>
+      <li><a href="mission_manager.html#mission_manager.mission_manager_node.MissionManager.allocation_loop">allocation_loop() (mission_manager.mission_manager_node.MissionManager method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.allocation_strategies.html#mission_manager.allocation_strategies.allocation_interface.AllocationAction">AllocationAction (class in mission_manager.allocation_strategies.allocation_interface)</a>
+</li>
+      <li><a href="mission_manager.allocation_strategies.html#mission_manager.allocation_strategies.allocation_interface.AllocationDecision">AllocationDecision (class in mission_manager.allocation_strategies.allocation_interface)</a>
+</li>
+      <li><a href="mission_manager.html#mission_manager.mission_manager_node.MissionManager.allocator">allocator (mission_manager.mission_manager_node.MissionManager attribute)</a>
+</li>
+      <li><a href="mission_manager.allocation_strategies.html#mission_manager.allocation_strategies.base_strategy.AllocatorStrategy">AllocatorStrategy (class in mission_manager.allocation_strategies.base_strategy)</a>
+</li>
+      <li><a href="mission_manager.core.html#id12">APPROACHING (mission_manager.core.mission.MissionState attribute)</a>, <a href="mission_manager.core.html#mission_manager.core.mission.MissionState.APPROACHING">[1]</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission.Mission.assign">assign() (mission_manager.core.mission.Mission method)</a>
+</li>
+      <li><a href="mission_manager.allocation_strategies.html#id0">ASSIGN_AND_START (mission_manager.allocation_strategies.allocation_interface.AllocationAction attribute)</a>, <a href="mission_manager.allocation_strategies.html#mission_manager.allocation_strategies.allocation_interface.AllocationAction.ASSIGN_AND_START">[1]</a>
+</li>
+      <li><a href="mission_manager.core.html#id13">ASSIGNED (mission_manager.core.mission.MissionState attribute)</a>, <a href="mission_manager.core.html#mission_manager.core.mission.MissionState.ASSIGNED">[1]</a>
+</li>
+      <li><a href="mission_manager.core.html#id0">assigned_robot_id (mission_manager.core.mission.Mission attribute)</a>, <a href="mission_manager.core.html#mission_manager.core.mission.Mission.assigned_robot_id">[1]</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="fleet_simulation.html#fleet_simulation.fleet_simulation.SimulatedRobot.battery">battery (fleet_simulation.fleet_simulation.SimulatedRobot attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="fleet_adapter.html#fleet_adapter.fleet_adapter.FleetStateAggregator.battery_callback">battery_callback() (fleet_adapter.fleet_adapter.FleetStateAggregator method)</a>
+</li>
+      <li><a href="fleet_adapter.html#fleet_adapter.fleet_adapter.FleetStateAggregator.bt_log_callback">bt_log_callback() (fleet_adapter.fleet_adapter.FleetStateAggregator method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="fleet_simulation.html#fleet_simulation.fleet_simulation.MockFleetNode.cancel_callback">cancel_callback() (fleet_simulation.fleet_simulation.MockFleetNode method)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot_adapter.RobotAdapter.cancel_goal">cancel_goal() (mission_manager.core.robot_adapter.RobotAdapter method)</a>
+</li>
+      <li><a href="mission_manager.allocation_strategies.html#mission_manager.allocation_strategies.closest_strategy.ClosestStrategy">ClosestStrategy (class in mission_manager.allocation_strategies.closest_strategy)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission.Mission.complete">complete() (mission_manager.core.mission.Mission method)</a>
+</li>
+      <li><a href="mission_manager.allocation_strategies.html#mission_manager.allocation_strategies.utility_strategy.UtilityStrategy.compute_cost">compute_cost() (mission_manager.allocation_strategies.utility_strategy.UtilityStrategy method)</a>
+</li>
+      <li><a href="fleet_simulation.html#fleet_simulation.fleet_simulation.MockFleetNode.compute_path_callback">compute_path_callback() (fleet_simulation.fleet_simulation.MockFleetNode method)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot_adapter.RobotAdapter.current_goal_pose">current_goal_pose (mission_manager.core.robot_adapter.RobotAdapter attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#id14">DELIVERING (mission_manager.core.mission.MissionState attribute)</a>, <a href="mission_manager.core.html#mission_manager.core.mission.MissionState.DELIVERING">[1]</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot_adapter.RobotAdapter.destroy">destroy() (mission_manager.core.robot_adapter.RobotAdapter method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission.Mission.destroy_validation_timer">destroy_validation_timer() (mission_manager.core.mission.Mission method)</a>
+</li>
+      <li><a href="mission_manager.core.html#id15">DISCHARGING (mission_manager.core.mission.MissionState attribute)</a>, <a href="mission_manager.core.html#mission_manager.core.mission.MissionState.DISCHARGING">[1]</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot_adapter.RobotAdapter.distance_remaining">distance_remaining (mission_manager.core.robot_adapter.RobotAdapter attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot_adapter.RobotAdapter.estimated_time_remaining">estimated_time_remaining (mission_manager.core.robot_adapter.RobotAdapter attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="fleet_simulation.html#fleet_simulation.fleet_simulation.euler_to_quaternion">euler_to_quaternion() (in module fleet_simulation.fleet_simulation)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#id16">FAILED (mission_manager.core.mission.MissionState attribute)</a>, <a href="mission_manager.core.html#mission_manager.core.mission.MissionState.FAILED">[1]</a>
+</li>
+      <li><a href="mission_manager.core.html#id17">FINISHED (mission_manager.core.mission.MissionState attribute)</a>, <a href="mission_manager.core.html#mission_manager.core.mission.MissionState.FINISHED">[1]</a>
+</li>
+      <li>
+    fleet_adapter
+
+      <ul>
+        <li><a href="fleet_adapter.html#module-fleet_adapter">module</a>
+</li>
+      </ul></li>
+      <li>
+    fleet_adapter.fleet_adapter
+
+      <ul>
+        <li><a href="fleet_adapter.html#module-fleet_adapter.fleet_adapter">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    fleet_simulation
+
+      <ul>
+        <li><a href="fleet_simulation.html#module-fleet_simulation">module</a>
+</li>
+      </ul></li>
+      <li>
+    fleet_simulation.fleet_simulation
+
+      <ul>
+        <li><a href="fleet_simulation.html#module-fleet_simulation.fleet_simulation">module</a>
+</li>
+      </ul></li>
+      <li><a href="fleet_adapter.html#fleet_adapter.fleet_adapter.FleetStateAggregator">FleetStateAggregator (class in fleet_adapter.fleet_adapter)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot_pool.RobotPool.get_all_robots">get_all_robots() (mission_manager.core.robot_pool.RobotPool method)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot.Robot.get_battery_pct">get_battery_pct() (mission_manager.core.robot.Robot method)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot_adapter.RobotAdapter.get_current_goal">get_current_goal() (mission_manager.core.robot_adapter.RobotAdapter method)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission_registry.MissionRegistry.get_mission">get_mission() (mission_manager.core.mission_registry.MissionRegistry method)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission_registry.MissionRegistry.get_mission_by_robot">get_mission_by_robot() (mission_manager.core.mission_registry.MissionRegistry method)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission_registry.MissionRegistry.get_mission_dict">get_mission_dict() (mission_manager.core.mission_registry.MissionRegistry method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission_registry.MissionRegistry.get_missions_by_state">get_missions_by_state() (mission_manager.core.mission_registry.MissionRegistry method)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission_registry.MissionRegistry.get_missions_list">get_missions_list() (mission_manager.core.mission_registry.MissionRegistry method)</a>
+</li>
+      <li><a href="fleet_simulation.html#fleet_simulation.fleet_simulation.SimulatedRobot.get_pose">get_pose() (fleet_simulation.fleet_simulation.SimulatedRobot method)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot.Robot.get_position">get_position() (mission_manager.core.robot.Robot method)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot_pool.RobotPool.get_robot">get_robot() (mission_manager.core.robot_pool.RobotPool method)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot_pool.RobotPool.get_robot_adapter">get_robot_adapter() (mission_manager.core.robot_pool.RobotPool method)</a>
+</li>
+      <li><a href="mission_manager.core.html#id1">goal_waypoint_idx (mission_manager.core.mission.Mission attribute)</a>, <a href="mission_manager.core.html#mission_manager.core.mission.Mission.goal_waypoint_idx">[1]</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission_registry.MissionRegistry.handle_validation">handle_validation() (mission_manager.core.mission_registry.MissionRegistry method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot_adapter.RobotAdapter.is_busy">is_busy() (mission_manager.core.robot_adapter.RobotAdapter method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot_adapter.RobotAdapter.is_navigating">is_navigating() (mission_manager.core.robot_adapter.RobotAdapter method)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot_pool.RobotPool.is_robot_in_pool">is_robot_in_pool() (mission_manager.core.robot_pool.RobotPool method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="K">K</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="fleet_adapter.html#fleet_adapter.fleet_adapter.FleetStateAggregator.known_robots">known_robots (fleet_adapter.fleet_adapter.FleetStateAggregator attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission.Mission.lock">lock (mission_manager.core.mission.Mission attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission.Mission.logger">logger (mission_manager.core.mission.Mission attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="fleet_adapter.html#fleet_adapter.fleet_adapter.main">main() (in module fleet_adapter.fleet_adapter)</a>
+
+      <ul>
+        <li><a href="fleet_simulation.html#fleet_simulation.fleet_simulation.main">(in module fleet_simulation.fleet_simulation)</a>
+</li>
+        <li><a href="mission_manager.html#mission_manager.mission_manager_node.main">(in module mission_manager.mission_manager_node)</a>
+</li>
+      </ul></li>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot_adapter.RobotAdapter.make_plan_async">make_plan_async() (mission_manager.core.robot_adapter.RobotAdapter method)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission.Mission">Mission (class in mission_manager.core.mission)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission_registry.MissionRegistry.mission_assign">mission_assign() (mission_manager.core.mission_registry.MissionRegistry method)</a>
+</li>
+      <li><a href="mission_manager.allocation_strategies.html#id5">mission_id (mission_manager.allocation_strategies.allocation_interface.AllocationDecision attribute)</a>, <a href="mission_manager.allocation_strategies.html#mission_manager.allocation_strategies.allocation_interface.AllocationDecision.mission_id">[1]</a>
+
+      <ul>
+        <li><a href="mission_manager.core.html#id2">(mission_manager.core.mission.Mission attribute)</a>, <a href="mission_manager.core.html#mission_manager.core.mission.Mission.mission_id">[1]</a>
+</li>
+      </ul></li>
+      <li>
+    mission_manager
+
+      <ul>
+        <li><a href="mission_manager.html#module-mission_manager">module</a>
+</li>
+      </ul></li>
+      <li>
+    mission_manager.allocation_strategies
+
+      <ul>
+        <li><a href="mission_manager.allocation_strategies.html#module-mission_manager.allocation_strategies">module</a>
+</li>
+      </ul></li>
+      <li>
+    mission_manager.allocation_strategies.allocation_interface
+
+      <ul>
+        <li><a href="mission_manager.allocation_strategies.html#module-mission_manager.allocation_strategies.allocation_interface">module</a>
+</li>
+      </ul></li>
+      <li>
+    mission_manager.allocation_strategies.base_strategy
+
+      <ul>
+        <li><a href="mission_manager.allocation_strategies.html#module-mission_manager.allocation_strategies.base_strategy">module</a>
+</li>
+      </ul></li>
+      <li>
+    mission_manager.allocation_strategies.closest_strategy
+
+      <ul>
+        <li><a href="mission_manager.allocation_strategies.html#module-mission_manager.allocation_strategies.closest_strategy">module</a>
+</li>
+      </ul></li>
+      <li>
+    mission_manager.allocation_strategies.naive_queue_strategy
+
+      <ul>
+        <li><a href="mission_manager.allocation_strategies.html#module-mission_manager.allocation_strategies.naive_queue_strategy">module</a>
+</li>
+      </ul></li>
+      <li>
+    mission_manager.allocation_strategies.utility_strategy
+
+      <ul>
+        <li><a href="mission_manager.allocation_strategies.html#module-mission_manager.allocation_strategies.utility_strategy">module</a>
+</li>
+      </ul></li>
+      <li>
+    mission_manager.config
+
+      <ul>
+        <li><a href="mission_manager.html#module-mission_manager.config">module</a>
+</li>
+      </ul></li>
+      <li>
+    mission_manager.core
+
+      <ul>
+        <li><a href="mission_manager.core.html#module-mission_manager.core">module</a>
+</li>
+      </ul></li>
+      <li>
+    mission_manager.core.mission
+
+      <ul>
+        <li><a href="mission_manager.core.html#module-mission_manager.core.mission">module</a>
+</li>
+      </ul></li>
+      <li>
+    mission_manager.core.mission_registry
+
+      <ul>
+        <li><a href="mission_manager.core.html#module-mission_manager.core.mission_registry">module</a>
+</li>
+      </ul></li>
+      <li>
+    mission_manager.core.robot
+
+      <ul>
+        <li><a href="mission_manager.core.html#module-mission_manager.core.robot">module</a>
+</li>
+      </ul></li>
+      <li>
+    mission_manager.core.robot_adapter
+
+      <ul>
+        <li><a href="mission_manager.core.html#module-mission_manager.core.robot_adapter">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    mission_manager.core.robot_pool
+
+      <ul>
+        <li><a href="mission_manager.core.html#module-mission_manager.core.robot_pool">module</a>
+</li>
+      </ul></li>
+      <li>
+    mission_manager.mission_manager_node
+
+      <ul>
+        <li><a href="mission_manager.html#module-mission_manager.mission_manager_node">module</a>
+</li>
+      </ul></li>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission_registry.MissionRegistry.mission_revoke">mission_revoke() (mission_manager.core.mission_registry.MissionRegistry method)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission_registry.MissionRegistry.mission_start_approaching">mission_start_approaching() (mission_manager.core.mission_registry.MissionRegistry method)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission_registry.MissionRegistry.mission_suspend">mission_suspend() (mission_manager.core.mission_registry.MissionRegistry method)</a>
+</li>
+      <li><a href="mission_manager.html#mission_manager.mission_manager_node.MissionManager">MissionManager (class in mission_manager.mission_manager_node)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission.MissionPriority">MissionPriority (class in mission_manager.core.mission)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission_registry.MissionRegistry">MissionRegistry (class in mission_manager.core.mission_registry)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission.MissionState">MissionState (class in mission_manager.core.mission)</a>
+</li>
+      <li><a href="fleet_simulation.html#fleet_simulation.fleet_simulation.MockFleetNode">MockFleetNode (class in fleet_simulation.fleet_simulation)</a>
+</li>
+      <li>
+    module
+
+      <ul>
+        <li><a href="fleet_adapter.html#module-fleet_adapter">fleet_adapter</a>
+</li>
+        <li><a href="fleet_adapter.html#module-fleet_adapter.fleet_adapter">fleet_adapter.fleet_adapter</a>
+</li>
+        <li><a href="fleet_simulation.html#module-fleet_simulation">fleet_simulation</a>
+</li>
+        <li><a href="fleet_simulation.html#module-fleet_simulation.fleet_simulation">fleet_simulation.fleet_simulation</a>
+</li>
+        <li><a href="mission_manager.html#module-mission_manager">mission_manager</a>
+</li>
+        <li><a href="mission_manager.allocation_strategies.html#module-mission_manager.allocation_strategies">mission_manager.allocation_strategies</a>
+</li>
+        <li><a href="mission_manager.allocation_strategies.html#module-mission_manager.allocation_strategies.allocation_interface">mission_manager.allocation_strategies.allocation_interface</a>
+</li>
+        <li><a href="mission_manager.allocation_strategies.html#module-mission_manager.allocation_strategies.base_strategy">mission_manager.allocation_strategies.base_strategy</a>
+</li>
+        <li><a href="mission_manager.allocation_strategies.html#module-mission_manager.allocation_strategies.closest_strategy">mission_manager.allocation_strategies.closest_strategy</a>
+</li>
+        <li><a href="mission_manager.allocation_strategies.html#module-mission_manager.allocation_strategies.naive_queue_strategy">mission_manager.allocation_strategies.naive_queue_strategy</a>
+</li>
+        <li><a href="mission_manager.allocation_strategies.html#module-mission_manager.allocation_strategies.utility_strategy">mission_manager.allocation_strategies.utility_strategy</a>
+</li>
+        <li><a href="mission_manager.html#module-mission_manager.config">mission_manager.config</a>
+</li>
+        <li><a href="mission_manager.core.html#module-mission_manager.core">mission_manager.core</a>
+</li>
+        <li><a href="mission_manager.core.html#module-mission_manager.core.mission">mission_manager.core.mission</a>
+</li>
+        <li><a href="mission_manager.core.html#module-mission_manager.core.mission_registry">mission_manager.core.mission_registry</a>
+</li>
+        <li><a href="mission_manager.core.html#module-mission_manager.core.robot">mission_manager.core.robot</a>
+</li>
+        <li><a href="mission_manager.core.html#module-mission_manager.core.robot_adapter">mission_manager.core.robot_adapter</a>
+</li>
+        <li><a href="mission_manager.core.html#module-mission_manager.core.robot_pool">mission_manager.core.robot_pool</a>
+</li>
+        <li><a href="mission_manager.html#module-mission_manager.mission_manager_node">mission_manager.mission_manager_node</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.allocation_strategies.html#mission_manager.allocation_strategies.naive_queue_strategy.NaiveQueueStrategy">NaiveQueueStrategy (class in mission_manager.allocation_strategies.naive_queue_strategy)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot_adapter.RobotAdapter.namespace">namespace (mission_manager.core.robot_adapter.RobotAdapter attribute)</a>
+</li>
+      <li><a href="fleet_simulation.html#fleet_simulation.fleet_simulation.MockFleetNode.navigate_callback">navigate_callback() (fleet_simulation.fleet_simulation.MockFleetNode method)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot_adapter.RobotAdapter.navigation_time">navigation_time (mission_manager.core.robot_adapter.RobotAdapter attribute)</a>
+</li>
+      <li><a href="mission_manager.allocation_strategies.html#mission_manager.allocation_strategies.base_strategy.AllocatorStrategy.node">node (mission_manager.allocation_strategies.base_strategy.AllocatorStrategy attribute)</a>
+
+      <ul>
+        <li><a href="mission_manager.core.html#id3">(mission_manager.core.mission.Mission attribute)</a>, <a href="mission_manager.core.html#mission_manager.core.mission.Mission.node">[1]</a>
+</li>
+        <li><a href="mission_manager.core.html#mission_manager.core.mission_registry.MissionRegistry.node">(mission_manager.core.mission_registry.MissionRegistry attribute)</a>
+</li>
+        <li><a href="mission_manager.core.html#mission_manager.core.robot_adapter.RobotAdapter.node">(mission_manager.core.robot_adapter.RobotAdapter attribute)</a>
+</li>
+        <li><a href="mission_manager.core.html#mission_manager.core.robot_pool.RobotPool.node">(mission_manager.core.robot_pool.RobotPool attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#id9">NORMAL (mission_manager.core.mission.MissionPriority attribute)</a>, <a href="mission_manager.core.html#mission_manager.core.mission.MissionPriority.NORMAL">[1]</a>
+</li>
+      <li><a href="mission_manager.allocation_strategies.html#id1">NOTHING (mission_manager.allocation_strategies.allocation_interface.AllocationAction attribute)</a>, <a href="mission_manager.allocation_strategies.html#mission_manager.allocation_strategies.allocation_interface.AllocationAction.NOTHING">[1]</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission.Mission.on_arrival_cb">on_arrival_cb() (mission_manager.core.mission.Mission method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission.Mission.on_failure_cb">on_failure_cb() (mission_manager.core.mission.Mission method)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission.Mission.on_validation">on_validation() (mission_manager.core.mission.Mission method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#id18">PENDING (mission_manager.core.mission.MissionState attribute)</a>, <a href="mission_manager.core.html#mission_manager.core.mission.MissionState.PENDING">[1]</a>
+</li>
+      <li><a href="fleet_adapter.html#fleet_adapter.fleet_adapter.FleetStateAggregator.pose_callback">pose_callback() (fleet_adapter.fleet_adapter.FleetStateAggregator method)</a>
+</li>
+      <li><a href="mission_manager.core.html#id10">PRIORITAIRE (mission_manager.core.mission.MissionPriority attribute)</a>, <a href="mission_manager.core.html#mission_manager.core.mission.MissionPriority.PRIORITAIRE">[1]</a>
+</li>
+      <li><a href="mission_manager.core.html#id4">priority (mission_manager.core.mission.Mission attribute)</a>, <a href="mission_manager.core.html#mission_manager.core.mission.Mission.priority">[1]</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission.Mission.proceed">proceed() (mission_manager.core.mission.Mission method)</a>
+</li>
+      <li><a href="fleet_adapter.html#fleet_adapter.fleet_adapter.FleetStateAggregator.publish_fleet_state">publish_fleet_state() (fleet_adapter.fleet_adapter.FleetStateAggregator method)</a>
+
+      <ul>
+        <li><a href="fleet_simulation.html#fleet_simulation.fleet_simulation.MockFleetNode.publish_fleet_state">(fleet_simulation.fleet_simulation.MockFleetNode method)</a>
+</li>
+      </ul></li>
+      <li><a href="mission_manager.html#mission_manager.mission_manager_node.MissionManager.publish_missions_state">publish_missions_state() (mission_manager.mission_manager_node.MissionManager method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.allocation_strategies.html#id6">reason (mission_manager.allocation_strategies.allocation_interface.AllocationDecision attribute)</a>, <a href="mission_manager.allocation_strategies.html#mission_manager.allocation_strategies.allocation_interface.AllocationDecision.reason">[1]</a>
+</li>
+      <li><a href="fleet_adapter.html#fleet_adapter.fleet_adapter.FleetStateAggregator.register_new_robot">register_new_robot() (fleet_adapter.fleet_adapter.FleetStateAggregator method)</a>
+</li>
+      <li><a href="mission_manager.allocation_strategies.html#mission_manager.allocation_strategies.base_strategy.AllocatorStrategy.registry">registry (mission_manager.allocation_strategies.base_strategy.AllocatorStrategy attribute)</a>
+
+      <ul>
+        <li><a href="mission_manager.html#mission_manager.mission_manager_node.MissionManager.registry">(mission_manager.mission_manager_node.MissionManager attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission.Mission.release">release() (mission_manager.core.mission.Mission method)</a>
+</li>
+      <li><a href="mission_manager.core.html#id5">request_stamp (mission_manager.core.mission.Mission attribute)</a>, <a href="mission_manager.core.html#mission_manager.core.mission.Mission.request_stamp">[1]</a>
+</li>
+      <li><a href="mission_manager.allocation_strategies.html#id2">REVOKE (mission_manager.allocation_strategies.allocation_interface.AllocationAction attribute)</a>, <a href="mission_manager.allocation_strategies.html#mission_manager.allocation_strategies.allocation_interface.AllocationAction.REVOKE">[1]</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission.Mission.revoke">revoke() (mission_manager.core.mission.Mission method)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot.Robot">Robot (class in mission_manager.core.robot)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission.Mission.robot_adapter">robot_adapter (mission_manager.core.mission.Mission attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="fleet_simulation.html#fleet_simulation.fleet_simulation.SimulatedRobot.robot_id">robot_id (fleet_simulation.fleet_simulation.SimulatedRobot attribute)</a>
+
+      <ul>
+        <li><a href="mission_manager.allocation_strategies.html#id7">(mission_manager.allocation_strategies.allocation_interface.AllocationDecision attribute)</a>, <a href="mission_manager.allocation_strategies.html#mission_manager.allocation_strategies.allocation_interface.AllocationDecision.robot_id">[1]</a>
+</li>
+        <li><a href="mission_manager.core.html#mission_manager.core.robot.Robot.robot_id">(mission_manager.core.robot.Robot attribute)</a>
+</li>
+        <li><a href="mission_manager.core.html#mission_manager.core.robot_adapter.RobotAdapter.robot_id">(mission_manager.core.robot_adapter.RobotAdapter attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="mission_manager.allocation_strategies.html#mission_manager.allocation_strategies.base_strategy.AllocatorStrategy.robot_pool">robot_pool (mission_manager.allocation_strategies.base_strategy.AllocatorStrategy attribute)</a>
+
+      <ul>
+        <li><a href="mission_manager.core.html#mission_manager.core.mission_registry.MissionRegistry.robot_pool">(mission_manager.core.mission_registry.MissionRegistry attribute)</a>
+</li>
+        <li><a href="mission_manager.html#mission_manager.mission_manager_node.MissionManager.robot_pool">(mission_manager.mission_manager_node.MissionManager attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot_adapter.RobotAdapter">RobotAdapter (class in mission_manager.core.robot_adapter)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot_pool.RobotPool">RobotPool (class in mission_manager.core.robot_pool)</a>
+</li>
+      <li><a href="fleet_simulation.html#fleet_simulation.fleet_simulation.MockFleetNode.robots">robots (fleet_simulation.fleet_simulation.MockFleetNode attribute)</a>
+</li>
+      <li><a href="fleet_adapter.html#fleet_adapter.fleet_adapter.FleetStateAggregator.robots_data">robots_data (fleet_adapter.fleet_adapter.FleetStateAggregator attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="fleet_adapter.html#fleet_adapter.fleet_adapter.FleetStateAggregator.scan_for_robots">scan_for_robots() (fleet_adapter.fleet_adapter.FleetStateAggregator method)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot_adapter.RobotAdapter.send_goal">send_goal() (mission_manager.core.robot_adapter.RobotAdapter method)</a>
+</li>
+      <li><a href="fleet_simulation.html#fleet_simulation.fleet_simulation.SimulatedRobot">SimulatedRobot (class in fleet_simulation.fleet_simulation)</a>
+</li>
+      <li><a href="mission_manager.allocation_strategies.html#mission_manager.allocation_strategies.utility_strategy.solve_hungarian_max">solve_hungarian_max() (in module mission_manager.allocation_strategies.utility_strategy)</a>
+</li>
+      <li><a href="fleet_simulation.html#fleet_simulation.fleet_simulation.SimulatedRobot.speed">speed (fleet_simulation.fleet_simulation.SimulatedRobot attribute)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission.Mission.start_approaching">start_approaching() (mission_manager.core.mission.Mission method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission.Mission.start_validation_timer">start_validation_timer() (mission_manager.core.mission.Mission method)</a>
+</li>
+      <li><a href="mission_manager.core.html#id6">state (mission_manager.core.mission.Mission attribute)</a>, <a href="mission_manager.core.html#mission_manager.core.mission.Mission.state">[1]</a>
+</li>
+      <li><a href="fleet_simulation.html#fleet_simulation.fleet_simulation.SimulatedRobot.status">status (fleet_simulation.fleet_simulation.SimulatedRobot attribute)</a>
+</li>
+      <li><a href="fleet_adapter.html#fleet_adapter.fleet_adapter.FleetStateAggregator.subscribers">subscribers (fleet_adapter.fleet_adapter.FleetStateAggregator attribute)</a>
+</li>
+      <li><a href="mission_manager.allocation_strategies.html#id3">SUSPEND (mission_manager.allocation_strategies.allocation_interface.AllocationAction attribute)</a>, <a href="mission_manager.allocation_strategies.html#mission_manager.allocation_strategies.allocation_interface.AllocationAction.SUSPEND">[1]</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission.Mission.suspend">suspend() (mission_manager.core.mission.Mission method)</a>
+</li>
+      <li><a href="mission_manager.core.html#id19">SUSPENDING (mission_manager.core.mission.MissionState attribute)</a>, <a href="mission_manager.core.html#mission_manager.core.mission.MissionState.SUSPENDING">[1]</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#id7">timeout_timer (mission_manager.core.mission.Mission attribute)</a>, <a href="mission_manager.core.html#mission_manager.core.mission.Mission.timeout_timer">[1]</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission.TransitionException">TransitionException</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="U">U</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="fleet_adapter.html#fleet_adapter.fleet_adapter.FleetStateAggregator.unregister_robot">unregister_robot() (fleet_adapter.fleet_adapter.FleetStateAggregator method)</a>
+</li>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot_pool.RobotPool.update_pool">update_pool() (mission_manager.core.robot_pool.RobotPool method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#mission_manager.core.robot.Robot.update_state">update_state() (mission_manager.core.robot.Robot method)</a>
+</li>
+      <li><a href="mission_manager.core.html#id11">URGENTE (mission_manager.core.mission.MissionPriority attribute)</a>, <a href="mission_manager.core.html#mission_manager.core.mission.MissionPriority.URGENTE">[1]</a>
+</li>
+      <li><a href="mission_manager.allocation_strategies.html#mission_manager.allocation_strategies.utility_strategy.UtilityStrategy">UtilityStrategy (class in mission_manager.allocation_strategies.utility_strategy)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#mission_manager.core.mission.Mission.validation_timeout">validation_timeout (mission_manager.core.mission.Mission attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#id20">WAITING (mission_manager.core.mission.MissionState attribute)</a>, <a href="mission_manager.core.html#mission_manager.core.mission.MissionState.WAITING">[1]</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="mission_manager.core.html#id8">waypoints (mission_manager.core.mission.Mission attribute)</a>, <a href="mission_manager.core.html#mission_manager.core.mission.Mission.waypoints">[1]</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="X">X</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="fleet_simulation.html#fleet_simulation.fleet_simulation.SimulatedRobot.x">x (fleet_simulation.fleet_simulation.SimulatedRobot attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Y">Y</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="fleet_simulation.html#fleet_simulation.fleet_simulation.SimulatedRobot.y">y (fleet_simulation.fleet_simulation.SimulatedRobot attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="fleet_simulation.html#fleet_simulation.fleet_simulation.SimulatedRobot.yaw">yaw (fleet_simulation.fleet_simulation.SimulatedRobot attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Victor Forcioli, Alexis Vermeersch, Djino Varrambier Geoffroy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

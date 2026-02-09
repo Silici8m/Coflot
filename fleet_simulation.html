@@ -1,0 +1,402 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>fleet_simulation package &mdash; coflot_fleet 1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=56dcb7b8"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="fleet_interfaces — Messages" href="fleet_interfaces_msg.html" />
+    <link rel="prev" title="mission_manager.core package" href="mission_manager.core.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            coflot_fleet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Workspace</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="workspace_readme.html">Coflot - Système de Gestion de Flotte de Robots</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Packages Overview</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fleet_interfaces_readme.html">fleet_interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mission_manager_readme.html">mission_manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fleet_adapter_readme.html">fleet_adapter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coflot_bringup_fleet_readme.html">coflot_bringup_fleet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fleet_simulation_readme.html">fleet_simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="fleet_adapter.html">fleet_adapter package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mission_manager.html">mission_manager package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">fleet_simulation package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-fleet_simulation.fleet_simulation">fleet_simulation.fleet_simulation module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fleet_simulation.fleet_simulation.MockFleetNode"><code class="docutils literal notranslate"><span class="pre">MockFleetNode</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fleet_simulation.fleet_simulation.MockFleetNode.robots"><code class="docutils literal notranslate"><span class="pre">MockFleetNode.robots</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fleet_simulation.fleet_simulation.MockFleetNode.cancel_callback"><code class="docutils literal notranslate"><span class="pre">MockFleetNode.cancel_callback()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fleet_simulation.fleet_simulation.MockFleetNode.compute_path_callback"><code class="docutils literal notranslate"><span class="pre">MockFleetNode.compute_path_callback()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fleet_simulation.fleet_simulation.MockFleetNode.navigate_callback"><code class="docutils literal notranslate"><span class="pre">MockFleetNode.navigate_callback()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fleet_simulation.fleet_simulation.MockFleetNode.publish_fleet_state"><code class="docutils literal notranslate"><span class="pre">MockFleetNode.publish_fleet_state()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#fleet_simulation.fleet_simulation.SimulatedRobot"><code class="docutils literal notranslate"><span class="pre">SimulatedRobot</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fleet_simulation.fleet_simulation.SimulatedRobot.robot_id"><code class="docutils literal notranslate"><span class="pre">SimulatedRobot.robot_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fleet_simulation.fleet_simulation.SimulatedRobot.x"><code class="docutils literal notranslate"><span class="pre">SimulatedRobot.x</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fleet_simulation.fleet_simulation.SimulatedRobot.y"><code class="docutils literal notranslate"><span class="pre">SimulatedRobot.y</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fleet_simulation.fleet_simulation.SimulatedRobot.yaw"><code class="docutils literal notranslate"><span class="pre">SimulatedRobot.yaw</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fleet_simulation.fleet_simulation.SimulatedRobot.battery"><code class="docutils literal notranslate"><span class="pre">SimulatedRobot.battery</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fleet_simulation.fleet_simulation.SimulatedRobot.speed"><code class="docutils literal notranslate"><span class="pre">SimulatedRobot.speed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fleet_simulation.fleet_simulation.SimulatedRobot.status"><code class="docutils literal notranslate"><span class="pre">SimulatedRobot.status</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fleet_simulation.fleet_simulation.SimulatedRobot.get_pose"><code class="docutils literal notranslate"><span class="pre">SimulatedRobot.get_pose()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#fleet_simulation.fleet_simulation.euler_to_quaternion"><code class="docutils literal notranslate"><span class="pre">euler_to_quaternion()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fleet_simulation.fleet_simulation.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">ROS Interfaces</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fleet_interfaces_msg.html">fleet_interfaces — Messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coflot_bringup_fleet_launch.html">coflot_bringup_fleet — Launch files</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">coflot_fleet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">fleet_simulation package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/fleet_simulation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-fleet_simulation">
+<span id="fleet-simulation-package"></span><h1>fleet_simulation package<a class="headerlink" href="#module-fleet_simulation" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-fleet_simulation.fleet_simulation">
+<span id="fleet-simulation-fleet-simulation-module"></span><h2>fleet_simulation.fleet_simulation module<a class="headerlink" href="#module-fleet_simulation.fleet_simulation" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="fleet_simulation.fleet_simulation.MockFleetNode">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fleet_simulation.fleet_simulation.</span></span><span class="sig-name descname"><span class="pre">MockFleetNode</span></span><a class="reference internal" href="_modules/fleet_simulation/fleet_simulation.html#MockFleetNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fleet_simulation.fleet_simulation.MockFleetNode" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></p>
+<p>Simulates a fleet of robots and their navigation stacks.</p>
+<p>This node replaces physical robots and the Nav2 stack for testing purposes.
+It provides Action Servers that mimic the <cite>MapsToPose</cite> and <cite>ComputePathToPose</cite>
+interfaces found in standard ROS 2 navigation stacks.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fleet_simulation.fleet_simulation.MockFleetNode.robots">
+<span class="sig-name descname"><span class="pre">robots</span></span><a class="headerlink" href="#fleet_simulation.fleet_simulation.MockFleetNode.robots" title="Link to this definition"></a></dt>
+<dd><p>Dictionary of simulated robot instances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference internal" href="#fleet_simulation.fleet_simulation.SimulatedRobot" title="fleet_simulation.fleet_simulation.SimulatedRobot">SimulatedRobot</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="simple">
+<dt>ROS Parameters:</dt><dd><p>sim_speed (double): Global speed multiplier for simulation (default: 1.0).</p>
+</dd>
+<dt>ROS Topics:</dt><dd><dl class="simple">
+<dt>Publishes to:</dt><dd><p>/fleet/fleet_state (fleet_interfaces/RobotStateArray): Real-time telemetry of the fleet.</p>
+</dd>
+</dl>
+</dd>
+<dt>ROS Actions:</dt><dd><dl class="simple">
+<dt>Servers:</dt><dd><p>/{robot_id}/navigate_to_pose (nav2_msgs/NavigateToPose): Simulates robot movement.
+/{robot_id}/compute_path_to_pose (nav2_msgs/ComputePathToPose): Simulates path planning.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="fleet_simulation.fleet_simulation.MockFleetNode.cancel_callback">
+<span class="sig-name descname"><span class="pre">cancel_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">goal_handle</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fleet_simulation/fleet_simulation.html#MockFleetNode.cancel_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fleet_simulation.fleet_simulation.MockFleetNode.cancel_callback" title="Link to this definition"></a></dt>
+<dd><p>Callback to handle incoming cancellation requests for actions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>goal_handle</strong> (<em>Any</em>) – The handle of the action goal being cancelled.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Always returns ACCEPT to allow cancellation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>CancelResponse</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fleet_simulation.fleet_simulation.MockFleetNode.compute_path_callback">
+<span class="sig-name descname"><span class="pre">compute_path_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">goal_handle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fleet_simulation/fleet_simulation.html#MockFleetNode.compute_path_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fleet_simulation.fleet_simulation.MockFleetNode.compute_path_callback" title="Link to this definition"></a></dt>
+<dd><p>Simulates a path planner by generating a straight line path.</p>
+<p>This is a naive implementation that ignores obstacles, used purely
+for testing the upper layers of the architecture.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>goal_handle</strong> (<em>Any</em>) – The action server goal handle.</p></li>
+<li><p><strong>robot_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The ID of the robot requesting the plan.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result containing the computed path.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ComputePathToPose.Result</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fleet_simulation.fleet_simulation.MockFleetNode.navigate_callback">
+<span class="sig-name descname"><span class="pre">navigate_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">goal_handle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fleet_simulation/fleet_simulation.html#MockFleetNode.navigate_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fleet_simulation.fleet_simulation.MockFleetNode.navigate_callback" title="Link to this definition"></a></dt>
+<dd><p>Simulates the execution of a navigation action.</p>
+<p>This method blocks the thread to simulate travel time. It updates the robot’s
+position incrementally towards the goal, calculates battery drain, and publishes feedback.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Uses <cite>time.sleep()</cite> to simulate real-world travel time.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>goal_handle</strong> (<em>Any</em>) – The action server goal handle.</p></li>
+<li><p><strong>robot_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The ID of the robot to move.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The final result of the action.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>NavigateToPose.Result</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fleet_simulation.fleet_simulation.MockFleetNode.publish_fleet_state">
+<span class="sig-name descname"><span class="pre">publish_fleet_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fleet_simulation/fleet_simulation.html#MockFleetNode.publish_fleet_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fleet_simulation.fleet_simulation.MockFleetNode.publish_fleet_state" title="Link to this definition"></a></dt>
+<dd><p>Timer callback to publish the aggregated state of all simulated robots.</p>
+<p>Constructs a <cite>RobotStateArray</cite> message containing ID, battery, and pose
+for every robot in the simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fleet_simulation.fleet_simulation.SimulatedRobot">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fleet_simulation.fleet_simulation.</span></span><span class="sig-name descname"><span class="pre">SimulatedRobot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">robot_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">battery</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fleet_simulation/fleet_simulation.html#SimulatedRobot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fleet_simulation.fleet_simulation.SimulatedRobot" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Represents the internal state of a single simulated robot.</p>
+<p>This class acts as a data container and state machine for the simulation,
+holding position, battery levels, and operational status.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fleet_simulation.fleet_simulation.SimulatedRobot.robot_id">
+<span class="sig-name descname"><span class="pre">robot_id</span></span><a class="headerlink" href="#fleet_simulation.fleet_simulation.SimulatedRobot.robot_id" title="Link to this definition"></a></dt>
+<dd><p>Unique identifier of the robot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fleet_simulation.fleet_simulation.SimulatedRobot.x">
+<span class="sig-name descname"><span class="pre">x</span></span><a class="headerlink" href="#fleet_simulation.fleet_simulation.SimulatedRobot.x" title="Link to this definition"></a></dt>
+<dd><p>Current X coordinate in the map frame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fleet_simulation.fleet_simulation.SimulatedRobot.y">
+<span class="sig-name descname"><span class="pre">y</span></span><a class="headerlink" href="#fleet_simulation.fleet_simulation.SimulatedRobot.y" title="Link to this definition"></a></dt>
+<dd><p>Current Y coordinate in the map frame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fleet_simulation.fleet_simulation.SimulatedRobot.yaw">
+<span class="sig-name descname"><span class="pre">yaw</span></span><a class="headerlink" href="#fleet_simulation.fleet_simulation.SimulatedRobot.yaw" title="Link to this definition"></a></dt>
+<dd><p>Current orientation in radians.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fleet_simulation.fleet_simulation.SimulatedRobot.battery">
+<span class="sig-name descname"><span class="pre">battery</span></span><a class="headerlink" href="#fleet_simulation.fleet_simulation.SimulatedRobot.battery" title="Link to this definition"></a></dt>
+<dd><p>Current battery percentage (0-100).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fleet_simulation.fleet_simulation.SimulatedRobot.speed">
+<span class="sig-name descname"><span class="pre">speed</span></span><a class="headerlink" href="#fleet_simulation.fleet_simulation.SimulatedRobot.speed" title="Link to this definition"></a></dt>
+<dd><p>Movement speed in m/s.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fleet_simulation.fleet_simulation.SimulatedRobot.status">
+<span class="sig-name descname"><span class="pre">status</span></span><a class="headerlink" href="#fleet_simulation.fleet_simulation.SimulatedRobot.status" title="Link to this definition"></a></dt>
+<dd><p>Current operational status (e.g., “IDLE”, “BUSY”).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fleet_simulation.fleet_simulation.SimulatedRobot.get_pose">
+<span class="sig-name descname"><span class="pre">get_pose</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fleet_simulation/fleet_simulation.html#SimulatedRobot.get_pose"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fleet_simulation.fleet_simulation.SimulatedRobot.get_pose" title="Link to this definition"></a></dt>
+<dd><p>Generates a standard ROS Pose message based on current internal state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The current position and orientation.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pose</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fleet_simulation.fleet_simulation.euler_to_quaternion">
+<span class="sig-prename descclassname"><span class="pre">fleet_simulation.fleet_simulation.</span></span><span class="sig-name descname"><span class="pre">euler_to_quaternion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">yaw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fleet_simulation/fleet_simulation.html#euler_to_quaternion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fleet_simulation.fleet_simulation.euler_to_quaternion" title="Link to this definition"></a></dt>
+<dd><p>Converts a yaw angle (in radians) into a ROS 2 Quaternion message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>yaw</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – The angle in radians.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The corresponding ROS geometry_msgs Quaternion.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Quaternion</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fleet_simulation.fleet_simulation.main">
+<span class="sig-prename descclassname"><span class="pre">fleet_simulation.fleet_simulation.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fleet_simulation/fleet_simulation.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fleet_simulation.fleet_simulation.main" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="mission_manager.core.html" class="btn btn-neutral float-left" title="mission_manager.core package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="fleet_interfaces_msg.html" class="btn btn-neutral float-right" title="fleet_interfaces — Messages" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Victor Forcioli, Alexis Vermeersch, Djino Varrambier Geoffroy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

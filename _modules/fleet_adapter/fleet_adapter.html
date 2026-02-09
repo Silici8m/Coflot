@@ -1,0 +1,843 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>fleet_adapter.fleet_adapter &mdash; coflot_fleet 1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=56dcb7b8"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}`;
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        all_mermaids.forEach((el) => {
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+        await mermaid.run();
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+const load = async () => {
+    initStyles();
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...JSON.parse(
+                    `{"startOnLoad": false}`
+                ),
+                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...JSON.parse(
+        `{"startOnLoad": false}`
+    ),
+    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    }
+);
+
+window.addEventListener("load", load);</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            coflot_fleet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Workspace</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../workspace_readme.html">Coflot - Système de Gestion de Flotte de Robots</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Packages Overview</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../fleet_interfaces_readme.html">fleet_interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../mission_manager_readme.html">mission_manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fleet_adapter_readme.html">fleet_adapter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../coflot_bringup_fleet_readme.html">coflot_bringup_fleet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fleet_simulation_readme.html">fleet_simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../fleet_adapter.html">fleet_adapter package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../mission_manager.html">mission_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fleet_simulation.html">fleet_simulation package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">ROS Interfaces</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../fleet_interfaces_msg.html">fleet_interfaces — Messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../coflot_bringup_fleet_launch.html">coflot_bringup_fleet — Launch files</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">coflot_fleet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">fleet_adapter.fleet_adapter</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for fleet_adapter.fleet_adapter</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># fleet_adapter.py</span>
+
+<span class="sd">&quot;&quot;&quot;Fleet State Aggregator Node.</span>
+
+<span class="sd">This module defines the FleetStateAggregator node, which centralizes information </span>
+<span class="sd">from multiple robots (battery, pose, navigation status) and publishes a unified </span>
+<span class="sd">fleet state message.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.subscription</span><span class="w"> </span><span class="kn">import</span> <span class="n">Subscription</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.time</span><span class="w"> </span><span class="kn">import</span> <span class="n">Time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="c1"># Standard Messages</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sensor_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">BatteryState</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nav2_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">BehaviorTreeLog</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">geometry_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pose</span>
+
+<span class="c1"># Custom Messages</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fleet_interfaces.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">RobotState</span><span class="p">,</span> <span class="n">RobotStateArray</span>
+
+<span class="n">FLEET_STATE_TOPIC</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;/fleet/fleet_state&#39;</span>
+<span class="n">POSE_TIMEOUT_SEC</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span>  <span class="c1"># Time before warning</span>
+
+<div class="viewcode-block" id="FleetStateAggregator">
+<a class="viewcode-back" href="../../fleet_adapter.html#fleet_adapter.fleet_adapter.FleetStateAggregator">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FleetStateAggregator</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Aggregates states from multiple robots into a single fleet message.</span>
+
+<span class="sd">    This node dynamically scans for active robots based on their topic namespaces,</span>
+<span class="sd">    subscribes to their individual status topics (battery, behavior tree, pose),</span>
+<span class="sd">    and publishes a consolidated `RobotStateArray`.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        robots_data (Dict[str, Dict[str, Any]]): Storage for the latest data </span>
+<span class="sd">            of each robot. keys are robot_ids. </span>
+<span class="sd">            Structure: { &#39;robot_id&#39;: { &#39;battery&#39;: float, &#39;mode&#39;: str, </span>
+<span class="sd">            &#39;pose&#39;: Pose, &#39;last_pose_time&#39;: Time } }.</span>
+<span class="sd">        known_robots (Set[str]): Set of currently registered robot IDs.</span>
+<span class="sd">        subscribers (List[Subscription]): List of active subscription objects </span>
+<span class="sd">            to prevent garbage collection.</span>
+
+<span class="sd">    ROS Topics:</span>
+<span class="sd">        Publishers:</span>
+<span class="sd">            /fleet/fleet_state (fleet_interfaces/msg/RobotStateArray): </span>
+<span class="sd">                The aggregated state of the entire fleet.</span>
+<span class="sd">        </span>
+<span class="sd">        Subscribers (Dynamically created per robot_id):</span>
+<span class="sd">            /{robot_id}/sensors/battery_state (sensor_msgs/msg/BatteryState): </span>
+<span class="sd">                Battery level.</span>
+<span class="sd">            /{robot_id}/behavior_tree_log (nav2_msgs/msg/BehaviorTreeLog): </span>
+<span class="sd">                Navigation status.</span>
+<span class="sd">            /{robot_id}/robot_pose (geometry_msgs/msg/Pose): </span>
+<span class="sd">                Current robot position.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the FleetStateAggregator node.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;fleet_adapter&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fleet_pub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span><span class="n">RobotStateArray</span><span class="p">,</span> <span class="n">FLEET_STATE_TOPIC</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="c1"># Structure : { &#39;robot_id&#39;: { &#39;battery&#39;: float, &#39;mode&#39;: str, &#39;pose&#39;: Pose, &#39;last_pose_time&#39;: Time } }</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">robots_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">known_robots</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscribers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Subscription</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span> 
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_for_robots</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">publish_fleet_state</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Fleet State Aggregator (Mode Pose Topic) démarré.&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FleetStateAggregator.scan_for_robots">
+<a class="viewcode-back" href="../../fleet_adapter.html#fleet_adapter.fleet_adapter.FleetStateAggregator.scan_for_robots">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">scan_for_robots</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scans the ROS graph to detect new or disconnected robots.</span>
+
+<span class="sd">        This method looks for topics ending with &#39;/sensors/battery_state&#39;. </span>
+<span class="sd">        If a topic matches, the prefix is assumed to be the robot_id.</span>
+<span class="sd">        It registers new robots and unregisters those that are no longer active.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">topic_names_and_types</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_topic_names_and_types</span><span class="p">()</span>
+        <span class="n">active_robots_in_scan</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">topic_name</span><span class="p">,</span> <span class="n">types</span> <span class="ow">in</span> <span class="n">topic_names_and_types</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;sensor_msgs/msg/BatteryState&#39;</span> <span class="ow">in</span> <span class="n">types</span> <span class="ow">and</span> <span class="n">topic_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;/sensors/battery_state&#39;</span><span class="p">):</span>
+                <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">topic_name</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="n">robot_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_publishers</span><span class="p">(</span><span class="n">topic_name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">active_robots_in_scan</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">robot_id</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">robot_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_robots</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">register_new_robot</span><span class="p">(</span><span class="n">robot_id</span><span class="p">)</span>
+
+        <span class="n">disconnected_robots</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_robots</span> <span class="o">-</span> <span class="n">active_robots_in_scan</span>
+        <span class="k">for</span> <span class="n">robot_id</span> <span class="ow">in</span> <span class="n">disconnected_robots</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">unregister_robot</span><span class="p">(</span><span class="n">robot_id</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="FleetStateAggregator.register_new_robot">
+<a class="viewcode-back" href="../../fleet_adapter.html#fleet_adapter.fleet_adapter.FleetStateAggregator.register_new_robot">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">register_new_robot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Registers a new robot and subscribes to its topics.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            robot_id (str): The unique identifier of the robot (namespace).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✨ Connexion du robot : </span><span class="si">{</span><span class="n">robot_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">known_robots</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">robot_id</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">robots_data</span><span class="p">[</span><span class="n">robot_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;battery&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s1">&#39;mode&#39;</span><span class="p">:</span> <span class="s1">&#39;idle&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;nav_status&#39;</span><span class="p">:</span> <span class="s1">&#39;IDLE&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;pose&#39;</span><span class="p">:</span> <span class="n">Pose</span><span class="p">(),</span>
+            <span class="c1"># On initialise le timer au moment de la connexion</span>
+            <span class="s1">&#39;last_pose_time&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> 
+        <span class="p">}</span>
+
+        <span class="c1"># 1. Sub Batterie</span>
+        <span class="n">sub_bat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_subscription</span><span class="p">(</span>
+            <span class="n">BatteryState</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">robot_id</span><span class="si">}</span><span class="s2">/sensors/battery_state&quot;</span><span class="p">,</span>
+            <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">battery_callback</span><span class="p">,</span> <span class="n">robot_id</span><span class="o">=</span><span class="n">robot_id</span><span class="p">),</span> <span class="mi">10</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscribers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sub_bat</span><span class="p">)</span>
+
+        <span class="c1"># 2. Sub Behavior Tree</span>
+        <span class="n">sub_bt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_subscription</span><span class="p">(</span>
+            <span class="n">BehaviorTreeLog</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">robot_id</span><span class="si">}</span><span class="s2">/behavior_tree_log&quot;</span><span class="p">,</span>
+            <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bt_log_callback</span><span class="p">,</span> <span class="n">robot_id</span><span class="o">=</span><span class="n">robot_id</span><span class="p">),</span> <span class="mi">10</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscribers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sub_bt</span><span class="p">)</span>
+
+        <span class="c1"># 3. Sub Pose</span>
+        <span class="n">sub_pose</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_subscription</span><span class="p">(</span>
+            <span class="n">Pose</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">robot_id</span><span class="si">}</span><span class="s2">/robot_pose&quot;</span><span class="p">,</span>
+            <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pose_callback</span><span class="p">,</span> <span class="n">robot_id</span><span class="o">=</span><span class="n">robot_id</span><span class="p">),</span> <span class="mi">10</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscribers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sub_pose</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="FleetStateAggregator.unregister_robot">
+<a class="viewcode-back" href="../../fleet_adapter.html#fleet_adapter.fleet_adapter.FleetStateAggregator.unregister_robot">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">unregister_robot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Unregisters a robot and cleans up its data.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This implementation does not explicitly destroy individual subscriptions </span>
+<span class="sd">            stored in the `subscribers` list, relying on Python&#39;s garbage collection </span>
+<span class="sd">            or node destruction if necessary.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            robot_id (str): The unique identifier of the robot to remove.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;💤 Déconnexion du robot : </span><span class="si">{</span><span class="n">robot_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">robot_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_robots</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">known_robots</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">robot_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">robot_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">robots_data</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">robots_data</span><span class="p">[</span><span class="n">robot_id</span><span class="p">]</span></div>
+
+
+    <span class="c1"># ---------------------- Callbacks ----------------------</span>
+
+<div class="viewcode-block" id="FleetStateAggregator.battery_callback">
+<a class="viewcode-back" href="../../fleet_adapter.html#fleet_adapter.fleet_adapter.FleetStateAggregator.battery_callback">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">battery_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">BatteryState</span><span class="p">,</span> <span class="n">robot_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the battery level for a specific robot.</span>
+
+<span class="sd">        Handles both percentage-based (0.0-1.0) and voltage-based reporting </span>
+<span class="sd">        (estimated mapping from 12V to 16.5V).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            msg (BatteryState): The battery state message.</span>
+<span class="sd">            robot_id (str): The ID of the robot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">robot_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">robots_data</span><span class="p">:</span>
+            <span class="n">pct</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">percentage</span><span class="p">):</span>
+                <span class="n">pct</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">percentage</span> <span class="o">*</span> <span class="mf">100.0</span> <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">percentage</span> <span class="o">&lt;=</span> <span class="mf">1.0</span> <span class="k">else</span> <span class="n">msg</span><span class="o">.</span><span class="n">percentage</span>
+            <span class="k">elif</span> <span class="n">msg</span><span class="o">.</span><span class="n">voltage</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="n">pct</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">((</span><span class="n">msg</span><span class="o">.</span><span class="n">voltage</span> <span class="o">-</span> <span class="mf">12.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">16.5</span> <span class="o">-</span> <span class="mf">12.0</span><span class="p">)</span> <span class="o">*</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="mf">100.0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">robots_data</span><span class="p">[</span><span class="n">robot_id</span><span class="p">][</span><span class="s1">&#39;battery&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">pct</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="FleetStateAggregator.bt_log_callback">
+<a class="viewcode-back" href="../../fleet_adapter.html#fleet_adapter.fleet_adapter.FleetStateAggregator.bt_log_callback">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bt_log_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">BehaviorTreeLog</span><span class="p">,</span> <span class="n">robot_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the navigation status and mode based on Behavior Tree logs.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            msg (BehaviorTreeLog): The behavior tree log message.</span>
+<span class="sd">            robot_id (str): The ID of the robot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">robot_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">robots_data</span> <span class="ow">and</span> <span class="n">msg</span><span class="o">.</span><span class="n">event_log</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">event_log</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">current_status</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">robots_data</span><span class="p">[</span><span class="n">robot_id</span><span class="p">][</span><span class="s1">&#39;nav_status&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">status</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">robots_data</span><span class="p">[</span><span class="n">robot_id</span><span class="p">][</span><span class="s1">&#39;mode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;busy&quot;</span> <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;RUNNING&quot;</span> <span class="k">else</span> <span class="s2">&quot;idle&quot;</span></div>
+
+
+<div class="viewcode-block" id="FleetStateAggregator.pose_callback">
+<a class="viewcode-back" href="../../fleet_adapter.html#fleet_adapter.fleet_adapter.FleetStateAggregator.pose_callback">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pose_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Pose</span><span class="p">,</span> <span class="n">robot_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the pose and the last received timestamp for a robot.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            msg (Pose): The pose message.</span>
+<span class="sd">            robot_id (str): The ID of the robot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">robot_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">robots_data</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">robots_data</span><span class="p">[</span><span class="n">robot_id</span><span class="p">][</span><span class="s1">&#39;pose&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">msg</span>
+            <span class="c1"># Mise à jour du timestamp</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">robots_data</span><span class="p">[</span><span class="n">robot_id</span><span class="p">][</span><span class="s1">&#39;last_pose_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span></div>
+
+
+    <span class="c1"># ---------------------- Publish ----------------------</span>
+
+<div class="viewcode-block" id="FleetStateAggregator.publish_fleet_state">
+<a class="viewcode-back" href="../../fleet_adapter.html#fleet_adapter.fleet_adapter.FleetStateAggregator.publish_fleet_state">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">publish_fleet_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Aggregates and publishes the state of all known robots.</span>
+
+<span class="sd">        This method checks for data staleness (timeout) on robot poses and </span>
+<span class="sd">        issues a warning if data is too old.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_robots</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">msg_array</span> <span class="o">=</span> <span class="n">RobotStateArray</span><span class="p">()</span>
+        <span class="n">current_time</span><span class="p">:</span> <span class="n">Time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        
+        <span class="n">msg_array</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">stamp</span> <span class="o">=</span> <span class="n">current_time</span><span class="o">.</span><span class="n">to_msg</span><span class="p">()</span>
+        <span class="n">msg_array</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">frame_id</span> <span class="o">=</span> <span class="s2">&quot;map&quot;</span>
+
+        <span class="k">for</span> <span class="n">robot_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_robots</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">robot_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">robots_data</span><span class="p">:</span> <span class="k">continue</span>
+            <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">robots_data</span><span class="p">[</span><span class="n">robot_id</span><span class="p">]</span>
+
+            <span class="c1"># --- CHECK TIMEOUT POSE ---</span>
+            <span class="c1"># Calcul du delta temps en secondes</span>
+            <span class="n">last_pose_time</span><span class="p">:</span> <span class="n">Time</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;last_pose_time&#39;</span><span class="p">]</span>
+            <span class="n">time_diff</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="p">(</span><span class="n">current_time</span> <span class="o">-</span> <span class="n">last_pose_time</span><span class="p">)</span><span class="o">.</span><span class="n">nanoseconds</span> <span class="o">/</span> <span class="mf">1e9</span>
+            
+            <span class="k">if</span> <span class="n">time_diff</span> <span class="o">&gt;</span> <span class="n">POSE_TIMEOUT_SEC</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;⚠️ Pas de données de pose pour </span><span class="si">{</span><span class="n">robot_id</span><span class="si">}</span><span class="s2"> depuis </span><span class="si">{</span><span class="n">time_diff</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">,</span>
+                    <span class="n">throttle_duration_sec</span><span class="o">=</span><span class="mf">2.0</span>
+                <span class="p">)</span>
+            <span class="c1"># --------------------------</span>
+
+            <span class="n">robot_state</span> <span class="o">=</span> <span class="n">RobotState</span><span class="p">()</span>
+            <span class="n">robot_state</span><span class="o">.</span><span class="n">robot_id</span> <span class="o">=</span> <span class="n">robot_id</span>
+            <span class="n">robot_state</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">])</span>
+            <span class="n">robot_state</span><span class="o">.</span><span class="n">battery_pct</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;battery&#39;</span><span class="p">])</span>
+            <span class="n">robot_state</span><span class="o">.</span><span class="n">pose</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;pose&#39;</span><span class="p">]</span>
+            <span class="n">robot_state</span><span class="o">.</span><span class="n">stamp</span> <span class="o">=</span> <span class="n">current_time</span><span class="o">.</span><span class="n">to_msg</span><span class="p">()</span>
+            <span class="n">msg_array</span><span class="o">.</span><span class="n">robots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">robot_state</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fleet_pub</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">msg_array</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../fleet_adapter.html#fleet_adapter.fleet_adapter.main">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry point for the fleet state aggregator node.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        args (Optional[List[str]]): Command line arguments.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">FleetStateAggregator</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">destroy_node</span><span class="p">()</span>
+        <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Victor Forcioli, Alexis Vermeersch, Djino Varrambier Geoffroy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

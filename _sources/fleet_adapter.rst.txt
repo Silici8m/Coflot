@@ -1,0 +1,18 @@
+fleet\_adapter package
+======================
+
+.. automodule:: fleet_adapter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+fleet\_adapter.fleet\_adapter module
+------------------------------------
+
+.. automodule:: fleet_adapter.fleet_adapter
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,232 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>fleet_interfaces — Messages &mdash; coflot_fleet 1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=56dcb7b8"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="coflot_bringup_fleet — Launch files" href="coflot_bringup_fleet_launch.html" />
+    <link rel="prev" title="fleet_simulation package" href="fleet_simulation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            coflot_fleet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Workspace</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="workspace_readme.html">Coflot - Système de Gestion de Flotte de Robots</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Packages Overview</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fleet_interfaces_readme.html">fleet_interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mission_manager_readme.html">mission_manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fleet_adapter_readme.html">fleet_adapter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coflot_bringup_fleet_readme.html">coflot_bringup_fleet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fleet_simulation_readme.html">fleet_simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fleet_adapter.html">fleet_adapter package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mission_manager.html">mission_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fleet_simulation.html">fleet_simulation package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">ROS Interfaces</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">fleet_interfaces — Messages</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#missionrequest-msg">MissionRequest.msg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#missionstatearray-msg">MissionStateArray.msg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#missionstate-msg">MissionState.msg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#robotstatearray-msg">RobotStateArray.msg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#robotstate-msg">RobotState.msg</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="coflot_bringup_fleet_launch.html">coflot_bringup_fleet — Launch files</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">coflot_fleet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">fleet_interfaces — Messages</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/fleet_interfaces_msg.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="fleet-interfaces-messages">
+<h1>fleet_interfaces — Messages<a class="headerlink" href="#fleet-interfaces-messages" title="Link to this heading"></a></h1>
+<section id="missionrequest-msg">
+<h2>MissionRequest.msg<a class="headerlink" href="#missionrequest-msg" title="Link to this heading"></a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># MissionRequest.msg
+
+# DESCRIPTION: Request definition for submitting a new mission to the fleet manager.
+
+std_msgs/Header header
+
+# Unique identifier for the mission (e.g., &quot;mission_123&quot;)
+string mission_id
+
+# Priority level : higher values indicate higher priority (e.g., 1 for NORMAL, 2 for PRIORITAIRE, 3 for URGENTE)
+int32 priority
+
+# Ordered list of target poses the robot must visit
+geometry_msgs/Pose[] waypoints
+</pre></div>
+</div>
+</section>
+<section id="missionstatearray-msg">
+<h2>MissionStateArray.msg<a class="headerlink" href="#missionstatearray-msg" title="Link to this heading"></a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># MissionStateArray.msg
+
+# DESCRIPTION: Aggregated list of all mission states (active and queued).
+
+std_msgs/Header header
+
+MissionState[] missions
+</pre></div>
+</div>
+</section>
+<section id="missionstate-msg">
+<h2>MissionState.msg<a class="headerlink" href="#missionstate-msg" title="Link to this heading"></a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># MissionState.msg
+
+# DESCRIPTION: Live status of a specific mission managed by the system.
+
+string mission_id
+
+# Priority level: 0 = Normal, 1 = High, 2 = Urgent
+int32 priority
+
+# Sequence of waypoints to visit
+geometry_msgs/Pose[] waypoints
+
+# ID of the robot performing the mission (empty string &quot;&quot; if unassigned)
+string assigned_robot_id
+
+# Lifecycle status.
+# Values: PENDING, ASSIGNED, APPROACHING, WAITING, DELIVERING, 
+#         SUSPENDING, DISCHARGING, FINISHED, FAILED
+string status 
+
+# Current target waypoint index.
+# -1: Not started / 0: Moving to 1st waypoint / Increments upon departure.
+int32 goal_waypoint_idx
+
+# Time when the mission was originally requested
+builtin_interfaces/Time request_stamp
+</pre></div>
+</div>
+</section>
+<section id="robotstatearray-msg">
+<h2>RobotStateArray.msg<a class="headerlink" href="#robotstatearray-msg" title="Link to this heading"></a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># RobotStateArray.msg
+
+# DESCRIPTION: Aggregated telemetry for the entire fleet.
+
+std_msgs/Header header
+
+RobotState[] robots
+</pre></div>
+</div>
+</section>
+<section id="robotstate-msg">
+<h2>RobotState.msg<a class="headerlink" href="#robotstate-msg" title="Link to this heading"></a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># RobotState.msg
+
+# DESCRIPTION: Telemetry and status data for a single robot.
+
+# Unique identifier of the robot (namespace)
+string robot_id
+
+# Current operational mode (Not used)
+string mode
+
+# Battery level percentage (0.0 to 100.0)
+float32 battery_pct
+
+# Current map-referenced pose
+geometry_msgs/Pose pose
+
+# Timestamp of the data
+builtin_interfaces/Time stamp
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="fleet_simulation.html" class="btn btn-neutral float-left" title="fleet_simulation package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="coflot_bringup_fleet_launch.html" class="btn btn-neutral float-right" title="coflot_bringup_fleet — Launch files" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Victor Forcioli, Alexis Vermeersch, Djino Varrambier Geoffroy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

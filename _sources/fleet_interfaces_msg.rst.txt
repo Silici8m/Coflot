@@ -1,0 +1,33 @@
+fleet_interfaces — Messages
+===========================
+
+MissionRequest.msg
+------------------
+
+.. literalinclude:: interfaces/MissionRequest.msg
+   :language: text
+
+MissionStateArray.msg
+---------------------
+
+.. literalinclude:: interfaces/MissionStateArray.msg
+   :language: text
+
+MissionState.msg
+----------------
+
+.. literalinclude:: interfaces/MissionState.msg
+   :language: text
+
+RobotStateArray.msg
+-------------------
+
+.. literalinclude:: interfaces/RobotStateArray.msg
+   :language: text
+
+RobotState.msg
+--------------
+
+.. literalinclude:: interfaces/RobotState.msg
+   :language: text
+

@@ -1,0 +1,1033 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mission_manager.core.mission &mdash; coflot_fleet 1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=56dcb7b8"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}`;
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        all_mermaids.forEach((el) => {
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+        await mermaid.run();
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+const load = async () => {
+    initStyles();
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...JSON.parse(
+                    `{"startOnLoad": false}`
+                ),
+                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...JSON.parse(
+        `{"startOnLoad": false}`
+    ),
+    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    }
+);
+
+window.addEventListener("load", load);</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            coflot_fleet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Workspace</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../workspace_readme.html">Coflot - Système de Gestion de Flotte de Robots</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Packages Overview</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../fleet_interfaces_readme.html">fleet_interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mission_manager_readme.html">mission_manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fleet_adapter_readme.html">fleet_adapter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../coflot_bringup_fleet_readme.html">coflot_bringup_fleet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fleet_simulation_readme.html">fleet_simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../fleet_adapter.html">fleet_adapter package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mission_manager.html">mission_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fleet_simulation.html">fleet_simulation package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">ROS Interfaces</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../fleet_interfaces_msg.html">fleet_interfaces — Messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../coflot_bringup_fleet_launch.html">coflot_bringup_fleet — Launch files</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">coflot_fleet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">mission_manager.core.mission</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for mission_manager.core.mission</h1><div class="highlight"><pre>
+<span></span><span class="c1"># mission.py</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.time</span><span class="w"> </span><span class="kn">import</span> <span class="n">Time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.timer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Timer</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">mission_manager.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">VALIDATION_TIMEOUT</span>
+
+<div class="viewcode-block" id="MissionState">
+<a class="viewcode-back" href="../../../mission_manager.core.html#mission_manager.core.mission.MissionState">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MissionState</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Enumeration representing the possible states of a mission lifecycle.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        PENDING: Mission is created but not yet active or has been revoked/released.</span>
+<span class="sd">        ASSIGNED: Mission is assigned to a robot but hasn&#39;t started moving.</span>
+<span class="sd">        APPROACHING: Robot is moving towards the first waypoint (pickup point).</span>
+<span class="sd">        WAITING: Robot arrived at a waypoint and waits for validation to proceed.</span>
+<span class="sd">        DELIVERING: Robot is moving between intermediate waypoints.</span>
+<span class="sd">        SUSPENDING: Mission is being paused; robot is moving to a safe halt or waypoint.</span>
+<span class="sd">        DISCHARGING: Robot arrived at the final destination or is unloading.</span>
+<span class="sd">        FINISHED: Mission completed successfully.</span>
+<span class="sd">        FAILED: Mission failed due to navigation or operational errors.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">PENDING</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ASSIGNED</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">APPROACHING</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">WAITING</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">DELIVERING</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">SUSPENDING</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">DISCHARGING</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">FINISHED</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">FAILED</span> <span class="o">=</span> <span class="mi">8</span></div>
+
+    
+<div class="viewcode-block" id="MissionPriority">
+<a class="viewcode-back" href="../../../mission_manager.core.html#mission_manager.core.mission.MissionPriority">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MissionPriority</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Enumeration representing the priority levels of a mission.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        NORMAL: Standard priority.</span>
+<span class="sd">        PRIORITAIRE: High priority.</span>
+<span class="sd">        URGENTE: Critical priority, may preempt other missions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">NORMAL</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">PRIORITAIRE</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">URGENTE</span> <span class="o">=</span> <span class="mi">3</span></div>
+
+
+<div class="viewcode-block" id="TransitionException">
+<a class="viewcode-back" href="../../../mission_manager.core.html#mission_manager.core.mission.TransitionException">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TransitionException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Exception raised when an invalid state transition is attempted.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+    
+    
+<div class="viewcode-block" id="Mission">
+<a class="viewcode-back" href="../../../mission_manager.core.html#mission_manager.core.mission.Mission">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Mission</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Manages the lifecycle, state, and execution of a specific mission.</span>
+
+<span class="sd">    This class encapsulates all data related to a mission (waypoints, priority, state)</span>
+<span class="sd">    and manages the interactions with the assigned robot via a robot adapter. It handles</span>
+<span class="sd">    navigation events, timeouts, and human validation logic.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        node (Node): Reference to the parent ROS 2 node for logging and timer creation.</span>
+<span class="sd">        logger (rclpy.impl.rcutils_logger.RcutilsLogger): Logger instance.</span>
+<span class="sd">        mission_id (str): Unique identifier for the mission.</span>
+<span class="sd">        priority (int): Priority level of the mission.</span>
+<span class="sd">        state (MissionState): Current state of the mission.</span>
+<span class="sd">        waypoints (list): List of geometry_msgs/Pose representing the path.</span>
+<span class="sd">        assigned_robot_id (Optional[str]): ID of the robot currently executing the mission.</span>
+<span class="sd">        goal_waypoint_idx (Optional[int]): Index of the current target waypoint.</span>
+<span class="sd">        request_stamp (Time): Timestamp when the mission was requested.</span>
+<span class="sd">        robot_adapter (Optional[Any]): Interface to control the assigned robot.</span>
+<span class="sd">        timeout_timer (Optional[Timer]): Timer for auto-validation at waypoints.</span>
+<span class="sd">        validation_timeout (float): Duration in seconds before auto-validation.</span>
+<span class="sd">        lock (threading.RLock): Reentrant lock for thread-safe state management.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">node</span><span class="p">:</span> <span class="n">Node</span>
+    <span class="n">mission_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">priority</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">state</span><span class="p">:</span> <span class="n">MissionState</span>
+    <span class="n">waypoints</span><span class="p">:</span> <span class="nb">list</span>
+    <span class="n">assigned_robot_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">goal_waypoint_idx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">request_stamp</span><span class="p">:</span> <span class="n">Time</span>
+    <span class="c1">#client: RobotNavigationActionClient</span>
+    <span class="n">timeout_timer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Timer</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent_node</span><span class="p">:</span> <span class="n">Node</span><span class="p">,</span> <span class="n">mission_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">priority</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">waypoints</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">request_stamp</span><span class="p">:</span> <span class="n">Time</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes a new Mission instance.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            parent_node (Node): The ROS 2 node managing this mission.</span>
+<span class="sd">            mission_id (str): Unique identifier.</span>
+<span class="sd">            priority (int): Priority value (usually mapped from MissionPriority).</span>
+<span class="sd">            waypoints (list): List of target poses.</span>
+<span class="sd">            request_stamp (Time): Time of creation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">node</span> <span class="o">=</span> <span class="n">parent_node</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">parent_node</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mission_id</span> <span class="o">=</span> <span class="n">mission_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">priority</span> <span class="o">=</span> <span class="n">priority</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">PENDING</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">waypoints</span> <span class="o">=</span> <span class="n">waypoints</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assigned_robot_id</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">goal_waypoint_idx</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">request_stamp</span> <span class="o">=</span> <span class="n">request_stamp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">robot_adapter</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timeout_timer</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validation_timeout</span> <span class="o">=</span> <span class="n">VALIDATION_TIMEOUT</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">RLock</span><span class="p">()</span>
+        
+        
+<div class="viewcode-block" id="Mission.assign">
+<a class="viewcode-back" href="../../../mission_manager.core.html#mission_manager.core.mission.Mission.assign">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">assign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">robot_adapter</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Assigns a specific robot to this mission.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            robot_id (str): The identifier of the robot.</span>
+<span class="sd">            robot_adapter (Any): The adapter instance to control the robot.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TransitionException: If the mission is not in PENDING state.</span>
+<span class="sd">            Exception: If the robot adapter indicates the robot is busy.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">PENDING</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">TransitionException</span><span class="p">(</span><span class="s2">&quot;Mission can only be assigned from PENDING state.&quot;</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">robot_adapter</span><span class="o">.</span><span class="n">is_busy</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot assign mission to a robot whose action server is busy.&quot;</span><span class="p">)</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">assigned_robot_id</span> <span class="o">=</span> <span class="n">robot_id</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">robot_adapter</span> <span class="o">=</span> <span class="n">robot_adapter</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_waypoint_idx</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">goal_waypoint_idx</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">ASSIGNED</span></div>
+
+        
+        
+<div class="viewcode-block" id="Mission.start_approaching">
+<a class="viewcode-back" href="../../../mission_manager.core.html#mission_manager.core.mission.Mission.start_approaching">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">start_approaching</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Commands the robot to move towards the first waypoint (pickup location).</span>
+
+<span class="sd">        Transitions the mission state from ASSIGNED to APPROACHING.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TransitionException: If the mission is not in ASSIGNED state.</span>
+<span class="sd">            Exception: If the robot is busy executing another action.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">ASSIGNED</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">TransitionException</span><span class="p">(</span><span class="s2">&quot;Mission can only start approaching from ASSIGNED state.&quot;</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">robot_adapter</span><span class="o">.</span><span class="n">is_busy</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Robot </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">assigned_robot_id</span><span class="si">}</span><span class="s2"> is busy, cannot start mission </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mission_id</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot start mission with a robot whose action server is busy.&quot;</span><span class="p">)</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">robot_adapter</span><span class="o">.</span><span class="n">send_goal</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">waypoints</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">goal_waypoint_idx</span><span class="p">],</span>
+                <span class="n">on_success</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">on_arrival_cb</span><span class="p">,</span>
+                <span class="n">on_failure</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">on_failure_cb</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">APPROACHING</span></div>
+
+            
+            
+<div class="viewcode-block" id="Mission.revoke">
+<a class="viewcode-back" href="../../../mission_manager.core.html#mission_manager.core.mission.Mission.revoke">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">revoke</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Cancels the mission while it is in the approaching phase.</span>
+
+<span class="sd">        Stops the robot and resets the mission state to PENDING, allowing reassignment.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TransitionException: If the mission is not in APPROACHING state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span>  <span class="n">MissionState</span><span class="o">.</span><span class="n">APPROACHING</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">TransitionException</span><span class="p">(</span><span class="s2">&quot;Mission can only be revoked from APPROACHING state.&quot;</span><span class="p">)</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">_release_robot</span><span class="p">(</span><span class="n">cancel_active_goal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">PENDING</span></div>
+
+
+
+<div class="viewcode-block" id="Mission.proceed">
+<a class="viewcode-back" href="../../../mission_manager.core.html#mission_manager.core.mission.Mission.proceed">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">proceed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Commands the robot to proceed to the next waypoint in the list.</span>
+
+<span class="sd">        Transitions the mission state from WAITING to DELIVERING.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TransitionException: If the mission is not in WAITING state.</span>
+<span class="sd">            Exception: If the next waypoint index is out of bounds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">WAITING</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">TransitionException</span><span class="p">(</span><span class="s2">&quot;Mission can only proceed from WAITING state.&quot;</span><span class="p">)</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">goal_waypoint_idx</span> <span class="o">+=</span> <span class="mi">1</span>
+            
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_waypoint_idx</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">waypoints</span><span class="p">):</span>
+                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot proceed: Waypoint index out of bounds.&quot;</span><span class="p">)</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">robot_adapter</span><span class="o">.</span><span class="n">send_goal</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">waypoints</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">goal_waypoint_idx</span><span class="p">],</span>
+                <span class="n">on_success</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">on_arrival_cb</span><span class="p">,</span>
+                <span class="n">on_failure</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">on_failure_cb</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">DELIVERING</span></div>
+
+    
+    
+<div class="viewcode-block" id="Mission.suspend">
+<a class="viewcode-back" href="../../../mission_manager.core.html#mission_manager.core.mission.Mission.suspend">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">suspend</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Requests the mission to pause execution.</span>
+
+<span class="sd">        Transitions state to SUSPENDING. If the robot is already waiting, it simulates</span>
+<span class="sd">        an arrival to trigger the suspending logic immediately.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            Suspension is ignored if the robot is currently traveling to the final waypoint.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TransitionException: If not in DELIVERING or WAITING state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">MissionState</span><span class="o">.</span><span class="n">DELIVERING</span><span class="p">,</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">WAITING</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="n">TransitionException</span><span class="p">(</span><span class="s2">&quot;Mission can only be suspended from DELIVERING or WAITING state.&quot;</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_waypoint_idx</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">waypoints</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mission </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mission_id</span><span class="si">}</span><span class="s2">: Cannot suspend on last leg, finishing mission.&quot;</span><span class="p">)</span>
+                <span class="k">return</span>  <span class="c1"># No suspension at last waypoint</span>
+        
+            <span class="k">match</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span>
+                <span class="k">case</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">DELIVERING</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">SUSPENDING</span>
+                <span class="k">case</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">WAITING</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">destroy_validation_timer</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">SUSPENDING</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">on_arrival_cb</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="Mission.release">
+<a class="viewcode-back" href="../../../mission_manager.core.html#mission_manager.core.mission.Mission.release">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">release</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Releases the robot from the current mission, making the mission pending again.</span>
+
+<span class="sd">        Used when a mission is interrupted but can be resumed later. Transitions</span>
+<span class="sd">        state from DISCHARGING to PENDING.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TransitionException: If the mission is not in DISCHARGING state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">DISCHARGING</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">TransitionException</span><span class="p">(</span><span class="s2">&quot;Mission can only be released from DISCHARGING state.&quot;</span><span class="p">)</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">_release_robot</span><span class="p">(</span><span class="n">cancel_active_goal</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">PENDING</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mission </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mission_id</span><span class="si">}</span><span class="s2"> released. Resumable at waypoint </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">goal_waypoint_idx</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
+
+            
+            
+<div class="viewcode-block" id="Mission.complete">
+<a class="viewcode-back" href="../../../mission_manager.core.html#mission_manager.core.mission.Mission.complete">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">complete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Marks the mission as successfully finished and releases the robot.</span>
+
+<span class="sd">        Transitions state from DISCHARGING to FINISHED.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TransitionException: If the mission is not in DISCHARGING state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">DISCHARGING</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">TransitionException</span><span class="p">(</span><span class="s2">&quot;Mission can only be completed from DISCHARGING state.&quot;</span><span class="p">)</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">_release_robot</span><span class="p">(</span><span class="n">cancel_active_goal</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">FINISHED</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mission </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mission_id</span><span class="si">}</span><span class="s2"> finished successfully.&quot;</span><span class="p">)</span></div>
+
+
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_release_robot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cancel_active_goal</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Internal method to decouple the robot from the mission.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            cancel_active_goal (bool): If True, sends a cancellation request for the</span>
+<span class="sd">                                       current navigation goal.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">robot_adapter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">cancel_active_goal</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">robot_adapter</span><span class="o">.</span><span class="n">is_navigating</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">robot_adapter</span><span class="o">.</span><span class="n">cancel_goal</span><span class="p">()</span>
+                    
+                <span class="bp">self</span><span class="o">.</span><span class="n">assigned_robot_id</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">robot_adapter</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="Mission.on_arrival_cb">
+<a class="viewcode-back" href="../../../mission_manager.core.html#mission_manager.core.mission.Mission.on_arrival_cb">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_arrival_cb</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Callback executed when the robot successfully reaches a target waypoint.</span>
+
+<span class="sd">        Handles state transitions based on the current mission phase (APPROACHING,</span>
+<span class="sd">        DELIVERING, SUSPENDING) and starts the validation timer.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TransitionException: If called in an invalid state.</span>
+<span class="sd">            Exception: If an invalid waypoint index is encountered.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">PENDING</span><span class="p">:</span>
+            <span class="c1"># Cas d&#39;un revoke</span>
+            <span class="k">return</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">MissionState</span><span class="o">.</span><span class="n">APPROACHING</span><span class="p">,</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">DELIVERING</span><span class="p">,</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">SUSPENDING</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="n">TransitionException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Arrival event not valid in current state. </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">start_validation_timer</span><span class="p">()</span>
+            
+            <span class="k">match</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span>
+                <span class="k">case</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">APPROACHING</span><span class="p">:</span>
+                    <span class="c1"># Wait until the robot is loaded</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">WAITING</span>
+                
+                <span class="k">case</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">SUSPENDING</span><span class="p">:</span>
+                    <span class="c1"># Wait until the robot is unloaded</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_waypoint_idx</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">waypoints</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unwanted behaviour in mission </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mission_id</span><span class="si">}</span><span class="s2"> : Arrived at last waypoint during SUSPENDING.&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">DISCHARGING</span>
+                
+                <span class="k">case</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">DELIVERING</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_waypoint_idx</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">waypoints</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="c1"># Waiting before moving to next waypoint</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">WAITING</span>
+                    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_waypoint_idx</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">waypoints</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="c1"># Last waypoint reached</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">DISCHARGING</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Invalid waypoint index.&quot;</span><span class="p">)</span>
+                
+                <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">destroy_validation_timer</span><span class="p">()</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Arrival event not valid in current state.&quot;</span><span class="p">)</span></div>
+
+    
+    
+<div class="viewcode-block" id="Mission.start_validation_timer">
+<a class="viewcode-back" href="../../../mission_manager.core.html#mission_manager.core.mission.Mission.start_validation_timer">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">start_validation_timer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Starts or restarts the timer for automatic validation at a waypoint.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeout_timer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">destroy_validation_timer</span><span class="p">()</span>
+                
+            <span class="bp">self</span><span class="o">.</span><span class="n">timeout_timer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">validation_timeout</span><span class="p">,</span> 
+                <span class="bp">self</span><span class="o">.</span><span class="n">_on_validation_timeout</span>
+            <span class="p">)</span></div>
+
+            
+            
+<div class="viewcode-block" id="Mission.destroy_validation_timer">
+<a class="viewcode-back" href="../../../mission_manager.core.html#mission_manager.core.mission.Mission.destroy_validation_timer">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">destroy_validation_timer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Cancels and destroys the active validation timer if it exists.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeout_timer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">timeout_timer</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">timeout_timer</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">timeout_timer</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+    
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_validation_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Internal callback triggered when the validation timer expires.</span>
+
+<span class="sd">        Automatically triggers validation if the mission is waiting or discharging.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="ow">in</span> <span class="p">[</span><span class="n">MissionState</span><span class="o">.</span><span class="n">WAITING</span><span class="p">,</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">DISCHARGING</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mission </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mission_id</span><span class="si">}</span><span class="s2"> : Validation au waypoint </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">goal_waypoint_idx</span><span class="si">}</span><span class="s2"> automatique après timeout.&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">on_validation</span><span class="p">()</span>
+            
+            
+    <span class="c1"># Callback called when validation is received from /human_vaildation topic</span>
+<div class="viewcode-block" id="Mission.on_validation">
+<a class="viewcode-back" href="../../../mission_manager.core.html#mission_manager.core.mission.Mission.on_validation">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Processes a validation signal (manual or timeout).</span>
+
+<span class="sd">        Depending on the current state, this method advances the mission (proceed),</span>
+<span class="sd">        completes it, or releases the robot.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            Exception: If the waypoint index is invalid during DISCHARGING.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeout_timer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">destroy_validation_timer</span><span class="p">()</span>
+            
+            <span class="k">match</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span>    
+                <span class="k">case</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">WAITING</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">proceed</span><span class="p">()</span>
+                    
+                <span class="k">case</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">DISCHARGING</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_waypoint_idx</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">waypoints</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">complete</span><span class="p">()</span>
+                    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_waypoint_idx</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">waypoints</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Invalid waypoint index in _on_validation.&quot;</span><span class="p">)</span>
+                
+                <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected validation for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mission_id</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
+
+            
+            
+<div class="viewcode-block" id="Mission.on_failure_cb">
+<a class="viewcode-back" href="../../../mission_manager.core.html#mission_manager.core.mission.Mission.on_failure_cb">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_failure_cb</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Callback executed when the robot fails to reach a goal.</span>
+
+<span class="sd">        Transitions the mission state to FAILED.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TransitionException: If the failure occurs in a state where navigation is not active.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">PENDING</span><span class="p">:</span>
+                <span class="c1"># Cas d&#39;un revoke</span>
+                <span class="k">return</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">MissionState</span><span class="o">.</span><span class="n">APPROACHING</span><span class="p">,</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">DELIVERING</span><span class="p">,</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">SUSPENDING</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="n">TransitionException</span><span class="p">(</span><span class="s2">&quot;Mission can only fail during APPROACHING, DELIVERING or SUSPENDING states.&quot;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mission </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mission_id</span><span class="si">}</span><span class="s2"> failed during navigation (previous state: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="si">}</span><span class="s2">).&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">MissionState</span><span class="o">.</span><span class="n">FAILED</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Victor Forcioli, Alexis Vermeersch, Djino Varrambier Geoffroy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,310 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>fleet_simulation &mdash; coflot_fleet 1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=56dcb7b8"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="fleet_adapter package" href="fleet_adapter.html" />
+    <link rel="prev" title="coflot_bringup_fleet" href="coflot_bringup_fleet_readme.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            coflot_fleet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Workspace</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="workspace_readme.html">Coflot - Système de Gestion de Flotte de Robots</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Packages Overview</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="fleet_interfaces_readme.html">fleet_interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mission_manager_readme.html">mission_manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fleet_adapter_readme.html">fleet_adapter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coflot_bringup_fleet_readme.html">coflot_bringup_fleet</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">fleet_simulation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#vue-d-ensemble">1 - Vue d’ensemble</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#role-fonctionnel">Rôle fonctionnel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#arborescence">Arborescence</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#utilisation-et-lancement">2 - Utilisation et Lancement</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#executables-ros2-run">Exécutables (ros2 run)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#launch-files-ros2-launch">Launch Files (ros2 launch)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#interfaces-ros">3 - Interfaces ROS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#topics-publies-publishers">Topics Publiés (Publishers)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#actions">Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parametres">Paramètres</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#architecture-et-logique">4 - Architecture et Logique</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#logique-de-simulation-simulatedrobot">Logique de Simulation (SimulatedRobot)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#algorithmes-internes">Algorithmes Internes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fleet_adapter.html">fleet_adapter package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mission_manager.html">mission_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fleet_simulation.html">fleet_simulation package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">ROS Interfaces</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fleet_interfaces_msg.html">fleet_interfaces — Messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coflot_bringup_fleet_launch.html">coflot_bringup_fleet — Launch files</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">coflot_fleet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">fleet_simulation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/fleet_simulation_readme.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="fleet-simulation">
+<h1>fleet_simulation<a class="headerlink" href="#fleet-simulation" title="Link to this heading"></a></h1>
+<section id="vue-d-ensemble">
+<h2>1 - Vue d’ensemble<a class="headerlink" href="#vue-d-ensemble" title="Link to this heading"></a></h2>
+<p>Le package <code class="docutils literal notranslate"><span class="pre">fleet_simulation</span></code> fournit un environnement de simulation léger pour le projet Coflot. Il remplace la couche matérielle (drivers robots) et la stack de navigation (Nav2) réelle pour permettre le développement et le test des couches décisionnelles supérieures (comme le <code class="docutils literal notranslate"><span class="pre">mission_manager</span></code>).</p>
+<section id="role-fonctionnel">
+<h3>Rôle fonctionnel<a class="headerlink" href="#role-fonctionnel" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Virtualisation de la flotte</strong> : Instanciation de robots virtuels (robot_1, robot_2) avec un état interne (position, batterie, statut).</p></li>
+<li><p><strong>Simulation des interfaces Nav2</strong> : Exposition de serveurs d’action standards (MapsToPose, ComputePathToPose) qui imitent le comportement de la navigation réelle (délais de déplacement, consommation batterie).</p></li>
+<li><p><strong>Télémétrie</strong> : Publication centralisée de l’état de la flotte.</p></li>
+</ol>
+</section>
+<section id="arborescence">
+<h3>Arborescence<a class="headerlink" href="#arborescence" title="Link to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>fleet_simulation/
+├── fleet_simulation/
+│   └── fleet_simulation.py   # Nœud principal (MockFleetNode)
+├── launch/
+│   └── simulation.launch.py  # Fichier de lancement (Map + Simu)
+├── maps/                     # Dossier contenant les fichiers de carte (glob)
+├── package.xml
+└── setup.py
+</pre></div>
+</div>
+</section>
+</section>
+<section id="utilisation-et-lancement">
+<h2>2 - Utilisation et Lancement<a class="headerlink" href="#utilisation-et-lancement" title="Link to this heading"></a></h2>
+<section id="executables-ros2-run">
+<h3>Exécutables (ros2 run)<a class="headerlink" href="#executables-ros2-run" title="Link to this heading"></a></h3>
+<p>Le nœud de simulation principal se lance avec l’exécutable <code class="docutils literal notranslate"><span class="pre">fleet_simulation</span></code> :</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>fleet_simulation<span class="w"> </span>fleet_simulation
+</pre></div>
+</div>
+<p>L’exécutable accepte le paramètres <code class="docutils literal notranslate"><span class="pre">sim_speed</span></code> via la ligne de commande :</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>fleet_simulation<span class="w"> </span>fleet_simulation<span class="w"> </span>--ros-args<span class="w"> </span>-p<span class="w"> </span>sim_speed:<span class="o">=</span><span class="m">2</span>.0
+</pre></div>
+</div>
+</section>
+<section id="launch-files-ros2-launch">
+<h3>Launch Files (ros2 launch)<a class="headerlink" href="#launch-files-ros2-launch" title="Link to this heading"></a></h3>
+<p>Un fichier de lancement est fourni pour démarrer le serveur de carte et la simulation simultanément.</p>
+<blockquote>
+<div><p><strong>Note :</strong>
+Le launche file ne doit pas être utilisé. Il faut lancer directement l’exécutable <code class="docutils literal notranslate"><span class="pre">fleet_simulation</span></code>. Pour interagir avec l’IHM et lancer du Map Server, voir package <code class="docutils literal notranslate"><span class="pre">coflot_bringup_fleet</span></code></p>
+</div></blockquote>
+</section>
+</section>
+<section id="interfaces-ros">
+<h2>3 - Interfaces ROS<a class="headerlink" href="#interfaces-ros" title="Link to this heading"></a></h2>
+<p>Le nœud <code class="docutils literal notranslate"><span class="pre">MockFleetNode</span></code> ne souscrit à aucun topic. Il agit principalement comme un générateur de données et un serveur d’actions.</p>
+<section id="topics-publies-publishers">
+<h3>Topics Publiés (Publishers)<a class="headerlink" href="#topics-publies-publishers" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Nom du topic</p></th>
+<th class="head text-left"><p>Type de message</p></th>
+<th class="head text-left"><p>Condition de publication</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">/fleet/fleet_state</span></code></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">fleet_interfaces/RobotStateArray</span></code></p></td>
+<td class="text-left"><p>Publié à une fréquence de <strong>10 Hz</strong> (timer 0.1s). Contient la liste complète des robots avec leur ID, pose et batterie.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="actions">
+<h3>Actions<a class="headerlink" href="#actions" title="Link to this heading"></a></h3>
+<p>Le nœud instancie dynamiquement des serveurs d’action pour chaque robot défini dans la flotte (<code class="docutils literal notranslate"><span class="pre">robot_1</span></code>, <code class="docutils literal notranslate"><span class="pre">robot_2</span></code>). Les noms des actions sont préfixés par l’ID du robot.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Nom</p></th>
+<th class="head text-left"><p>Type</p></th>
+<th class="head text-left"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">/{robot_id}/navigate_to_pose</span></code></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">nav2_msgs/NavigateToPose</span></code></p></td>
+<td class="text-left"><p>Simule le déplacement du robot vers une cible. Bloque l’exécution pendant une durée proportionnelle à la distance et la vitesse simulée.</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">/{robot_id}/compute_path_to_pose</span></code></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">nav2_msgs/ComputePathToPose</span></code></p></td>
+<td class="text-left"><p>Simule un planificateur de chemin. Retourne une trajectoire en ligne droite interpolée entre le départ et l’arrivée.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="parametres">
+<h3>Paramètres<a class="headerlink" href="#parametres" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Nom</p></th>
+<th class="head text-left"><p>Type</p></th>
+<th class="head text-left"><p>Valeur Défaut</p></th>
+<th class="head text-left"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">sim_speed</span></code></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">1.0</span></code></p></td>
+<td class="text-left"><p>Facteur multiplicateur de vitesse globale pour la simulation. Affecte la vitesse de déplacement des robots virtuels.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="architecture-et-logique">
+<h2>4 - Architecture et Logique<a class="headerlink" href="#architecture-et-logique" title="Link to this heading"></a></h2>
+<section id="logique-de-simulation-simulatedrobot">
+<h3>Logique de Simulation (SimulatedRobot)<a class="headerlink" href="#logique-de-simulation-simulatedrobot" title="Link to this heading"></a></h3>
+<p>Chaque robot est géré par une instance de la classe <code class="docutils literal notranslate"><span class="pre">SimulatedRobot</span></code> qui maintient un état interne protégé par un verrou.</p>
+<p>Le comportement du robot suit une machine à états simplifiée, pilotée par les appels au serveur d’action <code class="docutils literal notranslate"><span class="pre">MapsToPose</span></code> :</p>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>stateDiagram-v2
+    [*] --&gt; IDLE
+    
+    IDLE --&gt; BUSY : Réception Goal (navigate_callback)
+    
+    state BUSY {
+        [*] --&gt; Moving
+        Moving --&gt; Moving : Mise à jour Position (x, y)
+        Moving --&gt; Moving : Décharge Batterie (-0.05)
+        Moving --&gt; Moving : Wait (time.sleep)
+    }
+    
+    BUSY --&gt; IDLE : Arrivée à destination
+    BUSY --&gt; IDLE : Annulation (CancelRequest)
+</pre></div>
+</div>
+</section>
+<section id="algorithmes-internes">
+<h3>Algorithmes Internes<a class="headerlink" href="#algorithmes-internes" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Simulation de Navigation (<code class="docutils literal notranslate"><span class="pre">Maps_callback</span></code>) :</p>
+<ul class="simple">
+<li><p>Calcule la distance euclidienne totale et l’orientation (<code class="docutils literal notranslate"><span class="pre">atan2</span></code>) vers la cible.</p></li>
+<li><p>Entre dans une boucle temporelle (<code class="docutils literal notranslate"><span class="pre">while</span> <span class="pre">dist_traveled</span> <span class="pre">&lt;</span> <span class="pre">dist_total</span></code>).</p></li>
+<li><p>À chaque itération :</p>
+<ul>
+<li><p>Calcule le pas de déplacement : $step = speed \times rate$.</p></li>
+<li><p>Met à jour <code class="docutils literal notranslate"><span class="pre">x</span></code> et <code class="docutils literal notranslate"><span class="pre">y</span></code> via trigonométrie</p></li>
+<li><p>Publie un feedback <code class="docutils literal notranslate"><span class="pre">distance_remaining</span></code> et <code class="docutils literal notranslate"><span class="pre">estimated_time_remaining</span></code>.</p></li>
+<li><p>Utilise <code class="docutils literal notranslate"><span class="pre">time.sleep()</span></code> pour synchroniser la boucle avec le temps réel simulé.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Simulation de Planification (compute_path_callback) :</p>
+<ul class="simple">
+<li><p>Ignore les obstacles de la carte (implémentation naïve).</p></li>
+<li><p>Génère un <code class="docutils literal notranslate"><span class="pre">nav_msgs/Path</span></code> composé de points espacés de 0.5 mètres.</p></li>
+<li><p>Effectue une interpolation linéaire simple entre la pose de départ et la pose d’arrivée.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="coflot_bringup_fleet_readme.html" class="btn btn-neutral float-left" title="coflot_bringup_fleet" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="fleet_adapter.html" class="btn btn-neutral float-right" title="fleet_adapter package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Victor Forcioli, Alexis Vermeersch, Djino Varrambier Geoffroy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

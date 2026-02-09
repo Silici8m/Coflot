@@ -1,0 +1,34 @@
+Coflot ROS Documentation
+========================
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Workspace
+
+   workspace_readme
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Packages Overview
+
+   fleet_interfaces_readme
+   mission_manager_readme
+   fleet_adapter_readme
+   coflot_bringup_fleet_readme
+   fleet_simulation_readme
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Python API
+
+   fleet_adapter
+   mission_manager
+   fleet_simulation
+
+.. toctree::
+   :maxdepth: 2
+   :caption: ROS Interfaces
+
+   fleet_interfaces_msg
+   coflot_bringup_fleet_launch
+

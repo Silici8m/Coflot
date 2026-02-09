@@ -1,0 +1,940 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>fleet_simulation.fleet_simulation &mdash; coflot_fleet 1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=56dcb7b8"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}`;
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        all_mermaids.forEach((el) => {
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+        await mermaid.run();
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+const load = async () => {
+    initStyles();
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...JSON.parse(
+                    `{"startOnLoad": false}`
+                ),
+                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...JSON.parse(
+        `{"startOnLoad": false}`
+    ),
+    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    }
+);
+
+window.addEventListener("load", load);</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            coflot_fleet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Workspace</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../workspace_readme.html">Coflot - Système de Gestion de Flotte de Robots</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Packages Overview</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../fleet_interfaces_readme.html">fleet_interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../mission_manager_readme.html">mission_manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fleet_adapter_readme.html">fleet_adapter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../coflot_bringup_fleet_readme.html">coflot_bringup_fleet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fleet_simulation_readme.html">fleet_simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../fleet_adapter.html">fleet_adapter package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../mission_manager.html">mission_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fleet_simulation.html">fleet_simulation package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">ROS Interfaces</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../fleet_interfaces_msg.html">fleet_interfaces — Messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../coflot_bringup_fleet_launch.html">coflot_bringup_fleet — Launch files</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">coflot_fleet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">fleet_simulation.fleet_simulation</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for fleet_simulation.fleet_simulation</h1><div class="highlight"><pre>
+<span></span><span class="c1"># fleet_simulation.py</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.action</span><span class="w"> </span><span class="kn">import</span> <span class="n">ActionServer</span><span class="p">,</span> <span class="n">CancelResponse</span><span class="p">,</span> <span class="n">GoalResponse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.action.server</span><span class="w"> </span><span class="kn">import</span> <span class="n">ServerGoalHandle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.callback_groups</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReentrantCallbackGroup</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.executors</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiThreadedExecutor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.qos</span><span class="w"> </span><span class="kn">import</span> <span class="n">QoSProfile</span><span class="p">,</span> <span class="n">DurabilityPolicy</span>
+
+<span class="c1"># Messages</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fleet_interfaces.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">RobotState</span><span class="p">,</span> <span class="n">RobotStateArray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">geometry_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pose</span><span class="p">,</span> <span class="n">Point</span><span class="p">,</span> <span class="n">Quaternion</span><span class="p">,</span> <span class="n">PoseStamped</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nav2_msgs.action</span><span class="w"> </span><span class="kn">import</span> <span class="n">NavigateToPose</span><span class="p">,</span> <span class="n">ComputePathToPose</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nav_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<div class="viewcode-block" id="euler_to_quaternion">
+<a class="viewcode-back" href="../../fleet_simulation.html#fleet_simulation.fleet_simulation.euler_to_quaternion">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">euler_to_quaternion</span><span class="p">(</span><span class="n">yaw</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Quaternion</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a yaw angle (in radians) into a ROS 2 Quaternion message.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        yaw (float): The angle in radians.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Quaternion: The corresponding ROS geometry_msgs Quaternion.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">Quaternion</span><span class="p">()</span>
+    <span class="n">q</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">q</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">q</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">yaw</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+    <span class="n">q</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">yaw</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">q</span></div>
+
+
+<div class="viewcode-block" id="SimulatedRobot">
+<a class="viewcode-back" href="../../fleet_simulation.html#fleet_simulation.fleet_simulation.SimulatedRobot">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SimulatedRobot</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents the internal state of a single simulated robot.</span>
+
+<span class="sd">    This class acts as a data container and state machine for the simulation,</span>
+<span class="sd">    holding position, battery levels, and operational status.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        robot_id (str): Unique identifier of the robot.</span>
+<span class="sd">        x (float): Current X coordinate in the map frame.</span>
+<span class="sd">        y (float): Current Y coordinate in the map frame.</span>
+<span class="sd">        yaw (float): Current orientation in radians.</span>
+<span class="sd">        battery (float): Current battery percentage (0-100).</span>
+<span class="sd">        speed (float): Movement speed in m/s.</span>
+<span class="sd">        status (str): Current operational status (e.g., &quot;IDLE&quot;, &quot;BUSY&quot;).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">battery</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">100.0</span><span class="p">,</span> <span class="n">speed</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes a simulated robot.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            robot_id (str): Unique identifier.</span>
+<span class="sd">            x (float): Initial X position.</span>
+<span class="sd">            y (float): Initial Y position.</span>
+<span class="sd">            battery (float): Initial battery level (default: 100.0).</span>
+<span class="sd">            speed (float): Movement speed in m/s (default: 1.0).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">robot_id</span> <span class="o">=</span> <span class="n">robot_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">yaw</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="c1"># Orientation en radians</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">battery</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">battery</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">=</span> <span class="n">speed</span> <span class="c1"># m/s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;IDLE&quot;</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">RLock</span><span class="p">()</span>
+
+<div class="viewcode-block" id="SimulatedRobot.get_pose">
+<a class="viewcode-back" href="../../fleet_simulation.html#fleet_simulation.fleet_simulation.SimulatedRobot.get_pose">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_pose</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pose</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a standard ROS Pose message based on current internal state.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Pose: The current position and orientation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">Pose</span><span class="p">()</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">orientation</span> <span class="o">=</span> <span class="n">euler_to_quaternion</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yaw</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">p</span></div>
+</div>
+
+
+<div class="viewcode-block" id="MockFleetNode">
+<a class="viewcode-back" href="../../fleet_simulation.html#fleet_simulation.fleet_simulation.MockFleetNode">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MockFleetNode</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simulates a fleet of robots and their navigation stacks.</span>
+
+<span class="sd">    This node replaces physical robots and the Nav2 stack for testing purposes.</span>
+<span class="sd">    It provides Action Servers that mimic the `MapsToPose` and `ComputePathToPose`</span>
+<span class="sd">    interfaces found in standard ROS 2 navigation stacks.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        robots (Dict[str, SimulatedRobot]): Dictionary of simulated robot instances.</span>
+
+<span class="sd">    ROS Parameters:</span>
+<span class="sd">        sim_speed (double): Global speed multiplier for simulation (default: 1.0).</span>
+
+<span class="sd">    ROS Topics:</span>
+<span class="sd">        Publishes to:</span>
+<span class="sd">            /fleet/fleet_state (fleet_interfaces/RobotStateArray): Real-time telemetry of the fleet.</span>
+
+<span class="sd">    ROS Actions:</span>
+<span class="sd">        Servers:</span>
+<span class="sd">            /{robot_id}/navigate_to_pose (nav2_msgs/NavigateToPose): Simulates robot movement.</span>
+<span class="sd">            /{robot_id}/compute_path_to_pose (nav2_msgs/ComputePathToPose): Simulates path planning.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the Mock Fleet Node, sets up simulated robots, and starts Action Servers.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;mock_fleet&#39;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">declare_parameter</span><span class="p">(</span><span class="s1">&#39;sim_speed&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">speed_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_parameter</span><span class="p">(</span><span class="s1">&#39;sim_speed&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get_parameter_value</span><span class="p">()</span><span class="o">.</span><span class="n">double_value</span>
+
+        <span class="c1"># 1. Configuration de la flotte virtuelle (Vitesse ajoutée)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">robots</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SimulatedRobot</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;robot_1&quot;</span><span class="p">:</span> <span class="n">SimulatedRobot</span><span class="p">(</span><span class="s2">&quot;robot_1&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">battery</span><span class="o">=</span><span class="mf">90.0</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="n">speed_factor</span><span class="o">*</span><span class="mf">0.5</span><span class="p">),</span>
+            <span class="s2">&quot;robot_2&quot;</span><span class="p">:</span> <span class="n">SimulatedRobot</span><span class="p">(</span><span class="s2">&quot;robot_2&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">battery</span><span class="o">=</span><span class="mf">45.0</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="n">speed_factor</span><span class="o">*</span><span class="mf">0.3</span><span class="p">)</span> 
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cb_group</span> <span class="o">=</span> <span class="n">ReentrantCallbackGroup</span><span class="p">()</span>
+
+        <span class="c1"># 2. Publisher d&#39;état global</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_pub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span><span class="n">RobotStateArray</span><span class="p">,</span> <span class="s1">&#39;/fleet/fleet_state&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">publish_fleet_state</span><span class="p">)</span> <span class="c1"># 5 Hz (plus fluide)</span>
+
+        <span class="c1"># 3. Création des Action Servers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_action_servers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ActionServer</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">for</span> <span class="n">r_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">robots</span><span class="p">:</span>
+            <span class="c1"># NavigateToPose</span>
+            <span class="n">nav_topic</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">r_id</span><span class="si">}</span><span class="s2">/navigate_to_pose&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_action_servers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ActionServer</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="n">NavigateToPose</span><span class="p">,</span> <span class="n">nav_topic</span><span class="p">,</span>
+                <span class="n">execute_callback</span><span class="o">=</span><span class="k">lambda</span> <span class="n">goal_handle</span><span class="p">,</span> <span class="n">rid</span><span class="o">=</span><span class="n">r_id</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">navigate_callback</span><span class="p">(</span><span class="n">goal_handle</span><span class="p">,</span> <span class="n">rid</span><span class="p">),</span>
+                <span class="n">callback_group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cb_group</span><span class="p">,</span>
+                <span class="n">cancel_callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cancel_callback</span>
+            <span class="p">))</span>
+            
+            <span class="c1"># ComputePathToPose</span>
+            <span class="n">plan_topic</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">r_id</span><span class="si">}</span><span class="s2">/compute_path_to_pose&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_action_servers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ActionServer</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="n">ComputePathToPose</span><span class="p">,</span> <span class="n">plan_topic</span><span class="p">,</span>
+                <span class="n">execute_callback</span><span class="o">=</span><span class="k">lambda</span> <span class="n">goal_handle</span><span class="p">,</span> <span class="n">rid</span><span class="o">=</span><span class="n">r_id</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_path_callback</span><span class="p">(</span><span class="n">goal_handle</span><span class="p">,</span> <span class="n">rid</span><span class="p">),</span>
+                <span class="n">callback_group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cb_group</span>
+            <span class="p">))</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mock Fleet started with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">robots</span><span class="p">)</span><span class="si">}</span><span class="s2"> robots.&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MockFleetNode.cancel_callback">
+<a class="viewcode-back" href="../../fleet_simulation.html#fleet_simulation.fleet_simulation.MockFleetNode.cancel_callback">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cancel_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">goal_handle</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CancelResponse</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Callback to handle incoming cancellation requests for actions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            goal_handle (Any): The handle of the action goal being cancelled.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            CancelResponse: Always returns ACCEPT to allow cancellation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Received cancel request&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">CancelResponse</span><span class="o">.</span><span class="n">ACCEPT</span></div>
+
+
+<div class="viewcode-block" id="MockFleetNode.publish_fleet_state">
+<a class="viewcode-back" href="../../fleet_simulation.html#fleet_simulation.fleet_simulation.MockFleetNode.publish_fleet_state">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">publish_fleet_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Timer callback to publish the aggregated state of all simulated robots.</span>
+
+<span class="sd">        Constructs a `RobotStateArray` message containing ID, battery, and pose</span>
+<span class="sd">        for every robot in the simulation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">RobotStateArray</span><span class="p">()</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">stamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">to_msg</span><span class="p">()</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">frame_id</span> <span class="o">=</span> <span class="s2">&quot;map&quot;</span>
+        
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">robots</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">with</span> <span class="n">r</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">RobotState</span><span class="p">()</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">robot_id</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">robot_id</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">battery_pct</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">battery</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">pose</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">get_pose</span><span class="p">()</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">robots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_pub</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MockFleetNode.navigate_callback">
+<a class="viewcode-back" href="../../fleet_simulation.html#fleet_simulation.fleet_simulation.MockFleetNode.navigate_callback">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">navigate_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">goal_handle</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">robot_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simulates the execution of a navigation action.</span>
+
+<span class="sd">        This method blocks the thread to simulate travel time. It updates the robot&#39;s</span>
+<span class="sd">        position incrementally towards the goal, calculates battery drain, and publishes feedback.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            Uses `time.sleep()` to simulate real-world travel time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            goal_handle (Any): The action server goal handle.</span>
+<span class="sd">            robot_id (str): The ID of the robot to move.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            NavigateToPose.Result: The final result of the action.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">robot_id</span><span class="si">}</span><span class="s2">] Navigation started...&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Récupération de l&#39;objet robot simulé</span>
+        <span class="n">robot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">robots</span><span class="p">[</span><span class="n">robot_id</span><span class="p">]</span>  <span class="c1"># &lt;--- Correction ici (c&#39;était self.robots[r_id] dans la lambda, mais on le récupère proprement)</span>
+        
+        <span class="n">target_pose</span> <span class="o">=</span> <span class="n">goal_handle</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">pose</span>
+        <span class="n">tx</span><span class="p">,</span> <span class="n">ty</span> <span class="o">=</span> <span class="n">target_pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">target_pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span>
+        
+        <span class="c1"># Calcul du vecteur initial</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="n">tx</span> <span class="o">-</span> <span class="n">robot</span><span class="o">.</span><span class="n">x</span>
+        <span class="n">dy</span> <span class="o">=</span> <span class="n">ty</span> <span class="o">-</span> <span class="n">robot</span><span class="o">.</span><span class="n">y</span>
+        <span class="n">dist_total</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">)</span>
+        <span class="n">target_yaw</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">dy</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">robot</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+            <span class="n">robot</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;BUSY&quot;</span>
+            <span class="n">robot</span><span class="o">.</span><span class="n">yaw</span> <span class="o">=</span> <span class="n">target_yaw</span>
+            
+        <span class="n">rate</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c1"># 10 Hz</span>
+        <span class="n">dist_traveled</span> <span class="o">=</span> <span class="mf">0.0</span>
+        
+        <span class="c1"># Boucle de mouvement</span>
+        <span class="k">while</span> <span class="n">dist_traveled</span> <span class="o">&lt;</span> <span class="n">dist_total</span><span class="p">:</span>
+            <span class="n">start_loop</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            
+            <span class="c1"># 1. Vérification Annulation</span>
+            <span class="k">if</span> <span class="n">goal_handle</span><span class="o">.</span><span class="n">is_cancel_requested</span><span class="p">:</span>
+                <span class="n">goal_handle</span><span class="o">.</span><span class="n">canceled</span><span class="p">()</span>
+                <span class="k">with</span> <span class="n">robot</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span> <span class="n">robot</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;IDLE&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">robot_id</span><span class="si">}</span><span class="s2">] Navigation canceled.&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">NavigateToPose</span><span class="o">.</span><span class="n">Result</span><span class="p">()</span>
+            
+            <span class="c1"># 2. Avancée physique</span>
+            <span class="n">step_dist</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">speed</span> <span class="o">*</span> <span class="n">rate</span>
+            
+            <span class="c1"># Ne pas dépasser</span>
+            <span class="k">if</span> <span class="n">dist_traveled</span> <span class="o">+</span> <span class="n">step_dist</span> <span class="o">&gt;</span> <span class="n">dist_total</span><span class="p">:</span>
+                <span class="n">step_dist</span> <span class="o">=</span> <span class="n">dist_total</span> <span class="o">-</span> <span class="n">dist_traveled</span>
+            
+            <span class="n">dist_traveled</span> <span class="o">+=</span> <span class="n">step_dist</span>
+            
+            <span class="k">with</span> <span class="n">robot</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+                <span class="n">robot</span><span class="o">.</span><span class="n">x</span> <span class="o">+=</span> <span class="n">step_dist</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">robot</span><span class="o">.</span><span class="n">yaw</span><span class="p">)</span>
+                <span class="n">robot</span><span class="o">.</span><span class="n">y</span> <span class="o">+=</span> <span class="n">step_dist</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">robot</span><span class="o">.</span><span class="n">yaw</span><span class="p">)</span>
+                <span class="n">robot</span><span class="o">.</span><span class="n">battery</span> <span class="o">-=</span> <span class="mf">0.05</span>
+
+            <span class="c1"># 3. PUBLICATION DU FEEDBACK (CORRIGÉ)</span>
+            <span class="n">feedback_msg</span> <span class="o">=</span> <span class="n">NavigateToPose</span><span class="o">.</span><span class="n">Feedback</span><span class="p">()</span>
+            
+            <span class="n">remaining_dist</span> <span class="o">=</span> <span class="n">dist_total</span> <span class="o">-</span> <span class="n">dist_traveled</span>
+            <span class="n">feedback_msg</span><span class="o">.</span><span class="n">distance_remaining</span> <span class="o">=</span> <span class="n">remaining_dist</span>
+            
+            <span class="c1"># --- CALCUL DU TEMPS RESTANT ---</span>
+            <span class="k">if</span> <span class="n">robot</span><span class="o">.</span><span class="n">speed</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">time_left_sec</span> <span class="o">=</span> <span class="n">remaining_dist</span> <span class="o">/</span> <span class="n">robot</span><span class="o">.</span><span class="n">speed</span>
+                <span class="n">feedback_msg</span><span class="o">.</span><span class="n">estimated_time_remaining</span><span class="o">.</span><span class="n">sec</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time_left_sec</span><span class="p">)</span>
+                <span class="n">feedback_msg</span><span class="o">.</span><span class="n">estimated_time_remaining</span><span class="o">.</span><span class="n">nanosec</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">time_left_sec</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">time_left_sec</span><span class="p">))</span> <span class="o">*</span> <span class="mf">1e9</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Si vitesse nulle, temps infini (ou très grand)</span>
+                <span class="n">feedback_msg</span><span class="o">.</span><span class="n">estimated_time_remaining</span><span class="o">.</span><span class="n">sec</span> <span class="o">=</span> <span class="mi">9999</span>
+            <span class="c1"># --------------------------------------------</span>
+            
+            <span class="n">goal_handle</span><span class="o">.</span><span class="n">publish_feedback</span><span class="p">(</span><span class="n">feedback_msg</span><span class="p">)</span>
+            
+            <span class="c1"># 4. Gestion du temps de boucle</span>
+            <span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_loop</span>
+            <span class="k">if</span> <span class="n">elapsed</span> <span class="o">&lt;</span> <span class="n">rate</span><span class="p">:</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">rate</span> <span class="o">-</span> <span class="n">elapsed</span><span class="p">)</span>
+        
+        <span class="c1"># Fin</span>
+        <span class="n">goal_handle</span><span class="o">.</span><span class="n">succeed</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">robot</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+            <span class="n">robot</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">tx</span>
+            <span class="n">robot</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">ty</span>
+            <span class="n">robot</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;IDLE&quot;</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">robot_id</span><span class="si">}</span><span class="s2">] Arrived at (</span><span class="si">{</span><span class="n">tx</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">ty</span><span class="si">}</span><span class="s2">).&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">NavigateToPose</span><span class="o">.</span><span class="n">Result</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="MockFleetNode.compute_path_callback">
+<a class="viewcode-back" href="../../fleet_simulation.html#fleet_simulation.fleet_simulation.MockFleetNode.compute_path_callback">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_path_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">goal_handle</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">robot_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simulates a path planner by generating a straight line path.</span>
+
+<span class="sd">        This is a naive implementation that ignores obstacles, used purely</span>
+<span class="sd">        for testing the upper layers of the architecture.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            goal_handle (Any): The action server goal handle.</span>
+<span class="sd">            robot_id (str): The ID of the robot requesting the plan.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ComputePathToPose.Result: The result containing the computed path.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Simulation d&#39;un planificateur (A* simplifié en ligne droite)</span>
+        <span class="c1"># On génère un chemin avec des points tous les 50cm pour être réaliste</span>
+        
+        <span class="n">start_pose</span> <span class="o">=</span> <span class="n">goal_handle</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">pose</span> <span class="k">if</span> <span class="n">goal_handle</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">use_start</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">robots</span><span class="p">[</span><span class="n">robot_id</span><span class="p">]</span><span class="o">.</span><span class="n">get_pose</span><span class="p">()</span>
+        <span class="n">goal_pose</span> <span class="o">=</span> <span class="n">goal_handle</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">goal</span><span class="o">.</span><span class="n">pose</span>
+        
+        <span class="n">sx</span><span class="p">,</span> <span class="n">sy</span> <span class="o">=</span> <span class="n">start_pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">start_pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span>
+        <span class="n">gx</span><span class="p">,</span> <span class="n">gy</span> <span class="o">=</span> <span class="n">goal_pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">goal_pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span>
+        
+        <span class="n">dist</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">gx</span> <span class="o">-</span> <span class="n">sx</span><span class="p">,</span> <span class="n">gy</span> <span class="o">-</span> <span class="n">sy</span><span class="p">)</span>
+        <span class="n">step_size</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1"># 50cm</span>
+        <span class="n">num_steps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dist</span> <span class="o">/</span> <span class="n">step_size</span><span class="p">)</span>
+        
+        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">()</span>
+        <span class="n">path</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">frame_id</span> <span class="o">=</span> <span class="s2">&quot;map&quot;</span>
+        <span class="n">path</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">stamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">to_msg</span><span class="p">()</span>
+        
+        <span class="c1"># Interpolation des points</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">alpha</span> <span class="o">=</span> <span class="n">i</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">sx</span> <span class="o">+</span> <span class="p">(</span><span class="n">gx</span> <span class="o">-</span> <span class="n">sx</span><span class="p">)</span> <span class="o">*</span> <span class="n">alpha</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">sy</span> <span class="o">+</span> <span class="p">(</span><span class="n">gy</span> <span class="o">-</span> <span class="n">sy</span><span class="p">)</span> <span class="o">*</span> <span class="n">alpha</span>
+            
+            <span class="n">ps</span> <span class="o">=</span> <span class="n">PoseStamped</span><span class="p">()</span>
+            <span class="n">ps</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">header</span>
+            <span class="n">ps</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+            <span class="n">ps</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+            <span class="n">ps</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="n">path</span><span class="o">.</span><span class="n">poses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span>
+            
+        <span class="c1"># S&#39;assurer que le dernier point est bien le goal</span>
+        <span class="n">final_ps</span> <span class="o">=</span> <span class="n">PoseStamped</span><span class="p">()</span>
+        <span class="n">final_ps</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">header</span>
+        <span class="n">final_ps</span><span class="o">.</span><span class="n">pose</span> <span class="o">=</span> <span class="n">goal_pose</span>
+        <span class="n">path</span><span class="o">.</span><span class="n">poses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">final_ps</span><span class="p">)</span>
+        
+        <span class="n">goal_handle</span><span class="o">.</span><span class="n">succeed</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">ComputePathToPose</span><span class="o">.</span><span class="n">Result</span><span class="p">()</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="c1"># On peut aussi remplir result.planning_time pour plus de réalisme</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../fleet_simulation.html#fleet_simulation.fleet_simulation.main">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">MockFleetNode</span><span class="p">()</span>
+    
+    <span class="n">executor</span> <span class="o">=</span> <span class="n">MultiThreadedExecutor</span><span class="p">()</span>
+    <span class="n">executor</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">executor</span><span class="o">.</span><span class="n">spin</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">destroy_node</span><span class="p">()</span>
+        <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Victor Forcioli, Alexis Vermeersch, Djino Varrambier Geoffroy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

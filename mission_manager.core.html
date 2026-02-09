@@ -1,0 +1,1323 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mission_manager.core package &mdash; coflot_fleet 1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=56dcb7b8"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="fleet_simulation package" href="fleet_simulation.html" />
+    <link rel="prev" title="mission_manager.allocation_strategies package" href="mission_manager.allocation_strategies.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            coflot_fleet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Workspace</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="workspace_readme.html">Coflot - Système de Gestion de Flotte de Robots</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Packages Overview</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fleet_interfaces_readme.html">fleet_interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mission_manager_readme.html">mission_manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fleet_adapter_readme.html">fleet_adapter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coflot_bringup_fleet_readme.html">coflot_bringup_fleet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fleet_simulation_readme.html">fleet_simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="fleet_adapter.html">fleet_adapter package</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="mission_manager.html">mission_manager package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="mission_manager.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="mission_manager.allocation_strategies.html">mission_manager.allocation_strategies package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">mission_manager.core package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mission_manager.core.mission">mission_manager.core.mission module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mission_manager.core.mission_registry">mission_manager.core.mission_registry module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mission_manager.core.robot">mission_manager.core.robot module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mission_manager.core.robot_adapter">mission_manager.core.robot_adapter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mission_manager.core.robot_pool">mission_manager.core.robot_pool module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="mission_manager.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mission_manager.html#module-mission_manager.config">mission_manager.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mission_manager.html#module-mission_manager.mission_manager_node">mission_manager.mission_manager_node module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="fleet_simulation.html">fleet_simulation package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">ROS Interfaces</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fleet_interfaces_msg.html">fleet_interfaces — Messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coflot_bringup_fleet_launch.html">coflot_bringup_fleet — Launch files</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">coflot_fleet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="mission_manager.html">mission_manager package</a></li>
+      <li class="breadcrumb-item active">mission_manager.core package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/mission_manager.core.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-mission_manager.core">
+<span id="mission-manager-core-package"></span><h1>mission_manager.core package<a class="headerlink" href="#module-mission_manager.core" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-mission_manager.core.mission">
+<span id="mission-manager-core-mission-module"></span><h2>mission_manager.core.mission module<a class="headerlink" href="#module-mission_manager.core.mission" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mission_manager.core.mission.</span></span><span class="sig-name descname"><span class="pre">Mission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mission_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">priority</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">waypoints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request_stamp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission.html#Mission"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission.Mission" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Manages the lifecycle, state, and execution of a specific mission.</p>
+<p>This class encapsulates all data related to a mission (waypoints, priority, state)
+and manages the interactions with the assigned robot via a robot adapter. It handles
+navigation events, timeouts, and human validation logic.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission.node">
+<span class="sig-name descname"><span class="pre">node</span></span><a class="headerlink" href="#mission_manager.core.mission.Mission.node" title="Link to this definition"></a></dt>
+<dd><p>Reference to the parent ROS 2 node for logging and timer creation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Node</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission.logger">
+<span class="sig-name descname"><span class="pre">logger</span></span><a class="headerlink" href="#mission_manager.core.mission.Mission.logger" title="Link to this definition"></a></dt>
+<dd><p>Logger instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>rclpy.impl.rcutils_logger.RcutilsLogger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission.mission_id">
+<span class="sig-name descname"><span class="pre">mission_id</span></span><a class="headerlink" href="#mission_manager.core.mission.Mission.mission_id" title="Link to this definition"></a></dt>
+<dd><p>Unique identifier for the mission.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission.priority">
+<span class="sig-name descname"><span class="pre">priority</span></span><a class="headerlink" href="#mission_manager.core.mission.Mission.priority" title="Link to this definition"></a></dt>
+<dd><p>Priority level of the mission.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission.state">
+<span class="sig-name descname"><span class="pre">state</span></span><a class="headerlink" href="#mission_manager.core.mission.Mission.state" title="Link to this definition"></a></dt>
+<dd><p>Current state of the mission.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#mission_manager.core.mission.MissionState" title="mission_manager.core.mission.MissionState">MissionState</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission.waypoints">
+<span class="sig-name descname"><span class="pre">waypoints</span></span><a class="headerlink" href="#mission_manager.core.mission.Mission.waypoints" title="Link to this definition"></a></dt>
+<dd><p>List of geometry_msgs/Pose representing the path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission.assigned_robot_id">
+<span class="sig-name descname"><span class="pre">assigned_robot_id</span></span><a class="headerlink" href="#mission_manager.core.mission.Mission.assigned_robot_id" title="Link to this definition"></a></dt>
+<dd><p>ID of the robot currently executing the mission.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission.goal_waypoint_idx">
+<span class="sig-name descname"><span class="pre">goal_waypoint_idx</span></span><a class="headerlink" href="#mission_manager.core.mission.Mission.goal_waypoint_idx" title="Link to this definition"></a></dt>
+<dd><p>Index of the current target waypoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission.request_stamp">
+<span class="sig-name descname"><span class="pre">request_stamp</span></span><a class="headerlink" href="#mission_manager.core.mission.Mission.request_stamp" title="Link to this definition"></a></dt>
+<dd><p>Timestamp when the mission was requested.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Time</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission.robot_adapter">
+<span class="sig-name descname"><span class="pre">robot_adapter</span></span><a class="headerlink" href="#mission_manager.core.mission.Mission.robot_adapter" title="Link to this definition"></a></dt>
+<dd><p>Interface to control the assigned robot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission.timeout_timer">
+<span class="sig-name descname"><span class="pre">timeout_timer</span></span><a class="headerlink" href="#mission_manager.core.mission.Mission.timeout_timer" title="Link to this definition"></a></dt>
+<dd><p>Timer for auto-validation at waypoints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[Timer]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission.validation_timeout">
+<span class="sig-name descname"><span class="pre">validation_timeout</span></span><a class="headerlink" href="#mission_manager.core.mission.Mission.validation_timeout" title="Link to this definition"></a></dt>
+<dd><p>Duration in seconds before auto-validation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission.lock">
+<span class="sig-name descname"><span class="pre">lock</span></span><a class="headerlink" href="#mission_manager.core.mission.Mission.lock" title="Link to this definition"></a></dt>
+<dd><p>Reentrant lock for thread-safe state management.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/threading.html#threading.RLock" title="(in Python v3.14)">threading.RLock</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission.assign">
+<span class="sig-name descname"><span class="pre">assign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">robot_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot_adapter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission.html#Mission.assign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission.Mission.assign" title="Link to this definition"></a></dt>
+<dd><p>Assigns a specific robot to this mission.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>robot_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The identifier of the robot.</p></li>
+<li><p><strong>robot_adapter</strong> (<em>Any</em>) – The adapter instance to control the robot.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#mission_manager.core.mission.TransitionException" title="mission_manager.core.mission.TransitionException"><strong>TransitionException</strong></a> – If the mission is not in PENDING state.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.14)"><strong>Exception</strong></a> – If the robot adapter indicates the robot is busy.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">assigned_robot_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a><span class="pre">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a><span class="pre">]</span></em><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission.complete">
+<span class="sig-name descname"><span class="pre">complete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission.html#Mission.complete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission.Mission.complete" title="Link to this definition"></a></dt>
+<dd><p>Marks the mission as successfully finished and releases the robot.</p>
+<p>Transitions state from DISCHARGING to FINISHED.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#mission_manager.core.mission.TransitionException" title="mission_manager.core.mission.TransitionException"><strong>TransitionException</strong></a> – If the mission is not in DISCHARGING state.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission.destroy_validation_timer">
+<span class="sig-name descname"><span class="pre">destroy_validation_timer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission.html#Mission.destroy_validation_timer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission.Mission.destroy_validation_timer" title="Link to this definition"></a></dt>
+<dd><p>Cancels and destroys the active validation timer if it exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">goal_waypoint_idx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a><span class="pre">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a><span class="pre">]</span></em><a class="headerlink" href="#id1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">mission_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></em><a class="headerlink" href="#id2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">node</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></em><a class="headerlink" href="#id3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission.on_arrival_cb">
+<span class="sig-name descname"><span class="pre">on_arrival_cb</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission.html#Mission.on_arrival_cb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission.Mission.on_arrival_cb" title="Link to this definition"></a></dt>
+<dd><p>Callback executed when the robot successfully reaches a target waypoint.</p>
+<p>Handles state transitions based on the current mission phase (APPROACHING,
+DELIVERING, SUSPENDING) and starts the validation timer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#mission_manager.core.mission.TransitionException" title="mission_manager.core.mission.TransitionException"><strong>TransitionException</strong></a> – If called in an invalid state.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.14)"><strong>Exception</strong></a> – If an invalid waypoint index is encountered.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission.on_failure_cb">
+<span class="sig-name descname"><span class="pre">on_failure_cb</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission.html#Mission.on_failure_cb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission.Mission.on_failure_cb" title="Link to this definition"></a></dt>
+<dd><p>Callback executed when the robot fails to reach a goal.</p>
+<p>Transitions the mission state to FAILED.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#mission_manager.core.mission.TransitionException" title="mission_manager.core.mission.TransitionException"><strong>TransitionException</strong></a> – If the failure occurs in a state where navigation is not active.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission.on_validation">
+<span class="sig-name descname"><span class="pre">on_validation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission.html#Mission.on_validation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission.Mission.on_validation" title="Link to this definition"></a></dt>
+<dd><p>Processes a validation signal (manual or timeout).</p>
+<p>Depending on the current state, this method advances the mission (proceed),
+completes it, or releases the robot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.14)"><strong>Exception</strong></a> – If the waypoint index is invalid during DISCHARGING.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">priority</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></em><a class="headerlink" href="#id4" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission.proceed">
+<span class="sig-name descname"><span class="pre">proceed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission.html#Mission.proceed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission.Mission.proceed" title="Link to this definition"></a></dt>
+<dd><p>Commands the robot to proceed to the next waypoint in the list.</p>
+<p>Transitions the mission state from WAITING to DELIVERING.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#mission_manager.core.mission.TransitionException" title="mission_manager.core.mission.TransitionException"><strong>TransitionException</strong></a> – If the mission is not in WAITING state.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.14)"><strong>Exception</strong></a> – If the next waypoint index is out of bounds.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission.release">
+<span class="sig-name descname"><span class="pre">release</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission.html#Mission.release"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission.Mission.release" title="Link to this definition"></a></dt>
+<dd><p>Releases the robot from the current mission, making the mission pending again.</p>
+<p>Used when a mission is interrupted but can be resumed later. Transitions
+state from DISCHARGING to PENDING.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#mission_manager.core.mission.TransitionException" title="mission_manager.core.mission.TransitionException"><strong>TransitionException</strong></a> – If the mission is not in DISCHARGING state.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">request_stamp</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Time</span></code></em><a class="headerlink" href="#id5" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission.revoke">
+<span class="sig-name descname"><span class="pre">revoke</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission.html#Mission.revoke"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission.Mission.revoke" title="Link to this definition"></a></dt>
+<dd><p>Cancels the mission while it is in the approaching phase.</p>
+<p>Stops the robot and resets the mission state to PENDING, allowing reassignment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#mission_manager.core.mission.TransitionException" title="mission_manager.core.mission.TransitionException"><strong>TransitionException</strong></a> – If the mission is not in APPROACHING state.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission.start_approaching">
+<span class="sig-name descname"><span class="pre">start_approaching</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission.html#Mission.start_approaching"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission.Mission.start_approaching" title="Link to this definition"></a></dt>
+<dd><p>Commands the robot to move towards the first waypoint (pickup location).</p>
+<p>Transitions the mission state from ASSIGNED to APPROACHING.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#mission_manager.core.mission.TransitionException" title="mission_manager.core.mission.TransitionException"><strong>TransitionException</strong></a> – If the mission is not in ASSIGNED state.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.14)"><strong>Exception</strong></a> – If the robot is busy executing another action.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission.start_validation_timer">
+<span class="sig-name descname"><span class="pre">start_validation_timer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission.html#Mission.start_validation_timer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission.Mission.start_validation_timer" title="Link to this definition"></a></dt>
+<dd><p>Starts or restarts the timer for automatic validation at a waypoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">state</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#mission_manager.core.mission.MissionState" title="mission_manager.core.mission.MissionState"><code class="xref py py-class docutils literal notranslate"><span class="pre">MissionState</span></code></a></em><a class="headerlink" href="#id6" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.mission.Mission.suspend">
+<span class="sig-name descname"><span class="pre">suspend</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission.html#Mission.suspend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission.Mission.suspend" title="Link to this definition"></a></dt>
+<dd><p>Requests the mission to pause execution.</p>
+<p>Transitions state to SUSPENDING. If the robot is already waiting, it simulates
+an arrival to trigger the suspending logic immediately.
+:rtype: <span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Suspension is ignored if the robot is currently traveling to the final waypoint.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#mission_manager.core.mission.TransitionException" title="mission_manager.core.mission.TransitionException"><strong>TransitionException</strong></a> – If not in DELIVERING or WAITING state.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">timeout_timer</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a><span class="pre">[</span><a class="reference external" href="https://docs.ros.org/en/humble/p/rclpy/rclpy.timer.html#rclpy.timer.Timer" title="(in rclpy)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timer</span></code></a><span class="pre">]</span></em><a class="headerlink" href="#id7" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">waypoints</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a></em><a class="headerlink" href="#id8" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mission_manager.core.mission.MissionPriority">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mission_manager.core.mission.</span></span><span class="sig-name descname"><span class="pre">MissionPriority</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission.html#MissionPriority"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission.MissionPriority" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></a></p>
+<p>Enumeration representing the priority levels of a mission.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission.MissionPriority.NORMAL">
+<span class="sig-name descname"><span class="pre">NORMAL</span></span><a class="headerlink" href="#mission_manager.core.mission.MissionPriority.NORMAL" title="Link to this definition"></a></dt>
+<dd><p>Standard priority.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission.MissionPriority.PRIORITAIRE">
+<span class="sig-name descname"><span class="pre">PRIORITAIRE</span></span><a class="headerlink" href="#mission_manager.core.mission.MissionPriority.PRIORITAIRE" title="Link to this definition"></a></dt>
+<dd><p>High priority.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission.MissionPriority.URGENTE">
+<span class="sig-name descname"><span class="pre">URGENTE</span></span><a class="headerlink" href="#mission_manager.core.mission.MissionPriority.URGENTE" title="Link to this definition"></a></dt>
+<dd><p>Critical priority, may preempt other missions.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id9">
+<span class="sig-name descname"><span class="pre">NORMAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#id9" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id10">
+<span class="sig-name descname"><span class="pre">PRIORITAIRE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#id10" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id11">
+<span class="sig-name descname"><span class="pre">URGENTE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#id11" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mission_manager.core.mission.MissionState">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mission_manager.core.mission.</span></span><span class="sig-name descname"><span class="pre">MissionState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission.html#MissionState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission.MissionState" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></a></p>
+<p>Enumeration representing the possible states of a mission lifecycle.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission.MissionState.PENDING">
+<span class="sig-name descname"><span class="pre">PENDING</span></span><a class="headerlink" href="#mission_manager.core.mission.MissionState.PENDING" title="Link to this definition"></a></dt>
+<dd><p>Mission is created but not yet active or has been revoked/released.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission.MissionState.ASSIGNED">
+<span class="sig-name descname"><span class="pre">ASSIGNED</span></span><a class="headerlink" href="#mission_manager.core.mission.MissionState.ASSIGNED" title="Link to this definition"></a></dt>
+<dd><p>Mission is assigned to a robot but hasn’t started moving.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission.MissionState.APPROACHING">
+<span class="sig-name descname"><span class="pre">APPROACHING</span></span><a class="headerlink" href="#mission_manager.core.mission.MissionState.APPROACHING" title="Link to this definition"></a></dt>
+<dd><p>Robot is moving towards the first waypoint (pickup point).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission.MissionState.WAITING">
+<span class="sig-name descname"><span class="pre">WAITING</span></span><a class="headerlink" href="#mission_manager.core.mission.MissionState.WAITING" title="Link to this definition"></a></dt>
+<dd><p>Robot arrived at a waypoint and waits for validation to proceed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission.MissionState.DELIVERING">
+<span class="sig-name descname"><span class="pre">DELIVERING</span></span><a class="headerlink" href="#mission_manager.core.mission.MissionState.DELIVERING" title="Link to this definition"></a></dt>
+<dd><p>Robot is moving between intermediate waypoints.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission.MissionState.SUSPENDING">
+<span class="sig-name descname"><span class="pre">SUSPENDING</span></span><a class="headerlink" href="#mission_manager.core.mission.MissionState.SUSPENDING" title="Link to this definition"></a></dt>
+<dd><p>Mission is being paused; robot is moving to a safe halt or waypoint.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission.MissionState.DISCHARGING">
+<span class="sig-name descname"><span class="pre">DISCHARGING</span></span><a class="headerlink" href="#mission_manager.core.mission.MissionState.DISCHARGING" title="Link to this definition"></a></dt>
+<dd><p>Robot arrived at the final destination or is unloading.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission.MissionState.FINISHED">
+<span class="sig-name descname"><span class="pre">FINISHED</span></span><a class="headerlink" href="#mission_manager.core.mission.MissionState.FINISHED" title="Link to this definition"></a></dt>
+<dd><p>Mission completed successfully.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission.MissionState.FAILED">
+<span class="sig-name descname"><span class="pre">FAILED</span></span><a class="headerlink" href="#mission_manager.core.mission.MissionState.FAILED" title="Link to this definition"></a></dt>
+<dd><p>Mission failed due to navigation or operational errors.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id12">
+<span class="sig-name descname"><span class="pre">APPROACHING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#id12" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id13">
+<span class="sig-name descname"><span class="pre">ASSIGNED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#id13" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id14">
+<span class="sig-name descname"><span class="pre">DELIVERING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#id14" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id15">
+<span class="sig-name descname"><span class="pre">DISCHARGING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#id15" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id16">
+<span class="sig-name descname"><span class="pre">FAILED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8</span></em><a class="headerlink" href="#id16" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id17">
+<span class="sig-name descname"><span class="pre">FINISHED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#id17" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id18">
+<span class="sig-name descname"><span class="pre">PENDING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#id18" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id19">
+<span class="sig-name descname"><span class="pre">SUSPENDING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#id19" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id20">
+<span class="sig-name descname"><span class="pre">WAITING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#id20" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="mission_manager.core.mission.TransitionException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mission_manager.core.mission.</span></span><span class="sig-name descname"><span class="pre">TransitionException</span></span><a class="reference internal" href="_modules/mission_manager/core/mission.html#TransitionException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission.TransitionException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
+<p>Exception raised when an invalid state transition is attempted.</p>
+</dd></dl>
+
+</section>
+<section id="module-mission_manager.core.mission_registry">
+<span id="mission-manager-core-mission-registry-module"></span><h2>mission_manager.core.mission_registry module<a class="headerlink" href="#module-mission_manager.core.mission_registry" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mission_manager.core.mission_registry.MissionRegistry">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mission_manager.core.mission_registry.</span></span><span class="sig-name descname"><span class="pre">MissionRegistry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot_pool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission_registry.html#MissionRegistry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission_registry.MissionRegistry" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Central registry managing the lifecycle and storage of all missions.</p>
+<p>This class acts as a thread-safe database for missions. It handles creation,
+retrieval, assignment coordination, and automatic cleanup of finished missions.
+It serves as the interface between the high-level node logic and individual Mission objects.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission_registry.MissionRegistry.node">
+<span class="sig-name descname"><span class="pre">node</span></span><a class="headerlink" href="#mission_manager.core.mission_registry.MissionRegistry.node" title="Link to this definition"></a></dt>
+<dd><p>Reference to the parent ROS 2 node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Node</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission_registry.MissionRegistry.robot_pool">
+<span class="sig-name descname"><span class="pre">robot_pool</span></span><a class="headerlink" href="#mission_manager.core.mission_registry.MissionRegistry.robot_pool" title="Link to this definition"></a></dt>
+<dd><p>Reference to the robot pool manager.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#mission_manager.core.robot_pool.RobotPool" title="mission_manager.core.robot_pool.RobotPool">RobotPool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.mission_registry.MissionRegistry._missions">
+<span class="sig-name descname"><span class="pre">_missions</span></span><a class="headerlink" href="#mission_manager.core.mission_registry.MissionRegistry._missions" title="Link to this definition"></a></dt>
+<dd><p>Dictionary storing active and pending missions, indexed by ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference internal" href="#mission_manager.core.mission.Mission" title="mission_manager.core.mission.Mission">Mission</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.mission_registry.MissionRegistry.add_mission">
+<span class="sig-name descname"><span class="pre">add_mission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mission_request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission_registry.html#MissionRegistry.add_mission"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission_registry.MissionRegistry.add_mission" title="Link to this definition"></a></dt>
+<dd><p>Creates and registers a new Mission based on a request message.</p>
+<p>If a mission with the same ID already exists, the creation is skipped
+and an error is logged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mission_request</strong> (<em>MissionRequest</em>) – The message containing mission details (ID, priority, waypoints).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.mission_registry.MissionRegistry.get_mission">
+<span class="sig-name descname"><span class="pre">get_mission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mission_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission_registry.html#MissionRegistry.get_mission"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission_registry.MissionRegistry.get_mission" title="Link to this definition"></a></dt>
+<dd><p>Retrieves a mission by its unique identifier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mission_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The unique identifier of the mission.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The mission object if found, None otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[<a class="reference internal" href="#mission_manager.core.mission.Mission" title="mission_manager.core.mission.Mission">Mission</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.mission_registry.MissionRegistry.get_mission_by_robot">
+<span class="sig-name descname"><span class="pre">get_mission_by_robot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">robot_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission_registry.html#MissionRegistry.get_mission_by_robot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission_registry.MissionRegistry.get_mission_by_robot" title="Link to this definition"></a></dt>
+<dd><p>Finds the mission currently assigned to a specific robot.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This performs a linear search over all missions.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>robot_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The unique identifier of the robot.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The active mission assigned to the robot, or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[<a class="reference internal" href="#mission_manager.core.mission.Mission" title="mission_manager.core.mission.Mission">Mission</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.mission_registry.MissionRegistry.get_mission_dict">
+<span class="sig-name descname"><span class="pre">get_mission_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission_registry.html#MissionRegistry.get_mission_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission_registry.MissionRegistry.get_mission_dict" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the internal dictionary of missions.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Returns a direct reference to the internal dictionary. External modification
+is not thread-safe.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The dictionary mapping mission IDs to Mission objects.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference internal" href="#mission_manager.core.mission.Mission" title="mission_manager.core.mission.Mission">Mission</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.mission_registry.MissionRegistry.get_missions_by_state">
+<span class="sig-name descname"><span class="pre">get_missions_by_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission_registry.html#MissionRegistry.get_missions_by_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission_registry.MissionRegistry.get_missions_by_state" title="Link to this definition"></a></dt>
+<dd><p>Retrieves a list of all missions currently in a specific state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> (<a class="reference internal" href="#mission_manager.core.mission.MissionState" title="mission_manager.core.mission.MissionState"><em>MissionState</em></a>) – The state to filter by.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of matching Mission objects.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="#mission_manager.core.mission.Mission" title="mission_manager.core.mission.Mission">Mission</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.mission_registry.MissionRegistry.get_missions_list">
+<span class="sig-name descname"><span class="pre">get_missions_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission_registry.html#MissionRegistry.get_missions_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission_registry.MissionRegistry.get_missions_list" title="Link to this definition"></a></dt>
+<dd><p>Retrieves all registered missions as a list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list containing all managed Mission objects.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[<a class="reference internal" href="#mission_manager.core.mission.Mission" title="mission_manager.core.mission.Mission">Mission</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.mission_registry.MissionRegistry.handle_validation">
+<span class="sig-name descname"><span class="pre">handle_validation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mission_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission_registry.html#MissionRegistry.handle_validation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission_registry.MissionRegistry.handle_validation" title="Link to this definition"></a></dt>
+<dd><p>Triggers the validation event for a specific mission.</p>
+<p>This is typically called when a human operator validates a step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mission_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The unique identifier of the mission.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.mission_registry.MissionRegistry.mission_assign">
+<span class="sig-name descname"><span class="pre">mission_assign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mission_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission_registry.html#MissionRegistry.mission_assign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission_registry.MissionRegistry.mission_assign" title="Link to this definition"></a></dt>
+<dd><p>Attempts to assign a robot to a mission.</p>
+<p>Retrieves the mission and the robot adapter, then performs the assignment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mission_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The ID of the mission to assign.</p></li>
+<li><p><strong>robot_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The ID of the robot to assign.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if assignment was successful, False otherwise (e.g., mission/robot not found or busy).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.mission_registry.MissionRegistry.mission_revoke">
+<span class="sig-name descname"><span class="pre">mission_revoke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mission_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission_registry.html#MissionRegistry.mission_revoke"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission_registry.MissionRegistry.mission_revoke" title="Link to this definition"></a></dt>
+<dd><p>Revokes a mission, effectively cancelling its current assignment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mission_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The unique identifier of the mission.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.mission_registry.MissionRegistry.mission_start_approaching">
+<span class="sig-name descname"><span class="pre">mission_start_approaching</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mission_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission_registry.html#MissionRegistry.mission_start_approaching"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission_registry.MissionRegistry.mission_start_approaching" title="Link to this definition"></a></dt>
+<dd><p>Commands a mission to start the approaching phase.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mission_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The unique identifier of the mission.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.mission_registry.MissionRegistry.mission_suspend">
+<span class="sig-name descname"><span class="pre">mission_suspend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mission_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/mission_registry.html#MissionRegistry.mission_suspend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.mission_registry.MissionRegistry.mission_suspend" title="Link to this definition"></a></dt>
+<dd><p>Requests suspension of a specific mission.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mission_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The unique identifier of the mission.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-mission_manager.core.robot">
+<span id="mission-manager-core-robot-module"></span><h2>mission_manager.core.robot module<a class="headerlink" href="#module-mission_manager.core.robot" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mission_manager.core.robot.Robot">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mission_manager.core.robot.</span></span><span class="sig-name descname"><span class="pre">Robot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_msg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/robot.html#Robot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.robot.Robot" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Represents a managed robot within the fleet.</p>
+<p>This class serves as a state container and control interface for a single robot.
+It holds the latest known state (position, battery) and maintains an instance
+of the RobotAdapter to handle navigation commands.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.robot.Robot.robot_id">
+<span class="sig-name descname"><span class="pre">robot_id</span></span><a class="headerlink" href="#mission_manager.core.robot.Robot.robot_id" title="Link to this definition"></a></dt>
+<dd><p>The unique identifier of the robot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.robot.Robot.adapter">
+<span class="sig-name descname"><span class="pre">adapter</span></span><a class="headerlink" href="#mission_manager.core.robot.Robot.adapter" title="Link to this definition"></a></dt>
+<dd><p>The interface used to send commands to the robot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#mission_manager.core.robot_adapter.RobotAdapter" title="mission_manager.core.robot_adapter.RobotAdapter">RobotAdapter</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.robot.Robot._state_msg">
+<span class="sig-name descname"><span class="pre">_state_msg</span></span><a class="headerlink" href="#mission_manager.core.robot.Robot._state_msg" title="Link to this definition"></a></dt>
+<dd><p>The latest state message received from the robot/fleet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.robot.Robot.get_battery_pct">
+<span class="sig-name descname"><span class="pre">get_battery_pct</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/robot.html#Robot.get_battery_pct"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.robot.Robot.get_battery_pct" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the current battery level of the robot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The battery percentage.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.robot.Robot.get_position">
+<span class="sig-name descname"><span class="pre">get_position</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/robot.html#Robot.get_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.robot.Robot.get_position" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the current position of the robot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The pose object (typically geometry_msgs/Pose) from the state message.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.robot.Robot.update_state">
+<span class="sig-name descname"><span class="pre">update_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_msg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/robot.html#Robot.update_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.robot.Robot.update_state" title="Link to this definition"></a></dt>
+<dd><p>Updates the cached state of the robot with a new message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state_msg</strong> (<em>Any</em>) – The new state message containing updated telemetry.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-mission_manager.core.robot_adapter">
+<span id="mission-manager-core-robot-adapter-module"></span><h2>mission_manager.core.robot_adapter module<a class="headerlink" href="#module-mission_manager.core.robot_adapter" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mission_manager.core.robot_adapter.RobotAdapter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mission_manager.core.robot_adapter.</span></span><span class="sig-name descname"><span class="pre">RobotAdapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/robot_adapter.html#RobotAdapter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.robot_adapter.RobotAdapter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Interface between the Mission Manager and a specific robot’s navigation stack.</p>
+<p>This class encapsulates the ROS 2 Action Clients required to send navigation goals
+and compute paths for a single robot. It manages the lifecycle of a navigation
+action (sending, feedback, result) and provides thread-safe status checks.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.robot_adapter.RobotAdapter.robot_id">
+<span class="sig-name descname"><span class="pre">robot_id</span></span><a class="headerlink" href="#mission_manager.core.robot_adapter.RobotAdapter.robot_id" title="Link to this definition"></a></dt>
+<dd><p>Unique identifier of the robot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.robot_adapter.RobotAdapter.namespace">
+<span class="sig-name descname"><span class="pre">namespace</span></span><a class="headerlink" href="#mission_manager.core.robot_adapter.RobotAdapter.namespace" title="Link to this definition"></a></dt>
+<dd><p>ROS namespace of the robot (e.g., “/robot_1”).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.robot_adapter.RobotAdapter.current_goal_pose">
+<span class="sig-name descname"><span class="pre">current_goal_pose</span></span><a class="headerlink" href="#mission_manager.core.robot_adapter.RobotAdapter.current_goal_pose" title="Link to this definition"></a></dt>
+<dd><p>The target pose currently being pursued.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[Pose]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.robot_adapter.RobotAdapter.estimated_time_remaining">
+<span class="sig-name descname"><span class="pre">estimated_time_remaining</span></span><a class="headerlink" href="#mission_manager.core.robot_adapter.RobotAdapter.estimated_time_remaining" title="Link to this definition"></a></dt>
+<dd><p>Time remaining in seconds (from feedback).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.robot_adapter.RobotAdapter.navigation_time">
+<span class="sig-name descname"><span class="pre">navigation_time</span></span><a class="headerlink" href="#mission_manager.core.robot_adapter.RobotAdapter.navigation_time" title="Link to this definition"></a></dt>
+<dd><p>Time elapsed since start in seconds (from feedback).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.robot_adapter.RobotAdapter.distance_remaining">
+<span class="sig-name descname"><span class="pre">distance_remaining</span></span><a class="headerlink" href="#mission_manager.core.robot_adapter.RobotAdapter.distance_remaining" title="Link to this definition"></a></dt>
+<dd><p>Distance to goal in meters (from feedback).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.robot_adapter.RobotAdapter.cancel_goal">
+<span class="sig-name descname"><span class="pre">cancel_goal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/robot_adapter.html#RobotAdapter.cancel_goal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.robot_adapter.RobotAdapter.cancel_goal" title="Link to this definition"></a></dt>
+<dd><p>Requests cancellation of the current navigation goal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.robot_adapter.RobotAdapter.destroy">
+<span class="sig-name descname"><span class="pre">destroy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/robot_adapter.html#RobotAdapter.destroy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.robot_adapter.RobotAdapter.destroy" title="Link to this definition"></a></dt>
+<dd><p>Cleans up resources and destroys the action client.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.robot_adapter.RobotAdapter.get_current_goal">
+<span class="sig-name descname"><span class="pre">get_current_goal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/robot_adapter.html#RobotAdapter.get_current_goal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.robot_adapter.RobotAdapter.get_current_goal" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the current navigation goal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The current target pose, or None if idle.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optional[Pose]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.robot_adapter.RobotAdapter.is_busy">
+<span class="sig-name descname"><span class="pre">is_busy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/robot_adapter.html#RobotAdapter.is_busy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.robot_adapter.RobotAdapter.is_busy" title="Link to this definition"></a></dt>
+<dd><p>Checks if the robot is currently processing a goal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if waiting for a goal response or if a goal is active.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.robot_adapter.RobotAdapter.is_navigating">
+<span class="sig-name descname"><span class="pre">is_navigating</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/robot_adapter.html#RobotAdapter.is_navigating"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.robot_adapter.RobotAdapter.is_navigating" title="Link to this definition"></a></dt>
+<dd><p>Checks if the robot is actively navigating (goal accepted and running).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if a valid goal handle exists.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.robot_adapter.RobotAdapter.make_plan_async">
+<span class="sig-name descname"><span class="pre">make_plan_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_pose_msg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goal_pose_msg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/robot_adapter.html#RobotAdapter.make_plan_async"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.robot_adapter.RobotAdapter.make_plan_async" title="Link to this definition"></a></dt>
+<dd><p>Requests a path plan computation from the Nav2 server asynchronously.</p>
+<p>Used to estimate travel costs without moving the robot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_pose_msg</strong> (<em>Union</em><em>[</em><em>Pose</em><em>, </em><em>PoseStamped</em><em>]</em>) – The starting position.</p></li>
+<li><p><strong>goal_pose_msg</strong> (<em>Union</em><em>[</em><em>Pose</em><em>, </em><em>PoseStamped</em><em>]</em>) – The destination position.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Future object for the action goal, or None if server is unavailable.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[Future]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.robot_adapter.RobotAdapter.node">
+<span class="sig-name descname"><span class="pre">node</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></em><a class="headerlink" href="#mission_manager.core.robot_adapter.RobotAdapter.node" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.robot_adapter.RobotAdapter.send_goal">
+<span class="sig-name descname"><span class="pre">send_goal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pose</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_success</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_failure</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/robot_adapter.html#RobotAdapter.send_goal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.robot_adapter.RobotAdapter.send_goal" title="Link to this definition"></a></dt>
+<dd><p>Sends a navigation goal to the robot asynchronously.</p>
+<p>Constructs a NavigateToPose goal and sends it to the action server.
+Registers callbacks for acceptance and result handling.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pose</strong> (<em>Pose</em>) – The target geometry_msgs/Pose.</p></li>
+<li><p><strong>on_success</strong> (<em>Callable</em>) – Callback executed if navigation succeeds.</p></li>
+<li><p><strong>on_failure</strong> (<em>Callable</em>) – Callback executed if navigation fails, is aborted, or rejected.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.14)"><strong>Exception</strong></a> – If the robot is already busy with another goal.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-mission_manager.core.robot_pool">
+<span id="mission-manager-core-robot-pool-module"></span><h2>mission_manager.core.robot_pool module<a class="headerlink" href="#module-mission_manager.core.robot_pool" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mission_manager.core.robot_pool.RobotPool">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mission_manager.core.robot_pool.</span></span><span class="sig-name descname"><span class="pre">RobotPool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/robot_pool.html#RobotPool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.robot_pool.RobotPool" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Manages a collection of robots detected in the fleet.</p>
+<p>This class maintains a local registry of robots, handling their addition,
+removal, and state updates based on incoming fleet state messages. It provides
+access to robot instances and their adapters.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.robot_pool.RobotPool.node">
+<span class="sig-name descname"><span class="pre">node</span></span><a class="headerlink" href="#mission_manager.core.robot_pool.RobotPool.node" title="Link to this definition"></a></dt>
+<dd><p>Reference to the parent ROS 2 node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Node</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.core.robot_pool.RobotPool._robots">
+<span class="sig-name descname"><span class="pre">_robots</span></span><a class="headerlink" href="#mission_manager.core.robot_pool.RobotPool._robots" title="Link to this definition"></a></dt>
+<dd><p>Dictionary storing Robot instances indexed by robot ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference internal" href="#mission_manager.core.robot.Robot" title="mission_manager.core.robot.Robot">Robot</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.robot_pool.RobotPool.get_all_robots">
+<span class="sig-name descname"><span class="pre">get_all_robots</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/robot_pool.html#RobotPool.get_all_robots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.robot_pool.RobotPool.get_all_robots" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the dictionary of all registered robots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary mapping robot IDs to Robot instances.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference internal" href="#mission_manager.core.robot.Robot" title="mission_manager.core.robot.Robot">Robot</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.robot_pool.RobotPool.get_robot">
+<span class="sig-name descname"><span class="pre">get_robot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">robot_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/robot_pool.html#RobotPool.get_robot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.robot_pool.RobotPool.get_robot" title="Link to this definition"></a></dt>
+<dd><p>Retrieves a Robot instance by its ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>robot_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The unique identifier of the robot.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Robot instance, or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[<a class="reference internal" href="#mission_manager.core.robot.Robot" title="mission_manager.core.robot.Robot">Robot</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.robot_pool.RobotPool.get_robot_adapter">
+<span class="sig-name descname"><span class="pre">get_robot_adapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">robot_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/robot_pool.html#RobotPool.get_robot_adapter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.robot_pool.RobotPool.get_robot_adapter" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the adapter associated with a specific robot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>robot_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The unique identifier of the robot.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The robot’s adapter instance, or None if the robot is not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.robot_pool.RobotPool.is_robot_in_pool">
+<span class="sig-name descname"><span class="pre">is_robot_in_pool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">robot_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/robot_pool.html#RobotPool.is_robot_in_pool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.robot_pool.RobotPool.is_robot_in_pool" title="Link to this definition"></a></dt>
+<dd><p>Checks if a robot is currently registered in the pool.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>robot_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The unique identifier of the robot.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the robot exists in the pool, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.core.robot_pool.RobotPool.update_pool">
+<span class="sig-name descname"><span class="pre">update_pool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">robot_state_array_msg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/core/robot_pool.html#RobotPool.update_pool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.core.robot_pool.RobotPool.update_pool" title="Link to this definition"></a></dt>
+<dd><p>Updates the pool based on the latest fleet state message.</p>
+<p>Adds new robots, updates existing ones, and removes robots that are no longer
+present in the received message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>robot_state_array_msg</strong> (<em>RobotStateArray</em>) – The message containing states of all visible robots.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="mission_manager.allocation_strategies.html" class="btn btn-neutral float-left" title="mission_manager.allocation_strategies package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="fleet_simulation.html" class="btn btn-neutral float-right" title="fleet_simulation package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Victor Forcioli, Alexis Vermeersch, Djino Varrambier Geoffroy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

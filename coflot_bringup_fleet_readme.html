@@ -1,0 +1,231 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>coflot_bringup_fleet &mdash; coflot_fleet 1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=56dcb7b8"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="fleet_simulation" href="fleet_simulation_readme.html" />
+    <link rel="prev" title="fleet_adapter" href="fleet_adapter_readme.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            coflot_fleet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Workspace</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="workspace_readme.html">Coflot - Système de Gestion de Flotte de Robots</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Packages Overview</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="fleet_interfaces_readme.html">fleet_interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mission_manager_readme.html">mission_manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fleet_adapter_readme.html">fleet_adapter</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">coflot_bringup_fleet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#vue-d-ensemble">1 - Vue d’ensemble</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#role-fonctionnel">Rôle fonctionnel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#arborescence">Arborescence</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#utilisation-et-lancement">2 - Utilisation et Lancement</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#launch-files-ros2-launch">Launch Files (ros2 launch)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#arguments-de-lancement">Arguments de lancement</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#infrastructure-deployee">3 - Infrastructure Déployée</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#serveur-de-carte-nav2-map-server">1. Serveur de Carte (<code class="docutils literal notranslate"><span class="pre">nav2_map_server</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gestionnaire-de-cycle-de-vie-nav2-lifecycle-manager">2. Gestionnaire de Cycle de Vie (<code class="docutils literal notranslate"><span class="pre">nav2_lifecycle_manager</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#serveur-rosbridge-rosbridge-server">3. Serveur Rosbridge (<code class="docutils literal notranslate"><span class="pre">rosbridge_server</span></code>)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="fleet_simulation_readme.html">fleet_simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fleet_adapter.html">fleet_adapter package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mission_manager.html">mission_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fleet_simulation.html">fleet_simulation package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">ROS Interfaces</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fleet_interfaces_msg.html">fleet_interfaces — Messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coflot_bringup_fleet_launch.html">coflot_bringup_fleet — Launch files</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">coflot_fleet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">coflot_bringup_fleet</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/coflot_bringup_fleet_readme.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="coflot-bringup-fleet">
+<h1>coflot_bringup_fleet<a class="headerlink" href="#coflot-bringup-fleet" title="Link to this heading"></a></h1>
+<section id="vue-d-ensemble">
+<h2>1 - Vue d’ensemble<a class="headerlink" href="#vue-d-ensemble" title="Link to this heading"></a></h2>
+<p>Le package <code class="docutils literal notranslate"><span class="pre">coflot_bringup_fleet</span></code> contient un fichier de lancement pour connecter l’Interface Homme Machine du projet Coflot.</p>
+<section id="role-fonctionnel">
+<h3>Rôle fonctionnel<a class="headerlink" href="#role-fonctionnel" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Lancement du serveur de Carte</strong> : Chargement et publication de la carte statique via <code class="docutils literal notranslate"><span class="pre">nav2_map_server</span></code>.</p></li>
+<li><p><strong>Passerelle de Communication</strong> : Ouverture d’un port WebSocket via <code class="docutils literal notranslate"><span class="pre">rosbridge_server</span></code> pour permettre la connexion de l’IHM.</p></li>
+</ol>
+</section>
+<section id="arborescence">
+<h3>Arborescence<a class="headerlink" href="#arborescence" title="Link to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>coflot_bringup_fleet/
+├── launch/
+│   └── bring_up.launch.py    # Script de lancement
+├── maps/
+│   ├── salle2.pgm            # Carte
+│   └── salle2.yaml           # Métadonnées de la carte
+├── package.xml
+└── setup.py
+</pre></div>
+</div>
+</section>
+</section>
+<section id="utilisation-et-lancement">
+<h2>2 - Utilisation et Lancement<a class="headerlink" href="#utilisation-et-lancement" title="Link to this heading"></a></h2>
+<section id="launch-files-ros2-launch">
+<h3>Launch Files (ros2 launch)<a class="headerlink" href="#launch-files-ros2-launch" title="Link to this heading"></a></h3>
+<p>Le lancement de l’infrastructure s’effectue via la commande suivante :</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>coflot_bringup_fleet<span class="w"> </span>bring_up.launch.py
+</pre></div>
+</div>
+</section>
+<section id="arguments-de-lancement">
+<h3>Arguments de lancement<a class="headerlink" href="#arguments-de-lancement" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Argument</p></th>
+<th class="head text-left"><p>Valeur Défaut</p></th>
+<th class="head text-left"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">map</span></code></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">.../maps/salle2.yaml</span></code></p></td>
+<td class="text-left"><p>Chemin absolu vers le fichier de configuration YAML de la carte à charger.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="infrastructure-deployee">
+<h2>3 - Infrastructure Déployée<a class="headerlink" href="#infrastructure-deployee" title="Link to this heading"></a></h2>
+<p>Le fichier <code class="docutils literal notranslate"><span class="pre">bring_up.launch.py</span></code> démarre les trois processus suivants. Les commandes Bash ci-dessous permettent de lancer ces nœuds individuellement pour le débogage (équivalence stricte avec les paramètres du launch file).</p>
+<section id="serveur-de-carte-nav2-map-server">
+<h3>1. Serveur de Carte (<code class="docutils literal notranslate"><span class="pre">nav2_map_server</span></code>)<a class="headerlink" href="#serveur-de-carte-nav2-map-server" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Rôle :</strong> Charge le fichier de carte statique (OccupancyGrid) et le publie sur le réseau.</p></li>
+<li><p><strong>Commande équivalente :</strong></p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>nav2_map_server<span class="w"> </span>map_server<span class="w"> </span>--ros-args<span class="w"> </span>-p<span class="w"> </span>yaml_filename:<span class="o">=</span>/chemin/vers/salle2.yaml<span class="w"> </span>-p<span class="w"> </span>frame_id:<span class="o">=</span>map
+</pre></div>
+</div>
+</section>
+<section id="gestionnaire-de-cycle-de-vie-nav2-lifecycle-manager">
+<h3>2. Gestionnaire de Cycle de Vie (<code class="docutils literal notranslate"><span class="pre">nav2_lifecycle_manager</span></code>)<a class="headerlink" href="#gestionnaire-de-cycle-de-vie-nav2-lifecycle-manager" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Rôle :</strong> Supervise le nœud <code class="docutils literal notranslate"><span class="pre">map_server</span></code>. Il effectue automatiquement la transition de l’état <em>Unconfigured</em> vers <em>Active</em> pour que la carte soit effectivement publiée.</p></li>
+<li><p><strong>Commande équivalente :</strong></p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>nav2_lifecycle_manager<span class="w"> </span>lifecycle_manager<span class="w"> </span>--ros-args<span class="w"> </span>-p<span class="w"> </span>autostart:<span class="o">=</span>True<span class="w"> </span>-p<span class="w"> </span>node_names:<span class="o">=[</span><span class="s1">&#39;map_server&#39;</span><span class="o">]</span>
+</pre></div>
+</div>
+</section>
+<section id="serveur-rosbridge-rosbridge-server">
+<h3>3. Serveur Rosbridge (<code class="docutils literal notranslate"><span class="pre">rosbridge_server</span></code>)<a class="headerlink" href="#serveur-rosbridge-rosbridge-server" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Rôle :</strong> Crée une passerelle WebSocket (TCP) permettant aux applications externes (Web, IHM) d’interagir avec ROS 2 via JSON.</p></li>
+<li><p><strong>Commande équivalente :</strong></p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>rosbridge_server<span class="w"> </span>rosbridge_websocket<span class="w"> </span>--ros-args<span class="w"> </span>-p<span class="w"> </span>port:<span class="o">=</span><span class="m">9090</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="fleet_adapter_readme.html" class="btn btn-neutral float-left" title="fleet_adapter" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="fleet_simulation_readme.html" class="btn btn-neutral float-right" title="fleet_simulation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Victor Forcioli, Alexis Vermeersch, Djino Varrambier Geoffroy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

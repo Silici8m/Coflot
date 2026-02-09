@@ -1,0 +1,489 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mission_manager.allocation_strategies package &mdash; coflot_fleet 1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=56dcb7b8"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="mission_manager.core package" href="mission_manager.core.html" />
+    <link rel="prev" title="mission_manager package" href="mission_manager.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            coflot_fleet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Workspace</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="workspace_readme.html">Coflot - Système de Gestion de Flotte de Robots</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Packages Overview</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fleet_interfaces_readme.html">fleet_interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mission_manager_readme.html">mission_manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fleet_adapter_readme.html">fleet_adapter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coflot_bringup_fleet_readme.html">coflot_bringup_fleet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fleet_simulation_readme.html">fleet_simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="fleet_adapter.html">fleet_adapter package</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="mission_manager.html">mission_manager package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="mission_manager.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">mission_manager.allocation_strategies package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mission_manager.allocation_strategies.allocation_interface">mission_manager.allocation_strategies.allocation_interface module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mission_manager.allocation_strategies.base_strategy">mission_manager.allocation_strategies.base_strategy module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mission_manager.allocation_strategies.closest_strategy">mission_manager.allocation_strategies.closest_strategy module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mission_manager.allocation_strategies.naive_queue_strategy">mission_manager.allocation_strategies.naive_queue_strategy module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mission_manager.allocation_strategies.utility_strategy">mission_manager.allocation_strategies.utility_strategy module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mission_manager.core.html">mission_manager.core package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="mission_manager.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mission_manager.html#module-mission_manager.config">mission_manager.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mission_manager.html#module-mission_manager.mission_manager_node">mission_manager.mission_manager_node module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="fleet_simulation.html">fleet_simulation package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">ROS Interfaces</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fleet_interfaces_msg.html">fleet_interfaces — Messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coflot_bringup_fleet_launch.html">coflot_bringup_fleet — Launch files</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">coflot_fleet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="mission_manager.html">mission_manager package</a></li>
+      <li class="breadcrumb-item active">mission_manager.allocation_strategies package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/mission_manager.allocation_strategies.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-mission_manager.allocation_strategies">
+<span id="mission-manager-allocation-strategies-package"></span><h1>mission_manager.allocation_strategies package<a class="headerlink" href="#module-mission_manager.allocation_strategies" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-mission_manager.allocation_strategies.allocation_interface">
+<span id="mission-manager-allocation-strategies-allocation-interface-module"></span><h2>mission_manager.allocation_strategies.allocation_interface module<a class="headerlink" href="#module-mission_manager.allocation_strategies.allocation_interface" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mission_manager.allocation_strategies.allocation_interface.AllocationAction">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mission_manager.allocation_strategies.allocation_interface.</span></span><span class="sig-name descname"><span class="pre">AllocationAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/allocation_strategies/allocation_interface.html#AllocationAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.allocation_strategies.allocation_interface.AllocationAction" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></a></p>
+<p>Defines the specific type of action to be performed by the Dispatcher.</p>
+<p>This enumeration allows the Dispatcher to apply the correct procedure
+(start, preemption, suspension) without inferring logic.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.allocation_strategies.allocation_interface.AllocationAction.ASSIGN_AND_START">
+<span class="sig-name descname"><span class="pre">ASSIGN_AND_START</span></span><a class="headerlink" href="#mission_manager.allocation_strategies.allocation_interface.AllocationAction.ASSIGN_AND_START" title="Link to this definition"></a></dt>
+<dd><p>Standard assignment. The robot is free and starts the mission immediately.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.allocation_strategies.allocation_interface.AllocationAction.REVOKE">
+<span class="sig-name descname"><span class="pre">REVOKE</span></span><a class="headerlink" href="#mission_manager.allocation_strategies.allocation_interface.AllocationAction.REVOKE" title="Link to this definition"></a></dt>
+<dd><p>Preemption (Emergency). The current mission is cancelled to start the new one.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.allocation_strategies.allocation_interface.AllocationAction.SUSPEND">
+<span class="sig-name descname"><span class="pre">SUSPEND</span></span><a class="headerlink" href="#mission_manager.allocation_strategies.allocation_interface.AllocationAction.SUSPEND" title="Link to this definition"></a></dt>
+<dd><p>Suspension. The current mission is paused to start the new one.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.allocation_strategies.allocation_interface.AllocationAction.NOTHING">
+<span class="sig-name descname"><span class="pre">NOTHING</span></span><a class="headerlink" href="#mission_manager.allocation_strategies.allocation_interface.AllocationAction.NOTHING" title="Link to this definition"></a></dt>
+<dd><p>No action required.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">ASSIGN_AND_START</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">NOTHING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#id1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">REVOKE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#id2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">SUSPEND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#id3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mission_manager.allocation_strategies.allocation_interface.AllocationDecision">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mission_manager.allocation_strategies.allocation_interface.</span></span><span class="sig-name descname"><span class="pre">AllocationDecision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mission_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/allocation_strategies/allocation_interface.html#AllocationDecision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.allocation_strategies.allocation_interface.AllocationDecision" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Data Transfer Object (DTO) representing a decision made by the allocator.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.allocation_strategies.allocation_interface.AllocationDecision.action">
+<span class="sig-name descname"><span class="pre">action</span></span><a class="headerlink" href="#mission_manager.allocation_strategies.allocation_interface.AllocationDecision.action" title="Link to this definition"></a></dt>
+<dd><p>The type of action to execute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#mission_manager.allocation_strategies.allocation_interface.AllocationAction" title="mission_manager.allocation_strategies.allocation_interface.AllocationAction">AllocationAction</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.allocation_strategies.allocation_interface.AllocationDecision.mission_id">
+<span class="sig-name descname"><span class="pre">mission_id</span></span><a class="headerlink" href="#mission_manager.allocation_strategies.allocation_interface.AllocationDecision.mission_id" title="Link to this definition"></a></dt>
+<dd><p>The unique identifier of the mission concerned by the decision.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.allocation_strategies.allocation_interface.AllocationDecision.robot_id">
+<span class="sig-name descname"><span class="pre">robot_id</span></span><a class="headerlink" href="#mission_manager.allocation_strategies.allocation_interface.AllocationDecision.robot_id" title="Link to this definition"></a></dt>
+<dd><p>The unique identifier of the robot assigned or affected.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.allocation_strategies.allocation_interface.AllocationDecision.reason">
+<span class="sig-name descname"><span class="pre">reason</span></span><a class="headerlink" href="#mission_manager.allocation_strategies.allocation_interface.AllocationDecision.reason" title="Link to this definition"></a></dt>
+<dd><p>A textual explanation for the decision (default is empty).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">action</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#mission_manager.allocation_strategies.allocation_interface.AllocationAction" title="mission_manager.allocation_strategies.allocation_interface.AllocationAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AllocationAction</span></code></a></em><a class="headerlink" href="#id4" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">mission_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></em><a class="headerlink" href="#id5" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">reason</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#id6" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">robot_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></em><a class="headerlink" href="#id7" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-mission_manager.allocation_strategies.base_strategy">
+<span id="mission-manager-allocation-strategies-base-strategy-module"></span><h2>mission_manager.allocation_strategies.base_strategy module<a class="headerlink" href="#module-mission_manager.allocation_strategies.base_strategy" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mission_manager.allocation_strategies.base_strategy.AllocatorStrategy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mission_manager.allocation_strategies.base_strategy.</span></span><span class="sig-name descname"><span class="pre">AllocatorStrategy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot_pool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mission_registry</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/allocation_strategies/base_strategy.html#AllocatorStrategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.allocation_strategies.base_strategy.AllocatorStrategy" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
+<p>Abstract base class for mission allocation strategies.</p>
+<p>This class defines the interface that all specific allocation algorithms
+(e.g., Auction-based, Greedy, Hungarian) must implement. It provides
+access to the system state via the robot pool and mission registry.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.allocation_strategies.base_strategy.AllocatorStrategy.node">
+<span class="sig-name descname"><span class="pre">node</span></span><a class="headerlink" href="#mission_manager.allocation_strategies.base_strategy.AllocatorStrategy.node" title="Link to this definition"></a></dt>
+<dd><p>Reference to the parent ROS 2 node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Node</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.allocation_strategies.base_strategy.AllocatorStrategy.robot_pool">
+<span class="sig-name descname"><span class="pre">robot_pool</span></span><a class="headerlink" href="#mission_manager.allocation_strategies.base_strategy.AllocatorStrategy.robot_pool" title="Link to this definition"></a></dt>
+<dd><p>Reference to the robot pool manager.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="mission_manager.core.html#mission_manager.core.robot_pool.RobotPool" title="mission_manager.core.robot_pool.RobotPool">RobotPool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mission_manager.allocation_strategies.base_strategy.AllocatorStrategy.registry">
+<span class="sig-name descname"><span class="pre">registry</span></span><a class="headerlink" href="#mission_manager.allocation_strategies.base_strategy.AllocatorStrategy.registry" title="Link to this definition"></a></dt>
+<dd><p>Reference to the mission registry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="mission_manager.core.html#mission_manager.core.mission_registry.MissionRegistry" title="mission_manager.core.mission_registry.MissionRegistry">MissionRegistry</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.allocation_strategies.base_strategy.AllocatorStrategy.allocate">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">allocate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/allocation_strategies/base_strategy.html#AllocatorStrategy.allocate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.allocation_strategies.base_strategy.AllocatorStrategy.allocate" title="Link to this definition"></a></dt>
+<dd><p>Analyzes the current state and computes a list of allocation decisions.</p>
+<p>This method must be implemented by subclasses to define the specific
+allocation logic (matching robots to missions).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of decisions to be executed by the dispatcher.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[<a class="reference internal" href="#mission_manager.allocation_strategies.allocation_interface.AllocationDecision" title="mission_manager.allocation_strategies.allocation_interface.AllocationDecision">AllocationDecision</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-mission_manager.allocation_strategies.closest_strategy">
+<span id="mission-manager-allocation-strategies-closest-strategy-module"></span><h2>mission_manager.allocation_strategies.closest_strategy module<a class="headerlink" href="#module-mission_manager.allocation_strategies.closest_strategy" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mission_manager.allocation_strategies.closest_strategy.ClosestStrategy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mission_manager.allocation_strategies.closest_strategy.</span></span><span class="sig-name descname"><span class="pre">ClosestStrategy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot_pool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mission_registry</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/allocation_strategies/closest_strategy.html#ClosestStrategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.allocation_strategies.closest_strategy.ClosestStrategy" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mission_manager.allocation_strategies.base_strategy.AllocatorStrategy" title="mission_manager.allocation_strategies.base_strategy.AllocatorStrategy"><code class="xref py py-class docutils literal notranslate"><span class="pre">AllocatorStrategy</span></code></a></p>
+<p>Implements a greedy allocation strategy based on spatial proximity.</p>
+<p>This strategy assigns available robots to pending missions by minimizing the
+Euclidean distance between the robot’s current position and the mission’s
+first waypoint. It processes missions in order of priority (highest first)
+and then request time (oldest first).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.allocation_strategies.closest_strategy.ClosestStrategy.allocate">
+<span class="sig-name descname"><span class="pre">allocate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/allocation_strategies/closest_strategy.html#ClosestStrategy.allocate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.allocation_strategies.closest_strategy.ClosestStrategy.allocate" title="Link to this definition"></a></dt>
+<dd><p>Executes the allocation logic to match robots to missions.</p>
+<p>The process follows these steps:
+1. Identify busy robots (those currently assigned to unfinished missions).
+2. Identify available robots.
+3. Sort pending missions by Priority (Descending) and Date (Ascending).
+4. For each pending mission, find the closest available robot.
+5. Create an assignment decision and mark the robot as booked for this cycle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of assignment decisions to be applied.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[<a class="reference internal" href="#mission_manager.allocation_strategies.allocation_interface.AllocationDecision" title="mission_manager.allocation_strategies.allocation_interface.AllocationDecision">AllocationDecision</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-mission_manager.allocation_strategies.naive_queue_strategy">
+<span id="mission-manager-allocation-strategies-naive-queue-strategy-module"></span><h2>mission_manager.allocation_strategies.naive_queue_strategy module<a class="headerlink" href="#module-mission_manager.allocation_strategies.naive_queue_strategy" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mission_manager.allocation_strategies.naive_queue_strategy.NaiveQueueStrategy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mission_manager.allocation_strategies.naive_queue_strategy.</span></span><span class="sig-name descname"><span class="pre">NaiveQueueStrategy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot_pool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mission_registry</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/allocation_strategies/naive_queue_strategy.html#NaiveQueueStrategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.allocation_strategies.naive_queue_strategy.NaiveQueueStrategy" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mission_manager.allocation_strategies.base_strategy.AllocatorStrategy" title="mission_manager.allocation_strategies.base_strategy.AllocatorStrategy"><code class="xref py py-class docutils literal notranslate"><span class="pre">AllocatorStrategy</span></code></a></p>
+<p>Implements a simple FIFO (First-In-First-Out) allocation strategy.</p>
+<p>This strategy assigns the first available robot to the highest priority,
+oldest pending mission. It does not consider spatial distance, battery levels,
+or travel costs, making it a “naive” approach suitable for simple testing.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.allocation_strategies.naive_queue_strategy.NaiveQueueStrategy.allocate">
+<span class="sig-name descname"><span class="pre">allocate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/allocation_strategies/naive_queue_strategy.html#NaiveQueueStrategy.allocate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.allocation_strategies.naive_queue_strategy.NaiveQueueStrategy.allocate" title="Link to this definition"></a></dt>
+<dd><p>Executes the naive allocation logic to match robots to missions.</p>
+<p>The process follows these steps:
+1. Identify busy robots (those currently assigned to unfinished missions).
+2. List available robots.
+3. Retrieve and sort pending missions by Priority (Descending) and Date (Ascending).
+4. Assign available robots to missions sequentially (FIFO).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of assignment decisions to be applied.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[<a class="reference internal" href="#mission_manager.allocation_strategies.allocation_interface.AllocationDecision" title="mission_manager.allocation_strategies.allocation_interface.AllocationDecision">AllocationDecision</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-mission_manager.allocation_strategies.utility_strategy">
+<span id="mission-manager-allocation-strategies-utility-strategy-module"></span><h2>mission_manager.allocation_strategies.utility_strategy module<a class="headerlink" href="#module-mission_manager.allocation_strategies.utility_strategy" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mission_manager.allocation_strategies.utility_strategy.UtilityStrategy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mission_manager.allocation_strategies.utility_strategy.</span></span><span class="sig-name descname"><span class="pre">UtilityStrategy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot_pool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mission_registry</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/allocation_strategies/utility_strategy.html#UtilityStrategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.allocation_strategies.utility_strategy.UtilityStrategy" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mission_manager.allocation_strategies.base_strategy.AllocatorStrategy" title="mission_manager.allocation_strategies.base_strategy.AllocatorStrategy"><code class="xref py py-class docutils literal notranslate"><span class="pre">AllocatorStrategy</span></code></a></p>
+<p>Implements a global optimization strategy based on Utility.</p>
+<p>This strategy computes a Utility matrix (Quality - Cost) for every robot-mission pair
+and solves the assignment problem using the Hungarian algorithm (Munkres) to maximize
+the global utility of the fleet. It accounts for mission priorities, travel times,
+and transition costs (revocation/suspension penalties).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.allocation_strategies.utility_strategy.UtilityStrategy.allocate">
+<span class="sig-name descname"><span class="pre">allocate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/allocation_strategies/utility_strategy.html#UtilityStrategy.allocate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.allocation_strategies.utility_strategy.UtilityStrategy.allocate" title="Link to this definition"></a></dt>
+<dd><p>Executes the utility-based allocation logic.</p>
+<p>The process follows these steps:
+1. Construct a Cost Matrix based on temporal costs (travel time + penalties).
+2. Derive a Utility Matrix (Quality - Cost), adjusted by mission Priority coefficients.
+3. Solve the assignment problem using the Hungarian algorithm to maximize global utility.
+4. Generate allocation decisions for the optimal assignments found.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of decisions to be executed by the dispatcher.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[<a class="reference internal" href="#mission_manager.allocation_strategies.allocation_interface.AllocationDecision" title="mission_manager.allocation_strategies.allocation_interface.AllocationDecision">AllocationDecision</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mission_manager.allocation_strategies.utility_strategy.UtilityStrategy.compute_cost">
+<span class="sig-name descname"><span class="pre">compute_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mission_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/allocation_strategies/utility_strategy.html#UtilityStrategy.compute_cost"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.allocation_strategies.utility_strategy.UtilityStrategy.compute_cost" title="Link to this definition"></a></dt>
+<dd><p>Calculates the total temporal cost (in seconds) for a robot to perform a target mission.</p>
+<p>This method evaluates:
+1. Strict constraints (Anti-theft, Stability).
+2. Technical feasibility (Required actions like Suspend/Revoke).
+3. Transition penalties (Time to free the robot from its current task).
+4. Travel time to the target mission’s first waypoint (using path planning).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mission_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The unique identifier of the target mission.</p></li>
+<li><p><strong>robot_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The unique identifier of the candidate robot.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The estimated cost in seconds. Returns float(‘inf’) if the assignment is impossible.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mission_manager.allocation_strategies.utility_strategy.solve_hungarian_max">
+<span class="sig-prename descclassname"><span class="pre">mission_manager.allocation_strategies.utility_strategy.</span></span><span class="sig-name descname"><span class="pre">solve_hungarian_max</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mission_manager/allocation_strategies/utility_strategy.html#solve_hungarian_max"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mission_manager.allocation_strategies.utility_strategy.solve_hungarian_max" title="Link to this definition"></a></dt>
+<dd><p>Solves the linear assignment problem to maximize the total utility.</p>
+<p>This function wraps scipy’s <cite>linear_sum_assignment</cite> (which minimizes cost)
+by passing the negative of the matrix to achieve maximization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>matrix</strong> (<em>Union</em><em>[</em><em>List</em><em>[</em><em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em>) – A 2D cost/utility matrix.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A tuple containing:</dt><dd><ul class="simple">
+<li><p>A list of (row_index, col_index) tuples representing the optimal assignment.</p></li>
+<li><p>The total sum of the values of the assigned elements.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[List[Tuple[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a>]], <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="mission_manager.html" class="btn btn-neutral float-left" title="mission_manager package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mission_manager.core.html" class="btn btn-neutral float-right" title="mission_manager.core package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Victor Forcioli, Alexis Vermeersch, Djino Varrambier Geoffroy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
